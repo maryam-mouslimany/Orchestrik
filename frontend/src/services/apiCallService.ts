@@ -1,0 +1,47 @@
+import axios from 'axios';
+import type { AxiosRequestConfig } from 'axios';
+ 
+const baseURL = 'http://127.0.0.1:8000/api'; 
+
+//axios instance
+const api = axios.create({
+  baseURL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+const apiCall = async (
+  endpoint: string,                   
+  method: string = 'GET',             
+  data: any = null,                   
+  params: any = null,                 
+  requiresAuth: boolean = false       
+) => {
+  try {
+    const headers: AxiosRequestConfig['headers'] = {};
+
+    if (requiresAuth) {
+      const token = localStorage.getItem('token'); 
+      if (!token) {
+        throw new Error('No token found, authorization required');
+      }
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await api({
+      url: endpoint,
+      method: method.toLowerCase(),
+      data,
+      params,
+      headers,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('API Call Error:', error);
+    throw error;
+  }
+};
+
+export default apiCall;
