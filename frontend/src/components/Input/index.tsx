@@ -10,7 +10,7 @@ interface CustomInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; 
 }
 
-export const Input: React.FC<CustomInputProps> = ({
+const Input: React.FC<CustomInputProps> = ({
   label,
   placeholder,
   type = 'text',
