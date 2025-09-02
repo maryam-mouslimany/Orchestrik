@@ -1,3 +1,53 @@
-button{
+/* Button styles using CSS custom property */
+.button {
     background-color: var(--primary-color);
+    width: 100%;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--primary-color) 85%, black);
+    transform: translateY(-1px);
+}
+
+.button:active:not(:disabled) {
+    transform: translateY(0);
+    background-color: color-mix(in srgb, var(--primary-color) 75%, black);
+}
+
+
+.button:focus {
+    outline: 2px solid color-mix(in srgb, var(--primary-color) 40%, transparent);
+    outline-offset: 2px;
+}
+
+/* Loading spinner */
+.loading {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

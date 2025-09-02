@@ -10,13 +10,14 @@ export const useLogin = () => {
     const isEmailValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
     const isPasswordValid = password.length >= 6;
     const isValid = isEmailValid && isPasswordValid;
+
+    const emailError = email && !isEmailValid ? 'Please enter a valid email.' : '';
+    const passwordError = password && !isPasswordValid ? 'Password must be at least 6 characters.' : '';
+
     console.log(password)
 
     const handleLogin = async () => {
-        if (!isValid) {
-            alert('Please fill out the form correctly!');
-            return;
-        }
+        if (!isValid) { return; }
 
         try {
             const response = await apiCall('/guest/login', 'POST', { email, password }, null, false);
@@ -39,5 +40,7 @@ export const useLogin = () => {
         setPassword,
         isValid,
         handleLogin,
+        emailError,
+        passwordError,
     };
 };
