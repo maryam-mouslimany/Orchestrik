@@ -1,3 +1,148 @@
-.container{
-    background-color: var(--primary-color);
+/* Root container */
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  height: 100dvh; 
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;              
+  color: #e7e9ee;                    
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Header with logo + brand */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: #f4f6fa;
+}
+
+.role {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.8;
+  color: #c7cbd6;
+}
+
+/* Nav list */
+.nav {
+  padding: 10px 8px;
+  overflow: auto;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item {
+  margin: 0;
+  padding: 0;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #cfd3dd;
+  text-decoration: none;
+  outline: none;
+  transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+/* Hover (non-active) */
+.link:hover {
+  background: var(--primary-color);
+  color: #eef1f7;
+}
+
+/* Active state uses your theme variable */
+.isActive {
+  background: var(--primary-color) ;
+  color: #ffffff;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--primary-color) 35%, transparent);
+}
+
+/* Optional stronger left accent for active */
+.isActive::before {
+  content: '';
+  width: 4px;
+  height: 70%;
+  margin-right: 6px;
+  border-radius: 6px;
+  background: var(--primary-color);
+}
+
+/* Icon + label */
+.icon {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.95;
+}
+
+.label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Keyboard focus */
+.link:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary-color) 50%, transparent);
+}
+
+/* Scrollbar (subtle) */
+.nav::-webkit-scrollbar {
+  width: 10px;
+}
+.nav::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+}
+.nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.12);
+}
+.nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Small screens: let it shrink a bit */
+@media (max-width: 1024px) {
+  .sidebar { width: 232px; min-width: 232px; }
 }

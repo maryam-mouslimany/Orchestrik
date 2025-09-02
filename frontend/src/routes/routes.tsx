@@ -6,7 +6,8 @@ const AppRoutes = () => {
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<Login />}></Route>
-                <Route path="/sidebar" element={<SideBar/>}></Route>
+                <Route path="/sidebar" element={<SideBar />}></Route>
+                <Route path="/dashboard" element={<SideBar />}></Route>
             </Routes>
         </BrowserRouter>
     )

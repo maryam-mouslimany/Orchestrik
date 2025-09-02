@@ -2,17 +2,21 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSidebar } from './hook';
 import styles from './styles.module.css';
+import logo from '../../assets/images/logo.png';
 
 // join module class strings
 
 const Sidebar: React.FC = () => {
-    const { items, activePath, roleName } = useSidebar();
+    const { items, roleName } = useSidebar();
 
     return (
         <aside className={styles.sidebar} data-role={roleName}>
             <div className={styles.header}>
-                <span className={styles.title}>Menu </span>
-                <span className={styles.role}>{roleName.toUpperCase()}</span>
+                <img className={styles.logo} src={logo} alt="App logo" />
+                <div className={styles.brand}>
+                    <span className={styles.title}>Menu </span>
+                    <span className={styles.role}>{roleName.toUpperCase()}</span>
+                </div>
             </div>
 
             <nav className={styles.nav}>
