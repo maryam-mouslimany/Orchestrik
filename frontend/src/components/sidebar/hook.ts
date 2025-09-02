@@ -1,79 +1,45 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
-export type Role = 'admin' | 'manager' | 'member';
-export type NavItem = { key: string; label: string; icon?: React.ReactNode; href?: string; };
-
-type User = {
-  id: number;
-  name: string;
-  role: Role;
-  avatarUrl?: string;
+export type MenuItem = {
+  key: string;
+  label: string;
+  to: string;
+  icon?: React.ReactNode;
 };
 
-type UseSidebarOptions = {
-  storageKey?: string; // allow override in tests
-  onNavigate?: (item: NavItem) => void; // optional navigation handler
+const MENU_BY_ROLE: Record<'admin' | 'pm' | 'member', MenuItem[]> = {
+  admin: [
+    { key: 'dashboard', label: 'Dashboard', to: '/dashboard' },
+    { key: 'users', label: 'Users', to: '/users' },
+    { key: 'projects', label: 'Projects', to: '/projects' },
+  ],
+  pm: [
+    { key: 'projects', label: 'Projects', to: '/projects' },
+    { key: 'team', label: 'Team', to: '/team' },
+    { key: 'reports', label: 'Reports', to: '/reports' },
+  ],
+  member: [
+    { key: 'my-tasks', label: 'My Tasks', to: '/my-tasks' },
+    { key: 'projects', label: 'Projects', to: '/projects' },
+    { key: 'profile', label: 'Profile', to: '/profile' },
+  ],
 };
 
-export function useSidebar(options: UseSidebarOptions = {}) {
-  const { storageKey = 'auth:user', onNavigate } = options;
+export const useSidebar = () => {
+  const { user } = useAuth();
+  const location = useLocation();
 
-  // read user from localStorage (you can later replace this with Context/Service)
-  const [user, setUser] = useState<User | null>(null);
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) setUser(JSON.parse(raw));
-    } catch {
-      setUser(null);
-    }
-  }, [storageKey]);
+  const roleName = (user?.role?.name as 'admin' | 'pm' | 'member') || 'member';
 
-  // role-based nav config
-  const navConfig: Record<Role, NavItem[]> = useMemo(
-    () => ({
-      admin: [
-        { key: 'dashboard', label: 'Dashboard' },
-        { key: 'projects', label: 'Projects' },
-        { key: 'users', label: 'Users' },
-        { key: 'reports', label: 'Reports' },
-        { key: 'settings', label: 'Settings' },
-      ],
-      manager: [
-        { key: 'dashboard', label: 'Dashboard' },
-        { key: 'projects', label: 'Projects' },
-        { key: 'team', label: 'Team' },
-        { key: 'reports', label: 'Reports' },
-      ],
-      member: [
-        { key: 'dashboard', label: 'Dashboard' },
-        { key: 'my-tasks', label: 'My Tasks' },
-        { key: 'calendar', label: 'Calendar' },
-        { key: 'profile', label: 'Profile' },
-      ],
-    }),
-    []
-  );
+  const items = useMemo(() => MENU_BY_ROLE[roleName], [roleName]);
 
-  const items: NavItem[] = useMemo(() => {
-    if (!user) return [];
-    const role = (user.role ?? 'member') as Role;
-    return navConfig[role] ?? navConfig.member;
-  }, [user, navConfig]);
-
-  // simple selection state (optional)
-  const [activeKey, setActiveKey] = useState<string | null>(null);
-
-  const handleSelect = (item: NavItem) => {
-    setActiveKey(item.key);
-    onNavigate?.(item);
-  };
+  const activePath = location.pathname;
 
   return {
-    user,
     items,
-    activeKey,
-    setActiveKey,
-    handleSelect,
+    activePath,
+    roleName,
   };
 }
