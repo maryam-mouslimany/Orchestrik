@@ -4,8 +4,6 @@ import { useSidebar } from './hook';
 import styles from './styles.module.css';
 import logo from '../../assets/images/logo.png';
 
-// join module class strings
-
 const Sidebar: React.FC = () => {
     const { items, roleName } = useSidebar();
     console.log(roleName)
