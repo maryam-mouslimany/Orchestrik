@@ -9,7 +9,7 @@ export type MenuItem = {
   icon?: React.ReactNode;
 };
 
-const MENU_BY_ROLE: Record<'admin' | 'pm' | 'member', MenuItem[]> = {
+const MENU_BY_ROLE: Record<'admin' | 'pm' | 'employee', MenuItem[]> = {
   admin: [
     { key: 'dashboard', label: 'Dashboard', to: '/dashboard' },
     { key: 'users', label: 'Users', to: '/users' },
@@ -20,7 +20,7 @@ const MENU_BY_ROLE: Record<'admin' | 'pm' | 'member', MenuItem[]> = {
     { key: 'team', label: 'Team', to: '/team' },
     { key: 'reports', label: 'Reports', to: '/reports' },
   ],
-  member: [
+  employee: [
     { key: 'my-tasks', label: 'My Tasks', to: '/my-tasks' },
     { key: 'projects', label: 'Projects', to: '/projects' },
     { key: 'profile', label: 'Profile', to: '/profile' },
@@ -31,7 +31,7 @@ export const useSidebar = () => {
   const { user } = useAuth();
   const location = useLocation();
 
-  const roleName = (user?.role?.name as 'admin' | 'pm' | 'member') || 'member';
+  const roleName = (user?.role?.name as 'admin' | 'pm' | 'employee');
 
   const items = useMemo(() => MENU_BY_ROLE[roleName], [roleName]);
 

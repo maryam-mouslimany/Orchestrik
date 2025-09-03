@@ -8,7 +8,7 @@ import logo from '../../assets/images/logo.png';
 
 const Sidebar: React.FC = () => {
     const { items, roleName } = useSidebar();
-
+    console.log(roleName)
     return (
         <aside className={styles.sidebar} data-role={roleName}>
             <div className={styles.header}>

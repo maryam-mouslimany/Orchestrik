@@ -24,6 +24,7 @@ export const authService = {
     getUser(): AppUser | null {
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
+            console.log('service user',raw)
             return raw ? (JSON.parse(raw) as AppUser) : null;
         } catch {
             return null;
