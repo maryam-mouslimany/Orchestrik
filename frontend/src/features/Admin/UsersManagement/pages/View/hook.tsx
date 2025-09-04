@@ -10,7 +10,6 @@ export type UserRow = {
   position: string;
   skills: string;
   //Actions: string; // pre-joined to avoid render()
-
 };
 
 export const useUsersTable = () => {
@@ -32,7 +31,7 @@ export const useUsersTable = () => {
         email: u.email,
         role: u?.role?.name ?? '',
         position: u?.position?.name ?? '',
-        skills: Array.isArray(u?.skills) ? u.skills.map((s: any) => s.name).join(', ') : '',
+        skills: Array.isArray(u?.skills) ? u.skills.map((s:any) => s.name).join(', ') : '',
       }));
 
       setRows(mapped);

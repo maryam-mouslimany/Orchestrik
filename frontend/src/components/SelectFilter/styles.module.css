@@ -1,0 +1,30 @@
+/* components/SelectFilter/styles.module.css */
+.selectFilter {
+  display: grid;
+  gap: 6px;
+  max-width: 280px;        /* tweak as you like */
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.select {
+  display: block;          /* ensure it renders */
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color .12s, box-shadow .12s;
+}
+
+.select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,.15);
+}
