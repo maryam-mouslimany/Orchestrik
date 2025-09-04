@@ -1,8 +1,13 @@
 import axios from 'axios';
 import type { AxiosRequestConfig } from 'axios';
- 
-const baseURL = 'http://127.0.0.1:8000/api'; 
 
+const baseURL = 'http://127.0.0.1:8000/api';
+type ApiCallParams = {
+  method: 'GET' | 'POST' | 'DELETE',
+  data?: {},
+  params?: {},
+  requiresAuth?: boolean
+}
 //axios instance
 const api = axios.create({
   baseURL,
@@ -12,17 +17,19 @@ const api = axios.create({
 });
 
 const apiCall = async (
-  endpoint: string,                   
-  method: string = 'GET',             
-  data: any = null,                   
-  params: any = null,                 
-  requiresAuth: boolean = false       
+  endpoint: string,
+  {
+    method = 'GET',
+    data,
+    params,
+    requiresAuth }
+    : ApiCallParams
 ) => {
   try {
     const headers: AxiosRequestConfig['headers'] = {};
 
     if (requiresAuth) {
-      const token = localStorage.getItem('token'); 
+      const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('No token found, authorization required');
       }

@@ -23,7 +23,7 @@ export const useUsersTable = () => {
       setLoading(true);
       setError(null);
 
-      const res = await apiCall('/admin/users', 'GET', null, null, true);
+      const res = await apiCall('/admin/users', {method:'GET', requiresAuth:true});
       const list: any[] = Array.isArray(res.data) ? res.data : [];
       console.log(list)
       const mapped: UserRow[] = list.map((u) => ({
