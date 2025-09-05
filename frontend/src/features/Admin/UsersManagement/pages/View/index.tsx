@@ -1,17 +1,21 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import Alert from '@mui/material/Alert';
-import SimpleMuiTable from '../../../../../components/Table';
-import { useUsersTable } from './hook';
-import Sidebar from '../../../../../components/Sidebar';
-import SelectFilter from '../../../../../components/SelectFilter';
 import { useState } from "react";
+import Box from '@mui/material/Box';
+import { useUsersTable } from './hook';
+import Alert from '@mui/material/Alert';
+import Sidebar from '../../../../../components/Sidebar';
+import SimpleMuiTable from '../../../../../components/Table';
+import CircularProgress from '@mui/material/CircularProgress';
+import SelectFilter from '../../../../../components/SelectFilter';
+import { useSelector } from 'react-redux';
 
 export const UsersTablePage: React.FC = () => {
   const { rows, columns, loading, error } = useUsersTable();
   const [status, setStatus] = useState<string | null>(null);
   const [roleId,setRoleId] = useState<string | null>(null);
+
+    const { list } = useSelector((s: RootState) => s.skills);
+    console.log(list)
+
   console.log(status, roleId)
   return (
     <Box>
