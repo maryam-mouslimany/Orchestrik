@@ -7,6 +7,7 @@ use App\Http\Controllers\ProjetController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\SkillController;
 
 //Unauthenticated APIs
 Route::group(["prefix" => "guest"], function () {
@@ -16,6 +17,7 @@ Route::group(["prefix" => "guest"], function () {
 //Authenticated Apis
 Route::middleware(['auth'])->group(function () {
     Route::get("/projects", [ProjetController::class, "getProjects"]);
+    Route::get("/skills", [SkillController::class, "getSkills"]);
     Route::post("/tasks/editStatus/{taskId}", [TaskController::class, "editStatus"]);
 
     Route::prefix('admin')->middleware(RoleMiddleware::class . ':admin')->group(function () {
