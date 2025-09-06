@@ -4,7 +4,6 @@ import { UsersTablePage } from '../features/Admin/UsersManagement/pages/View';
 import { AppLayout } from '../layouts/AppLayout';
 import { rootLoader } from './loaders/rootLoader';
 
-
 export const router = createBrowserRouter([
 
   { path: '/login', element: <Login /> },
@@ -13,9 +12,9 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <AppLayout />,
-    loader: rootLoader,            
+    loader: rootLoader,
     children: [
-      { index: true, element:<p>dashboard</p> },           
+      { index: true, element: <p>dashboard</p> },
       { path: 'dashboard', element: <p>dashboard</p> },
       { path: 'users', element: <UsersTablePage /> },
       { path: '*', element: <p>Not found</p> },

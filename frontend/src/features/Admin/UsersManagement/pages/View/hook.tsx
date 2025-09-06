@@ -14,7 +14,7 @@ export type UserRow = {
 
 export const useUsersTable = () => {
   // filters fields
-  const [skillId, setSkillId] = useState<string | null>(null);
+  const [skills, setSkills] = useState<Array<number | string>>([]); // was skillId
   const [positionId, setPositionId] = useState<string | null>(null);
   const [roleId, setRoleId] = useState<string | null>(null);
 
@@ -25,8 +25,8 @@ export const useUsersTable = () => {
   const filters = useMemo(() => ({
     roleId: roleId ? Number(roleId) : undefined,
     positionId: positionId ? Number(positionId) : undefined,
-    skills: skillId ? [Number(skillId)] : [],
-  }), [roleId, positionId, skillId]);
+    skills: (skills ?? []).map((v) => Number(v)),
+  }), [roleId, positionId, skills]);
 
   const [rows, setRows] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -40,7 +40,7 @@ export const useUsersTable = () => {
       const res = await apiCall('/admin/users', {
         method: 'GET',
         requiresAuth: true,
-        params: { filters }, 
+        params: { filters },
       });
 
       const list: any[] = Array.isArray(res.data) ? res.data : [];
@@ -78,7 +78,7 @@ export const useUsersTable = () => {
     rows, columns, loading, error, refresh: fetchUsers,
     roleId, setRoleId,
     positionId, setPositionId,
-    skillId, setSkillId,
+    skills, setSkills,
     skillsOptions,
     positionsOptions,
   };
