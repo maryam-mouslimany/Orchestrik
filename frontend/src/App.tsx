@@ -1,17 +1,20 @@
-
-import React from 'react';
 import './App.css';
 import './assets/styles/base.css';
-import AppRoutes from './routes/routes';
+import { router } from './routes/router';
+import { RouterProvider } from 'react-router-dom';
 //import { PrimeReactProvider } from 'primereact/api';
 import { AuthProvider } from './contexts/AuthContext';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 function App() {
 
   return (
-    <AuthProvider>
-      <AppRoutes />
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </Provider>
   );
 
 }

@@ -26,7 +26,7 @@ export const useLogin = () => {
         if (!isValid) { return; }
 
         try {
-            const res = await apiCall('/guest/login', 'POST', { email, password }, null, false);
+            const res = await apiCall('/guest/login', {method:'POST', data:{ email, password }});
             const data = res?.data ?? res; // some wrappers already return the body
 
             const user = {
