@@ -1,6 +1,7 @@
-import {useCallback, useState, useMemo, useEffect } from 'react';
-  import apiCall from '../../../../../services/apiCallService';
+import apiCall from '../../../../../services/apiCallService';
 import { type Column } from '../../../../../components/Table';
+import { useCallback, useState, useMemo, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 export type UserRow = {
   id: number;
@@ -9,10 +10,24 @@ export type UserRow = {
   role: string;
   position: string;
   skills: string;
-  //Actions: string; // pre-joined to avoid render()
 };
 
 export const useUsersTable = () => {
+  // filters fields
+  const [skillId, setSkillId] = useState<string | null>(null);
+  const [positionId, setPositionId] = useState<string | null>(null);
+  const [roleId, setRoleId] = useState<string | null>(null);
+
+  // skills and positions from redux
+  const { list: skillsOptions } = useSelector((s: any) => s.skills);
+  const { positionsList: positionsOptions } = useSelector((s: any) => s.positions);
+
+  const filters = useMemo(() => ({
+    roleId: roleId ? Number(roleId) : undefined,
+    positionId: positionId ? Number(positionId) : undefined,
+    skills: skillId ? [Number(skillId)] : [],
+  }), [roleId, positionId, skillId]);
+
   const [rows, setRows] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,9 +37,13 @@ export const useUsersTable = () => {
       setLoading(true);
       setError(null);
 
-      const res = await apiCall('/admin/users', { method: 'GET', requiresAuth: true });
+      const res = await apiCall('/admin/users', {
+        method: 'GET',
+        requiresAuth: true,
+        params: { filters }, 
+      });
+
       const list: any[] = Array.isArray(res.data) ? res.data : [];
-      console.log(list)
       const mapped: UserRow[] = list.map((u) => ({
         id: u.id,
         name: u.name,
@@ -41,11 +60,10 @@ export const useUsersTable = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [filters]);
 
   useEffect(() => { void fetchUsers(); }, [fetchUsers]);
 
-  // simple, no render functions
   const columns: Column<UserRow>[] = useMemo(() => ([
     { key: 'id', label: 'ID', width: 80 },
     { key: 'name', label: 'Name' },
@@ -56,5 +74,12 @@ export const useUsersTable = () => {
     { key: 'actions', label: 'Actions' },
   ]), []);
 
-  return { rows, columns, loading, error, refresh: fetchUsers };
+  return {
+    rows, columns, loading, error, refresh: fetchUsers,
+    roleId, setRoleId,
+    positionId, setPositionId,
+    skillId, setSkillId,
+    skillsOptions,
+    positionsOptions,
+  };
 };
