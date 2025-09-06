@@ -10,7 +10,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\RoleController;
-
+use App\Http\Controllers\ClientController;
 //Unauthenticated APIs
 Route::group(["prefix" => "guest"], function () {
     Route::post("/login", [AuthController::class, "login"]);
@@ -22,6 +22,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get("/skills", [SkillController::class, "getSkills"]);
     Route::get("/positions", [PositionController::class, "getPositions"]);
     Route::get("/roles", [RoleController::class, "getRoles"]);
+    Route::get("/clients", [ClientController::class, "getClients"]);
 
     Route::post("/tasks/editStatus/{taskId}", [TaskController::class, "editStatus"]);
 

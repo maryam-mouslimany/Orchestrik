@@ -6,6 +6,6 @@ use App\Models\Position;
 class PositionService
 {
     static function getPositions(){
-            return position::all();
+            return Position::all();
         }
 }
