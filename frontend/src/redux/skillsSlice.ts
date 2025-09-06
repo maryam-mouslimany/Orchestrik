@@ -21,7 +21,8 @@ const initialState: SkillsState = {
 export const fetchSkills = createAsyncThunk<Skill[]>(
   "skills/fetchAll",
   async () => {
-    const res = await apiCall('/skills', {method:'GET', requiresAuth:true})
+    const res = await apiCall('/skills', { method: 'GET', requiresAuth: true })
+    console.log('roles form api', res.data)
     return res.data;
   }
 );
@@ -45,7 +46,7 @@ const skillsSlice = createSlice({
       })
       .addCase(fetchSkills.fulfilled, (state, action: PayloadAction<Skill[]>) => {
         state.list = action.payload;
-        state.filtered = action.payload; 
+        state.filtered = action.payload;
         state.loading = false;
         state.error = null;
       })

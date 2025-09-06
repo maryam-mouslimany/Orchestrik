@@ -1,16 +1,23 @@
 import { store } from '../../redux/store';
 import { fetchSkills } from '../../redux/skillsSlice';
+import { fetchPositions } from '../../redux/positionsSlice';
 
 export async function rootLoader() {
   const state = store.getState();
 
-  const alreadyLoaded = state.skills.list.length > 0;
-  const loading = state.skills.loading;
+  const skillsLoaded = state.skills.list.length > 0;
+  const skillsLoading = state.skills.loading;
 
-  if (!alreadyLoaded && !loading) {
+  if (!skillsLoaded && !skillsLoading) {
     await store.dispatch(fetchSkills());
   }
 
-  // We don't need to return data; Redux holds it.
+  const positionsLoaded = state.positions.positionsList.length > 0;
+  const positionsLoading = state.positions.loading;
+
+  if (!positionsLoaded && !positionsLoading) {
+    await store.dispatch(fetchPositions());
+  }
+
   return null;
 }

@@ -1,43 +1,51 @@
-import { useState } from "react";
 import Box from '@mui/material/Box';
-import { useUsersTable } from './hook';
 import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 import Sidebar from '../../../../../components/Sidebar';
 import SimpleMuiTable from '../../../../../components/Table';
-import CircularProgress from '@mui/material/CircularProgress';
 import SelectFilter from '../../../../../components/SelectFilter';
-import { useSelector } from 'react-redux';
+import { ROLES } from '../../../../../constants/constants';
+import { useUsersTable } from './hook';
 
 export const UsersTablePage: React.FC = () => {
-  const { rows, columns, loading, error } = useUsersTable();
-  const [status, setStatus] = useState<string | null>(null);
-  const [roleId,setRoleId] = useState<string | null>(null);
+  const {
+    rows, columns, loading, error,
+    roleId, setRoleId,
+    positionId, setPositionId,
+    skillId, setSkillId,
+    skillsOptions, positionsOptions,
+  } = useUsersTable();
 
-    const { list } = useSelector((s: RootState) => s.skills);
-    console.log(list)
-
-  console.log(status, roleId)
   return (
     <Box>
       <Sidebar />
+
       {loading && (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
           <CircularProgress size={18} /> Loading users…
         </Box>
       )}
       {error && <Alert severity="error" sx={{ mb: 1 }}>{error}</Alert>}
+
       <SelectFilter
-        label="Status"
-        options={["active", "inactive"]}  
-        selected={status}                
-        onChange={(val:string) => setStatus(val)}
+        label="PositiRolesons"
+        options={ROLES}
+        selected={roleId}
+        onChange={setRoleId}
       />
 
       <SelectFilter
-        label="Role"
-        options={[{ id: 1, name: "Admin" }, { id: 2, name: "PM" }]}
-        selected={roleId}                 // e.g., 1 or null
-        onChange={setRoleId}
+        label="Positions"
+        options={positionsOptions}
+        selected={positionId}
+        onChange={setPositionId}
+      />
+
+      <SelectFilter
+        label="Skills"
+        options={skillsOptions}
+        selected={skillId}
+        onChange={setSkillId}
       />
 
       <SimpleMuiTable
