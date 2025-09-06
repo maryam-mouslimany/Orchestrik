@@ -6,13 +6,14 @@ import SimpleMuiTable from '../../../../../components/Table';
 import SelectFilter from '../../../../../components/SelectFilter';
 import { ROLES } from '../../../../../constants/constants';
 import { useUsersTable } from './hook';
+import MultipleSelectChip from '../../../../../components/MultipleSelectFilter';
 
 export const UsersTablePage: React.FC = () => {
   const {
     rows, columns, loading, error,
     roleId, setRoleId,
     positionId, setPositionId,
-    skillId, setSkillId,
+    skills, setSkills,
     skillsOptions, positionsOptions,
   } = useUsersTable();
 
@@ -41,13 +42,13 @@ export const UsersTablePage: React.FC = () => {
         onChange={setPositionId}
       />
 
-      <SelectFilter
+      <MultipleSelectChip
         label="Skills"
         options={skillsOptions}
-        selected={skillId}
-        onChange={setSkillId}
+        selected={skills}
+        onChange={setSkills}
       />
-
+    
       <SimpleMuiTable
         rows={rows}
         columns={columns}
