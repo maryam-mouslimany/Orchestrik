@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
-import CircularProgress from '@mui/material/CircularProgress';
-import Sidebar from '../../../../../components/Sidebar';
-import SimpleMuiTable from '../../../../../components/Table';
-import SelectFilter from '../../../../../components/SelectFilter';
-import { ROLES } from '../../../../../constants/constants';
 import { useUsersTable } from './hook';
+import Alert from '@mui/material/Alert';
+import Sidebar from '../../../../../components/Sidebar';
+import { ROLES } from '../../../../../constants/constants';
+import SimpleMuiTable from '../../../../../components/Table';
+import CircularProgress from '@mui/material/CircularProgress';
+import SelectFilter from '../../../../../components/SelectFilter';
 import MultipleSelectChip from '../../../../../components/MultipleSelectFilter';
 
 export const UsersTablePage: React.FC = () => {
@@ -29,7 +29,7 @@ export const UsersTablePage: React.FC = () => {
       {error && <Alert severity="error" sx={{ mb: 1 }}>{error}</Alert>}
 
       <SelectFilter
-        label="PositiRolesons"
+        label="Roles"
         options={ROLES}
         selected={roleId}
         onChange={setRoleId}

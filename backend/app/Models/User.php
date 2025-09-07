@@ -54,7 +54,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function skills()
     {
-        return $this->belongsToMany(Skill::class, 'user_skills')->withTimestamps();;
+        return $this->belongsToMany(Skill::class, 'user_skills', 'user_id', 'skill_id')->withTimestamps();;
     }
 
     public function projects()

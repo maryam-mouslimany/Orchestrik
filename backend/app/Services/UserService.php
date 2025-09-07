@@ -12,7 +12,7 @@ class UserService
         $roleId     = $filters['roleId']     ?? null;
         $positionId = $filters['positionId'] ?? null;
         $skills     = $filters['skills']     ?? [];
-
+        //dd($skills);
         $q = User::query()
             ->with(['role', 'position', 'skills']);
 
@@ -20,14 +20,12 @@ class UserService
             $q->where('role_id', $roleId);
         }
 
-        if (!empty($filters['skills'])) {
+        if (!empty($filters['positionId'])) {
             $q->where('position_id', $positionId);
         }
 
         if (!empty($skills)) {
-            foreach ($skills as $skillId) {
-                $q->whereHas('skills', fn($sq) => $sq->where('skills.id', $skillId));
-            }
+            $q->whereHas('skills', fn($sq) => $sq->whereIn('skills.id', $skills));
         }
 
         return $q->get();
