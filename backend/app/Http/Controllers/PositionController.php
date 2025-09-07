@@ -12,7 +12,7 @@ class PositionController extends Controller
         try {
             $positions = PositionService::getPositions();
             if (!$positions)
-                return $this->error('Positions Not Created');
+                return $this->error('Positions Not Found');
             return $this->success($positions);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), 500);
