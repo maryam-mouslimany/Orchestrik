@@ -1,6 +1,7 @@
 import { store } from '../../redux/store';
 import { fetchSkills } from '../../redux/skillsSlice';
 import { fetchPositions } from '../../redux/positionsSlice';
+import { fetchProjects } from '../../redux/projectsSlice';
 
 export async function rootLoader() {
   const state = store.getState();
@@ -19,5 +20,11 @@ export async function rootLoader() {
     await store.dispatch(fetchPositions());
   }
 
+  const projectsLoaded = state.projects.projectsList.length > 0;
+  const projectsLoading = state.projects.loading;
+
+  if (!projectsLoaded && !projectsLoading) {
+    await store.dispatch(fetchProjects());
+  }
   return null;
 }
