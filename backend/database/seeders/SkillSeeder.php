@@ -11,16 +11,39 @@ class SkillSeeder extends Seeder
 {
     public function run(): void
     {
-         $skills = [
+        $skills = [
+            // Content
             'Content Writing',
-            'Video Production',
-            'Photography',
-            'Graphic Design',
-            'Social Media Management'
-        ];
+            'Content Planning',
 
+            // Design & Visual
+            'Graphic Design',
+            'Branding',
+            'Photo Editing',
+
+            // Photo/Video
+            'Photography',
+            'Cinematography',
+            'Video Production',
+            'Video Editing',
+            'Color Grading',
+
+            // Social / Growth
+            'Social Media Management',
+            'Community Management',
+            'Influencer Outreach',
+            'Media Buying',
+            'Campaign Management',
+
+            // SEO/SEM & Analytics
+            'SEO',
+            'Keyword Research',
+            'On-page SEO',
+            'SEM / PPC (Google Ads, Meta)',
+            'Marketing Analytics (GA4)',
+        ];
         foreach ($skills as $skill) {
-            Skill::create(['name' => $skill]);
+            Skill::firstOrCreate(['name' => $skill]);
         }
     }
 }

@@ -9,21 +9,28 @@ use Illuminate\Support\Facades\DB;
 
 class PositionSeeder extends Seeder
 {
-   
+
     public function run(): void
     {
-         $positions = [
-            'Photographer',
+        $positions = [
             'Project Manager',
+            'Content Strategist',
+            'Content Writer',
+            'Graphic Designer',
+            'Photographer',
             'Videographer',
             'Video Editor',
-            'Graphic Designer',
-            'Content Strategist',
+            'Community Manager',
+            'SEO Specialist',
+            'SEM / PPC Specialist',
+            'Media Buyer',
+            'Marketing Analyst',
+            'Creative Director',
+            'Art Director',
+            'Production Assistant',
         ];
-
         foreach ($positions as $position) {
-            Position::create(['name' => $position]);
+            Position::firstOrCreate(['name' => $position]);
         }
-
     }
 }
