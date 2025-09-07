@@ -17,6 +17,6 @@ class ProjectCreated
 
     public function __construct(
         public Project $project,
-        public array $input // the validated request data if you want it
+        public array $input 
     ) {}
 }

@@ -1,37 +1,39 @@
 <?php
 
 namespace App\Listeners;
-
-use Illuminate\Support\Str;
-use App\Events\ProjectCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class SendProjectToN8n implements ShouldQueue
 {
-    use InteractsWithQueue;
+    public $afterCommit = true;   // wait for DB commit
 
-    public function handle(ProjectCreated $event): void
+    public function handle(\App\Events\ProjectCreated $event): void
     {
-        $project = $event->project->loadMissing(['members', 'creator', 'client']);
-        $channelName = Str::slug($project->name, '-'); 
-        $memberEmails = $project->members
-            ->pluck('email')
-            ->filter()
-            ->unique()
-            ->values()
-            ->all();
-        $payload = [
-            'channelName'    => $channelName,
-            'members'        => $memberEmails, 
-            'messaage' => $event->input['welcomeMessage']
-                                ?? "Welcome to {$project->name}! 🎉",
-        ];
+        $project = $event->project->loadMissing(['members']);
+        $emails = $project->members->pluck('email')
+            ->filter(fn($e) => is_string($e) && filter_var($e, FILTER_VALIDATE_EMAIL))
+            ->values()->all();
 
-        Http::timeout(15)
-            ->acceptJson()
-            ->post(config('services.n8n.project_webhook'), $payload)
-            ->throw(); // if it fails, the job will retry per queue settings
+        // DO NOT let exceptions bubble to the request
+        try {
+            Http::timeout(10)->acceptJson()->post(
+                config('services.n8n.project_webhook'),
+                [
+                    'channelName' => Str::slug($project->name, '-'),
+                    'members'     => $emails,
+                    'message'     => $event->input['welcomeMessage'] ?? "Welcome to {$project->name}! 🎉",
+                ]
+            );
+        } catch (\Throwable $e) {
+            Log::warning('ProjectCreatedListener n8n call failed', [
+                'project_id' => $project->id,
+                'error'      => $e->getMessage(),
+            ]);
+            // IMPORTANT: return; do NOT rethrow
+            return;
+        }
     }
 }

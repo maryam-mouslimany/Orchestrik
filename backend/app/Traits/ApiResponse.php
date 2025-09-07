@@ -13,7 +13,7 @@ trait ApiResponse
         ], $statusCode);
     }
 
-      public function error(string $message = 'Error', int $statusCode = 400, $errors = null)
+    public function error(string $message = 'Error', int $statusCode = 400, $errors = null)
     {
         return response()->json([
             'status' => 'error',

@@ -29,12 +29,11 @@ class ProjectService
             'created_by' => Auth::user()->id,
         ]);
 
-        $project->members()->attach($data['members']); 
-        $project->load(['creator', 'client', 'members'])->get();
-
-         DB::afterCommit(function () use ($project, $data) {
-                event(new ProjectCreated($project, $data));
-            });
-        return $project;
+        $project->members()->attach($data['members']);
+        $project->load(['creator', 'client', 'members']);
+        DB::afterCommit(function () use ($project, $data) {
+            event(new ProjectCreated($project, $data));   
+        });
+        return $project->get();
     }
 }

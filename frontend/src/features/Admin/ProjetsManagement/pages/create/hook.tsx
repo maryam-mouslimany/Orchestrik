@@ -65,7 +65,7 @@ export const useProjectCreate = () => {
         requiresAuth: true,
         data: payload,
       });
-      console.log(res.data)
+      console.log('created Successfully',res)
     } finally {
       setCreating(false);
     }
