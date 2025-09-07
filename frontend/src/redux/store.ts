@@ -1,5 +1,6 @@
 import skillsReducer from './skillsSlice';
 import positionReducer from './positionsSlice';
+import usersRedducer from './usersSlice';
 
 import { configureStore } from '@reduxjs/toolkit';
 
@@ -7,6 +8,7 @@ export const store = configureStore({
   reducer: {
     skills: skillsReducer,
     positions: positionReducer,
+    users: usersRedducer,
   },
 });
 

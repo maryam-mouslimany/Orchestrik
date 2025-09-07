@@ -2,12 +2,13 @@ import React from 'react';
 import Input from '../../../../../components/Input';
 import SelectFilter from '../../../../../components/SelectFilter';
 import { useProjectCreate } from './hook';
-
+import MultiChipSelect from '../../../../../components/MultipleSelectFilter';
+import Button from '../../../../../components/Button';
 const ProjectCreatePage: React.FC = () => {
-  const { values, setField, clientOptions, statusOptions } = useProjectCreate();
+  const { values, setField, clientOptions, statusOptions, pmUsers, employeeUsers, createProject } = useProjectCreate();
 
   return (
-    <form>
+    <form onSubmit={(e) => e.preventDefault()} >
       {/* Name */}
       <Input
         label="Project Name"
@@ -40,6 +41,26 @@ const ProjectCreatePage: React.FC = () => {
         selected={values.status}    // string | ''
         onChange={(val) => setField('status', val)}
         placeholder="Select status"
+      />
+
+      <SelectFilter
+        label="Project Manager"
+        options={pmUsers}     // supports {value,label} or {name,label} via your normalizer
+        selected={values.pm_id}    // string | ''
+        onChange={(val) => setField('pm_id', val)}
+        placeholder="Assign a Project Manager"
+      />
+
+      <MultiChipSelect
+        label="Skills"
+        options={employeeUsers}
+        selected={values.employees_id}
+        onChange={(val) => setField('employees_id', val)}
+      />
+
+       <Button
+        label="Create Project"
+        onClick={createProject}
       />
     </form>
   );

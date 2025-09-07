@@ -7,9 +7,7 @@ export const AppLayout: React.FC = () => (
   <div className={styles.shell}>
     <Sidebar />
     <div className={styles.right}>
-      <header className={styles.header}>
-        {/* put your header component/content here */}
-      </header>
+  
       <main className={styles.main}>
         <Outlet />
       </main>

@@ -33,4 +33,5 @@ class UserController extends Controller
             return $this->error('Something went wrong', 500);
         }
     }
+
 }

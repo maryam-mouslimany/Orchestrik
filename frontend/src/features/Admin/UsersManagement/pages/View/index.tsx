@@ -1,12 +1,10 @@
 import Box from '@mui/material/Box';
 import { useUsersTable } from './hook';
 import Alert from '@mui/material/Alert';
-import Sidebar from '../../../../../components/Sidebar';
 import { ROLES } from '../../../../../constants/constants';
 import SimpleMuiTable from '../../../../../components/Table';
 import CircularProgress from '@mui/material/CircularProgress';
 import SelectFilter from '../../../../../components/SelectFilter';
-import MultipleSelectChip from '../../../../../components/MultipleSelectFilter';
 
 export const UsersTablePage: React.FC = () => {
   const {
@@ -19,8 +17,6 @@ export const UsersTablePage: React.FC = () => {
 
   return (
     <Box>
-      <Sidebar />
-
       {loading && (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
           <CircularProgress size={18} /> Loading users…
@@ -42,13 +38,13 @@ export const UsersTablePage: React.FC = () => {
         onChange={setPositionId}
       />
 
-      <MultipleSelectChip
+      <SelectFilter
         label="Skills"
         options={skillsOptions}
         selected={skills}
-        onChange={setSkills}
+        onChange={setPositionId}
       />
-    
+
       <SimpleMuiTable
         rows={rows}
         columns={columns}
