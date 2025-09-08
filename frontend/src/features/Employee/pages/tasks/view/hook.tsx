@@ -70,13 +70,14 @@ export const useTasksTable = () => {
   useEffect(() => { void fetchTasks(); }, [fetchTasks]);
 
   const columns: Column<TaskRow>[] = useMemo(() => ([
-    { key: 'id', label: 'ID', width: 80 },
-    { key: 'title', label: 'Title' },
-    { key: 'status', label: 'Status', width: 140, render: (value) => <Pill label={value} />, },
+    { key: 'id', label: 'ID', width: 40 },
+    { key: 'title', label: 'Title', width: 200 },
+    { key: 'status', label: 'Status', width: 50, render: (value) => <Pill label={value} />, },
     { key: 'description', label: 'Description', width: 260 },
-    { key: 'priority', label: 'Priority', width: 120, render: (value) => <Pill label={value} />, },
+    { key: 'priority', label: 'Priority', width: 50, render: (value) => <Pill label={value} />, },
     { key: 'deadline', label: 'Deadline', width: 160 },
-    { key: 'project', label: 'Project', width: 220 },
+    { key: 'Actions', label: 'Actions', width: 100 },
+
   ]), []);
   return {
     rows, columns, loading, error,

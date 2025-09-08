@@ -6,6 +6,7 @@ import SelectFilter from '../../../../../components/SelectFilter';
 import { useTasksTable } from './hook';
 import Pill from '../../../../../components/Pill';
 import { TaskPriorities, TaskSTATUSES } from '../../../../../constants/constants';
+import styles from './styles.module.css';
 
 export const TasksTablePage: React.FC = () => {
   const {
@@ -24,26 +25,27 @@ export const TasksTablePage: React.FC = () => {
       )}
       {error && <Alert severity="error" sx={{ mb: 1 }}>{error}</Alert>}
 
-      <SelectFilter
-        label="Priority"
-        options={TaskPriorities}
-        selected={priority}
-        onChange={setPriority}
-      />
+      <div className={styles.filterRow}>
+        <SelectFilter
+          label="Priority"
+          options={TaskPriorities}
+          selected={priority}
+          onChange={setPriority}
+        />
+        <SelectFilter
+          label="Status"
+          options={TaskSTATUSES}
+          selected={status}
+          onChange={setStatus}
+        />
+        <SelectFilter
+          label="Project"
+          options={projectsOptions}
+          selected={projectId}
+          onChange={setProjectId}
+        />
+      </div>
 
-      <SelectFilter
-        label="Status"
-        options={TaskSTATUSES}
-        selected={status}
-        onChange={setStatus}
-      />
-
-      <SelectFilter
-        label="Project"
-        options={projectsOptions}
-        selected={projectId}
-        onChange={setProjectId}
-      />
       <SimpleMuiTable
         rows={rows}
         columns={columns}
