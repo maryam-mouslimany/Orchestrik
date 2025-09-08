@@ -33,5 +33,6 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('employee')->middleware(RoleMiddleware::class . ':employee')->group(function () {
         Route::get("/tasks", [TaskController::class, "employeeTasks"]);
+        Route::get("/tasks/{taskId?}", [TaskController::class, "taskDetails"]);
     });
 });

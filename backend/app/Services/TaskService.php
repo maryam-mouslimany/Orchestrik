@@ -69,7 +69,7 @@ class TaskService
         $status = $filters['status'] ?? null;
         $deadline = $filters['deadline'] ?? [];
         $priority = $filters['priority'] ?? [];
-        
+
         $user =  auth()->user();
         $q = Task::with('project')->where('assigned_to', $user->id);
 
@@ -84,5 +84,9 @@ class TaskService
         }
 
         return $q->get();
+    }
+
+    static function taskDetails($request) {
+        return Task::find($request['taskId']);
     }
 }
