@@ -12,11 +12,7 @@ class PositionFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'        => 'Developer',
-            // include only real NOT NULL columns in your positions table:
-            'code'        => 'DEV',
-            'slug'        => 'developer',
-            'description' => 'Default position',
+            'name'=> 'Developer',
         ];
     }
 }
