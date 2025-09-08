@@ -4,6 +4,7 @@ import { type Column } from '../../../../../components/Table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Pill from '../../../../../components/Pill';
+
 export type TaskRow = {
   id: number;
   title: string;
@@ -76,8 +77,6 @@ export const useTasksTable = () => {
     { key: 'description', label: 'Description', width: 260 },
     { key: 'priority', label: 'Priority', width: 50, render: (value) => <Pill label={value} />, },
     { key: 'deadline', label: 'Deadline', width: 160 },
-    { key: 'Actions', label: 'Actions', width: 100 },
-
   ]), []);
   return {
     rows, columns, loading, error,
