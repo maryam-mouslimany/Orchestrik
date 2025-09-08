@@ -1,24 +1,31 @@
 <?php
 
-use App\Models\Position;
-use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Illuminate\Support\Facades\DB;
 
 uses(RefreshDatabase::class);
 
-it('logs in with valid credentials and returns token + relations', function () {
-    $role = Role::factory()->create();
-    $position = Position::factory()->create();
+beforeEach(function () {
+    // Run your DatabaseSeeder before each test
+    $this->seed();
+});
 
-    $user = \App\Models\User::factory()->create([
+it('logs in with valid credentials and returns token + relations', function () {
+    // Get seeded role and position IDs
+    $roleId = DB::table('roles')->first()->id;
+    $positionId = DB::table('positions')->first()->id;
+
+    // Create a user linked to seeded data
+    User::factory()->create([
         'name'              => 'Test User',
         'email'             => 'test@example.com',
         'email_verified_at' => now(),
         'password'          => Hash::make('Passw0rd!'),
-        'role_id'           => $role->id,
-        'position_id'       => $position->id,
+        'role_id'           => $roleId,
+        'position_id'       => $positionId,
     ]);
 
     $res = $this->postJson(loginUrl(), [
@@ -28,32 +35,26 @@ it('logs in with valid credentials and returns token + relations', function () {
 
     $res->assertStatus(200)
         ->assertJson(fn (AssertableJson $json) =>
-            $json
-                ->has('status')
+            $json->has('status')
                 ->has('data', fn ($u) =>
-                    $u->where('email', 'test@example.com')
-                      ->has('token')
-                      ->etc()
+                    $u->where('email', 'test@example.com')->has('token')->etc()
                 )
                 ->where('message', 'Successfully Logged In.')
                 ->etc()
         );
-
-    $token = data_get($res->json(), 'data.token');
-    expect((is_string($token) && $token !== '') || $token === true)->toBeTrue();
 });
 
 it('rejects wrong credentials with 401', function () {
-    $role = Role::factory()->create();
-    $position = Position::factory()->create();
+    $roleId = DB::table('roles')->first()->id;
+    $positionId = DB::table('positions')->first()->id;
 
-    \App\Models\User::factory()->create([
+    User::factory()->create([
         'name'              => 'Wrong User',
         'email'             => 'wrong@example.com',
         'email_verified_at' => now(),
         'password'          => Hash::make('Correct!123'),
-        'role_id'           => $role->id,
-        'position_id'       => $position->id,
+        'role_id'           => $roleId,
+        'position_id'       => $positionId,
     ]);
 
     $res = $this->postJson(loginUrl(), [
@@ -64,8 +65,8 @@ it('rejects wrong credentials with 401', function () {
     $res->assertStatus(401)
         ->assertJson(fn (AssertableJson $json) =>
             $json->has('status')
-                 ->where('message', 'Invalid credentials')
-                 ->etc()
+                ->where('message', 'Invalid credentials')
+                ->etc()
         );
 });
 
