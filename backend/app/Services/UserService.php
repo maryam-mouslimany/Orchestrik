@@ -9,9 +9,9 @@ class UserService
 {
     static function getUsers($filters)
     {
-        $roleId     = $filters['roleId']     ?? null;
+        $roleId = $filters['roleId'] ?? null;
         $positionId = $filters['positionId'] ?? null;
-        $skills     = $filters['skills']     ?? [];
+        $skills = $filters['skills'] ?? [];
 
         $q = User::query()
             ->with(['role', 'position', 'skills']);

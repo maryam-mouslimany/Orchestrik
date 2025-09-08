@@ -32,4 +32,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post("/users/create", [UserController::class, "createUser"]);
         Route::post("/tasks/create/{parentTask?}", [TaskController::class, "createTask"]);
     });
+    Route::prefix('employee')->middleware(RoleMiddleware::class . ':employee')->group(function () {
+        Route::get("/tasks", [TaskController::class, "employeeTasks"]);
+    });
 });

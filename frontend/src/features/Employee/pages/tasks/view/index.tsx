@@ -1,54 +1,49 @@
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
-import Sidebar from '../../../../../components/Sidebar';
 import SimpleMuiTable from '../../../../../components/Table';
 import SelectFilter from '../../../../../components/SelectFilter';
-import { ROLES } from '../../../../../constants/constants';
-import { useUsersTable } from './hook';
-import MultipleSelectChip from '../../../../../components/MultipleSelectFilter';
+import { useTasksTable } from './hook';
+import Pill from '../../../../../components/Pill';
+import { TaskPriorities, TaskSTATUSES } from '../../../../../constants/constants';
 
-export const UsersTablePage: React.FC = () => {
+export const TasksTablePage: React.FC = () => {
   const {
     rows, columns, loading, error,
-    roleId, setRoleId,
-    positionId, setPositionId,
-    skills, setSkills,
-    skillsOptions, positionsOptions,
-  } = useUsersTable();
+    projectId, setProjectId, status, setStatus, priority, setPriority, projectsOptions,
+
+  } = useTasksTable();
 
   return (
     <Box>
-      <Sidebar />
 
       {loading && (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-          <CircularProgress size={18} /> Loading users…
+          <CircularProgress size={18} /> Loading tasks...
         </Box>
       )}
       {error && <Alert severity="error" sx={{ mb: 1 }}>{error}</Alert>}
 
       <SelectFilter
-        label="PositiRolesons"
-        options={ROLES}
-        selected={roleId}
-        onChange={setRoleId}
+        label="Priority"
+        options={TaskPriorities}
+        selected={priority}
+        onChange={setPriority}
       />
 
       <SelectFilter
-        label="Positions"
-        options={positionsOptions}
-        selected={positionId}
-        onChange={setPositionId}
+        label="Status"
+        options={TaskSTATUSES}
+        selected={status}
+        onChange={setStatus}
       />
 
-      <MultipleSelectChip
-        label="Skills"
-        options={skillsOptions}
-        selected={skills}
-        onChange={setSkills}
+      <SelectFilter
+        label="Project"
+        options={projectsOptions}
+        selected={projectId}
+        onChange={setProjectId}
       />
-    
       <SimpleMuiTable
         rows={rows}
         columns={columns}
@@ -59,4 +54,4 @@ export const UsersTablePage: React.FC = () => {
   );
 };
 
-export default UsersTablePage;
+export default TasksTablePage;

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreTaskRequest;
 use App\services\TaskService;
 use app\Models\Task;
 use App\Http\Requests\UpdateTaskStatusRequest;
+use App\Http\Requests\GetTaskRequest;
 
 class TaskController extends Controller
 {
@@ -33,4 +34,17 @@ class TaskController extends Controller
             return $this->error('Something went wrong', 500);
         }
     }
+
+    function employeeTasks(GetTaskRequest $request)
+    {
+        try {
+            $tasks = TaskService::employeeTasks($request->validated());
+            if (!$tasks)
+                return $this->error('Tasks Not found');
+            return $this->success($tasks);
+        } catch (\Exception $e) {
+            return $this->error('Something went wrong', 500);
+        }
+    }
+
 }

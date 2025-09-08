@@ -1,85 +1,91 @@
+// src/pages/.../useTasksTable.ts
 import apiCall from '../../../../../services/apiCallService';
 import { type Column } from '../../../../../components/Table';
-import { useCallback, useState, useMemo, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-
-export type UserRow = {
+import Pill from '../../../../../components/Pill';
+export type TaskRow = {
   id: number;
-  name: string;
-  email: string;
-  role: string;
-  position: string;
-  skills: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  deadline: string;
+  project: string;
 };
 
-export const useUsersTable = () => {
-  // filters fields
-  const [skills, setSkills] = useState<Array<number | string>>([]); // was skillId
-  const [positionId, setPositionId] = useState<string | null>(null);
-  const [roleId, setRoleId] = useState<string | null>(null);
+export const useTasksTable = () => {
+  // filters
+  const [projectId, setProjectId] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
+  const [priority, setPriority] = useState<string | null>(null);
 
-  // skills and positions from redux
-  const { list: skillsOptions } = useSelector((s: any) => s.skills);
-  const { positionsList: positionsOptions } = useSelector((s: any) => s.positions);
+  //projects from redux
+  const { projectsList: projectsOptions } = useSelector((s: any) => s.projects);
 
-  const filters = useMemo(() => ({
-    roleId: roleId ? Number(roleId) : undefined,
-    positionId: positionId ? Number(positionId) : undefined,
-    skills: (skills ?? []).map((v) => Number(v)),
-  }), [roleId, positionId, skills]);
+  // build filters object and drop undefineds
+  const filters = useMemo(() => {
+    const f: any = {};
+    if (projectId) f.projectId = Number(projectId);
+    if (status) f.status = status;
+    if (priority) f.priority = priority;
+    return f;
+  }, [projectId, status, priority]);
 
-  const [rows, setRows] = useState<UserRow[]>([]);
+  const [rows, setRows] = useState<TaskRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchUsers = useCallback(async () => {
+  const fetchTasks = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const res = await apiCall('/admin/users', {
+      const res = await apiCall('/employee/tasks', {
         method: 'GET',
         requiresAuth: true,
         params: { filters },
       });
 
       const list: any[] = Array.isArray(res.data) ? res.data : [];
-      const mapped: UserRow[] = list.map((u) => ({
-        id: u.id,
-        name: u.name,
-        email: u.email,
-        role: u?.role?.name ?? '',
-        position: u?.position?.name ?? '',
-        skills: Array.isArray(u?.skills) ? u.skills.map((s: any) => s.name).join(', ') : '',
+      const mapped: TaskRow[] = list.map((t) => ({
+        id: t.id,
+        title: t.title ?? '',
+        description: t.description ?? '',
+        status: t.status ?? '',
+        priority: t.priority ?? '',
+        deadline: t.deadline ?? '',
+        project: t.project?.name ?? '',
       }));
 
       setRows(mapped);
     } catch (e: any) {
-      setError(e?.message ?? 'Failed to load users');
+      setError(e?.message ?? 'Failed to load tasks');
       setRows([]);
     } finally {
       setLoading(false);
     }
   }, [filters]);
 
-  useEffect(() => { void fetchUsers(); }, [fetchUsers]);
+  useEffect(() => { void fetchTasks(); }, [fetchTasks]);
 
-  const columns: Column<UserRow>[] = useMemo(() => ([
+  const columns: Column<TaskRow>[] = useMemo(() => ([
     { key: 'id', label: 'ID', width: 80 },
-    { key: 'name', label: 'Name' },
-    { key: 'email', label: 'Email', width: 260 },
-    { key: 'role', label: 'Role', width: 140 },
-    { key: 'position', label: 'Position', width: 160 },
-    { key: 'skills', label: 'Skills' },
-    { key: 'actions', label: 'Actions' },
+    { key: 'title', label: 'Title' },
+    { key: 'status', label: 'Status', width: 140, render: (value) => <Pill label={value} />, },
+    { key: 'description', label: 'Description', width: 260 },
+    { key: 'priority', label: 'Priority', width: 120, render: (value) => <Pill label={value} />, },
+    { key: 'deadline', label: 'Deadline', width: 160 },
+    { key: 'project', label: 'Project', width: 220 },
   ]), []);
-
   return {
-    rows, columns, loading, error, refresh: fetchUsers,
-    roleId, setRoleId,
-    positionId, setPositionId,
-    skills, setSkills,
-    skillsOptions,
-    positionsOptions,
+    rows, columns, loading, error,
+    refresh: fetchTasks,
+
+    projectId, setProjectId,
+    status, setStatus,
+    priority, setPriority,
+
+    projectsOptions,
   };
 };

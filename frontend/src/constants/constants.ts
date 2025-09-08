@@ -7,3 +7,11 @@ export const ROLES = [
 export const PROJECTSTATUSES = [
   'active', 'on_hold', 'completed'
 ];
+
+export const TaskSTATUSES = [
+  'pending', 'completed', 'in progress', 'reopened'
+];
+
+export const TaskPriorities = [
+  'low', 'medium', 'high'
+]
