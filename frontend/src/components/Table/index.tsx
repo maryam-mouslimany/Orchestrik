@@ -58,17 +58,19 @@ export const SimpleMuiTable = <T,>({
   const { isExpanded, toggle } = useRowExpansion(expandCfg);
 
   return (
-    <TableContainer sx={sx} className={[styles.container, className].filter(Boolean).join(' ')}>
-      <Table size="small" aria-label="headerless table">
+    < TableContainer className={[styles.container, className].filter(Boolean).join(' ')} >
+      <Table size="small" aria-label="table" className={styles.table}>
         <TableHead>
-          <TableRow>
+          <TableRow className={styles.headRow}>
             {columns.map((c, i) => (
-              <TableCell key={`${String(c.key)}-${i}`} sx={{ width: c.width, fontWeight: 600 }}>
+              <TableCell key={`${String(c.key)}-${i}`} className={styles.headCell} sx={{ width: c.width }}>
                 {c.label ?? String(c.key)}
               </TableCell>
             ))}
           </TableRow>
         </TableHead>
+
+
         <TableBody>
           {rows.map((row, rowIndex) => {
             const id = getRowId(row, rowIndex);
@@ -140,7 +142,7 @@ export const SimpleMuiTable = <T,>({
           })}
         </TableBody>
       </Table>
-    </TableContainer>
+    </TableContainer >
   );
 };
 

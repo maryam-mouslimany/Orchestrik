@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreTaskRequest;
 use App\services\TaskService;
-use app\Models\Task;
+use App\Models\Task;
 use App\Http\Requests\UpdateTaskStatusRequest;
 use App\Http\Requests\GetTaskRequest;
 
@@ -47,4 +47,15 @@ class TaskController extends Controller
         }
     }
 
+    function taskDetails(Request $request)
+    {
+        try {
+            $task = TaskService::taskDetails($request);
+            if (!$task)
+                return $this->error('Task Not found');
+            return $this->success($task);
+        } catch (\Exception $e) {
+            return $this->error('Something went wrong', 500);
+        }
+    }
 }

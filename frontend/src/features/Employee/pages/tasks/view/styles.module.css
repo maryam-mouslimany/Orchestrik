@@ -1,0 +1,46 @@
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
+  margin-bottom: 16px;
+
+  justify-content: flex-end; /* <-- pushes items to the right */
+}
+.filterRow > * {
+  min-width: 180px;
+  flex: 0 1 auto;
+}
+.actionIconBtn {
+  padding: 4px;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  color: var(--primary-color);      /* icon color */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;               /* subtle hit area shape */
+}
+
+/* no bg, no stroke/ring on any state */
+.actionIconBtn:hover,
+.actionIconBtn:active,
+.actionIconBtn:focus,
+.actionIconBtn:focus-visible {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  filter: brightness(0.9);          /* optional: tiny visual feedback */
+}
+
+/* force icon to render even if a global reset overrides svg/path */
+.actionIconBtn :global(svg),
+.actionIconBtn :global(svg path) {
+  fill: currentColor !important;
+  stroke: currentColor !important;
+  stroke-width: 1 !important;
+}

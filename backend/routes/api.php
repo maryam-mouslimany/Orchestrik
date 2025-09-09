@@ -23,7 +23,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get("/positions", [PositionController::class, "getPositions"]);
     Route::get("/roles", [RoleController::class, "getRoles"]);
     Route::get("/clients", [ClientController::class, "getClients"]);
-
     Route::post("/tasks/editStatus/{taskId}", [TaskController::class, "editStatus"]);
 
     Route::prefix('admin')->middleware(RoleMiddleware::class . ':admin')->group(function () {
@@ -34,5 +33,6 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('employee')->middleware(RoleMiddleware::class . ':employee')->group(function () {
         Route::get("/tasks", [TaskController::class, "employeeTasks"]);
+        Route::get("/tasks/{taskId?}", [TaskController::class, "taskDetails"]);
     });
 });
