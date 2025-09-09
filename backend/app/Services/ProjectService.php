@@ -3,9 +3,8 @@
 namespace App\Services;
 
 use App\Models\Project;
-use App\Events\ProjectCreated;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class ProjectService
 {
@@ -30,11 +29,6 @@ class ProjectService
         ]);
 
         $project->members()->attach($data['members']); 
-        $project->load(['creator', 'client', 'members'])->get();
-
-         DB::afterCommit(function () use ($project, $data) {
-                event(new ProjectCreated($project, $data));
-            });
-        return $project;
+        return $project->load(['creator', 'client', 'members'])->get();
     }
 }

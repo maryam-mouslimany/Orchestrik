@@ -2,22 +2,21 @@
 
 namespace App\Providers;
 
-use App\Events\ProjectCreated;
-use App\Listeners\SendProjectToN8n;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-
+    /**
+     * Register any application services.
+     */
     public function register(): void
     {
-        $listen = [
-            ProjectCreated::class => [
-                SendProjectToN8n::class,
-            ],
-        ];
+        //
     }
 
+    /**
+     * Bootstrap any application services.
+     */
     public function boot(): void
     {
         //

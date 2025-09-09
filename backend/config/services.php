@@ -34,8 +34,5 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-    'n8n' => [
-        'project_webhook' => env('N8N_PROJECT_WEBHOOK'),
-    ],
 
 ];

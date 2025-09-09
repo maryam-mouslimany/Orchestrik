@@ -7,30 +7,9 @@ use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    static function getUsers($filters)
+    static function getUsers()
     {
-        $roleId = $filters['roleId'] ?? null;
-        $positionId = $filters['positionId'] ?? null;
-        $skills = $filters['skills'] ?? [];
-
-        $q = User::query()
-            ->with(['role', 'position', 'skills']);
-
-        if (!empty($filters['roleId'])) {
-            $q->where('role_id', $roleId);
-        }
-
-        if (!empty($filters['skills'])) {
-            $q->where('position_id', $positionId);
-        }
-
-        if (!empty($skills)) {
-            foreach ($skills as $skillId) {
-                $q->whereHas('skills', fn($sq) => $sq->where('skills.id', $skillId));
-            }
-        }
-
-        return $q->get();
+        return User::with(['role', 'position', 'skills'])->get();
     }
 
     static function createUser($data)

@@ -23,19 +23,4 @@ class AuthController extends Controller
             return $this->error($e->getMessage(), 500);
         }
     }
-
-    public function validateToken(Request $request)
-    {
-        try {
-            $user = AuthService::validateToken($request);  
-
-            if (!$user) {
-                return $this->error('Invalid token', 401);
-            }
-
-            return $this->success($user, 'Valid token.');
-        } catch (\Throwable $e) {
-            return $this->error($e->getMessage(), 500);
-        }
-    }
 }

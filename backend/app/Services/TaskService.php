@@ -42,9 +42,7 @@ class TaskService
             $oldStatus = $task->status;
 
             $updateData = ['status' => $data['status']];
-            if (isset($data['duration'])) {
-                $updateData['duration'] = $data['duration'];
-            }
+            if (isset($data['duration'])) {$updateData['duration'] = $data['duration'];}
 
             $task->update($updateData);
 
@@ -59,34 +57,5 @@ class TaskService
             dd($e->getMessage());
         }
         return $task;
-    }
-
-    static function employeeTasks($request)
-    {
-        $filters   = $request['filters'] ?? $request;
-
-        $projectId = $filters['projectId'] ?? null;
-        $status = $filters['status'] ?? null;
-        $deadline = $filters['deadline'] ?? [];
-        $priority = $filters['priority'] ?? [];
-
-        $user =  auth()->user();
-        $q = Task::with('project')->where('assigned_to', $user->id);
-
-        if (!empty($filters['projectId'])) {
-            $q->where('project_id', $projectId);
-        }
-        if (!empty($filters['status'])) {
-            $q->where('status', $status);
-        }
-        if (!empty($filters['priority'])) {
-            $q->where('priority', $priority);
-        }
-
-        return $q->get();
-    }
-
-    static function taskDetails($request) {
-        return Task::find($request['taskId']);
     }
 }
