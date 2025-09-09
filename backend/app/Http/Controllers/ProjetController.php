@@ -31,4 +31,17 @@ class ProjetController extends Controller
             return $this->error('Something went wrong', 500);
         }
     }
+
+    function projectMembers(Request $request)
+    {
+        try {
+            $members = ProjectService::projectMembers($request);
+            if (!$members) {
+                return $this->error('Project not found or access denied', 404);
+            }
+            return $this->success($members);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+    }
 }

@@ -44,5 +44,6 @@ Route::middleware(['jwt.auth'])->group(function () {
 
     Route::prefix('pm')->middleware(RoleMiddleware::class . ':pm')->group(function () {
         Route::post('/recommend-assignee', [AgentController::class, 'recommend']);
+        Route::get("/projects/members/{projectId?}", [ProjetController::class, "projectMembers"]);
     });
 });
