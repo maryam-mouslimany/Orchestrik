@@ -11,6 +11,8 @@ use App\Http\Controllers\SkillController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\AgentController;
+
 //Unauthenticated APIs
 Route::group(["prefix" => "guest"], function () {
     Route::post("/login", [AuthController::class, "login"]);
@@ -25,6 +27,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get("/clients", [ClientController::class, "getClients"]);
 
     Route::post("/tasks/editStatus/{taskId}", [TaskController::class, "editStatus"]);
+
+
+    Route::prefix('agent')->group(function () {
+        Route::post('/reopened-tasks', [AgentController::class, 'reopenedTasks']);
+    });
 
     Route::prefix('admin')->middleware(RoleMiddleware::class . ':admin')->group(function () {
         Route::post("/projects/create", [ProjetController::class, "createProject"]);
