@@ -27,12 +27,12 @@ export const useLogin = () => {
 
         try {
             const res = await apiCall('/guest/login', {method:'POST', data:{ email, password }});
-            const data = res?.data ?? res; // some wrappers already return the body
+            const data = res?.data ?? res; 
 
             const user = {
                 ...data,
-                defaultRoute: defaultRouteByRole[data.role.name] ?? '/dashboard', // default route based on role
-                lastRoute: defaultRouteByRole[data.role.name] ?? '/dashboard',   // last visited route
+                defaultRoute: defaultRouteByRole[data.role.name] ?? '/dashboard', 
+                lastRoute: defaultRouteByRole[data.role.name] ?? '/dashboard',   
             };
             setUser(user);
 

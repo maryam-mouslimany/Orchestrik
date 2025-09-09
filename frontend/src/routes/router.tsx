@@ -7,23 +7,50 @@ import { UsersTablePage } from '../features/Admin/UsersManagement/pages/View';
 import ProjectCreatePage from '../features/Admin/ProjetsManagement/pages/create';
 import TasksTablePage from '../features/Employee/pages/tasks/view';
 import TasksPage from '../features/Admin/ProjetsManagement/pages/create';
-export const router = createBrowserRouter([
+import { AuthLayout } from '../layouts/AuthLayout';
+import { AdminLayout } from '../layouts/AdminLayout';
+import { PmLayout } from '../layouts/PmLayout';
+import { EmployeeLayout } from '../layouts/EmployeeLayout';
 
+export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
 
   {
-    path: '/',
-    element: <AppLayout />,
-    loader: rootLoader,
+    element: <AuthLayout />,             
     children: [
-      { index: true, element: <p>dashboard</p> },
-      { path: 'dashboard', element: <p>dashboard</p> },
-      { path: 'users', element: <UsersTablePage /> },
-      { path: 'my-tasks', element: <TasksTablePage /> },
-      { path: 'projects/create', element: <ProjectCreatePage />, loader: projectsCreateLoader },
-      { path: '*', element: <p>Not found</p> },
-            { path: 'test', element: <TasksPage/> },
+      {
+        element: <AppLayout />,           
+        loader: rootLoader,
+        children: [
+          { index: true, element: <p>dashboard</p> },
+          { path: 'dashboard', element: <p>dashboard</p> },
+          { path: 'test', element: <TasksPage /> },
+          { path: 'forbbiden', element: <p>Unauthorized</p> },
+          {
+            element: <AdminLayout />,
+            children: [
+              { path: 'users', element: <UsersTablePage /> },
+              { path: 'projects/create', element: <ProjectCreatePage />, loader: projectsCreateLoader },
+            ],
+          },
 
+          {
+            element: <PmLayout />,
+            children: [
+              // { path: 'pm/reports', element: <PmReportsPage /> },
+            ],
+          },
+
+          {
+            element: <EmployeeLayout />,
+            children: [
+              { path: 'my-tasks', element: <TasksTablePage /> },
+            ],
+          },
+
+          { path: '*', element: <p>Not found</p> },
+        ],
+      },
     ],
   },
 ]);
