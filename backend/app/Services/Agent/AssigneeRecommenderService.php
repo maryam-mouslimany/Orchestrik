@@ -22,11 +22,10 @@ class AssigneeRecommenderService
 
         $project = Project::findOrFail($projectId);
 
-        // members() per your ER; also eager-load optional position (if exists) + skills
         $members = $project->members()
             ->with([
                 'skills:id,name',
-                'position:id,name'  // safe if relation exists; else remove this line
+                'position:id,name'  
             ])
             ->get(['users.id', 'users.name', 'users.email', 'users.position_id']);
 
@@ -34,15 +33,15 @@ class AssigneeRecommenderService
             throw new \RuntimeException('This project has no members.');
         }
 
-        // unfinished workload inside this project (you use assigned_to + status != 'completed')
+        // unfinished workload inside this project 
         $openByUser = Task::select('assigned_to', DB::raw('COUNT(*) as cnt'))
             ->where('project_id', $projectId)
             ->whereNotNull('assigned_to')
             ->where('status', '!=', 'completed')
             ->groupBy('assigned_to')
-            ->pluck('cnt', 'assigned_to');   // [userId => openCount]
+            ->pluck('cnt', 'assigned_to');  
 
-        // Prepare candidates for LLM (include position to help semantic match)
+        // Prepare candidates for LLM 
         $candidates = $members->map(function ($u) use ($openByUser) {
             return [
                 'id'        => (int) $u->id,
@@ -104,7 +103,6 @@ PROMPT;
             ]
         );
 
-        // Parse & validate LLM response (no fallback)
         $decoded = is_array($raw) ? $raw : json_decode((string) $raw, true);
         if (
             !is_array($decoded) ||
@@ -119,7 +117,6 @@ PROMPT;
             throw new \RuntimeException('LLM selected an id that is not a project member.');
         }
 
-        // Build the exact reason sentence you want
         $name       = $winner['name'];
         $skillsList = collect($decoded['matchedSkills'] ?? [])
                         ->filter(fn($s) => is_string($s) && $s !== '')
