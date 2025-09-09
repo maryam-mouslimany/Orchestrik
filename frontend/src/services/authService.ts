@@ -47,22 +47,6 @@ export const authService = {
     }
   },
 
-  // Only update token if explicitly provided in the patch
-  updateUser(patch: Partial<AppUser>) {
-    const current = this.getUser();
-    if (!current) return;
-
-    const { token, ...safe } = patch;
-    const nextNoToken: StoredUser = { ...current, ...safe } as StoredUser;
-
-    localStorage.setItem(USER_KEY, JSON.stringify(nextNoToken));
-
-    if (typeof token === 'string') {
-      token.length ? localStorage.setItem(TOKEN_KEY, token)
-                   : localStorage.removeItem(TOKEN_KEY);
-    }
-  },
-
   clear() {
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(TOKEN_KEY);
