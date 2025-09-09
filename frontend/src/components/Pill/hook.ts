@@ -4,9 +4,9 @@ const MAP: Record<string, 'success'|'warning'|'danger'|'info'|'neutral'> = {
   // statuses
   active: 'success',
   completed: 'success',
-  pending: 'warning',
+  pending: 'danger',
   'on hold': 'warning',
-  'in progress': 'info',
+  'in progress': 'warning',
   reopened: 'info',
 
   // priorities

@@ -11,7 +11,7 @@ type SkillsState = {
 };
 
 const initialState: SkillsState = {
-  list: [],
+  list: [], 
   filtered: [],
   loading: false,
   error: null,

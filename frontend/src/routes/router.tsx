@@ -5,7 +5,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import { projectsCreateLoader } from './loaders/projectsCreateLoader';
 import { UsersTablePage } from '../features/Admin/UsersManagement/pages/View';
 import ProjectCreatePage from '../features/Admin/ProjetsManagement/pages/create';
-
+import TasksTablePage from '../features/Employee/pages/tasks/view';
+import TasksPage from '../features/Admin/ProjetsManagement/pages/create';
 export const router = createBrowserRouter([
 
   { path: '/login', element: <Login /> },
@@ -18,8 +19,11 @@ export const router = createBrowserRouter([
       { index: true, element: <p>dashboard</p> },
       { path: 'dashboard', element: <p>dashboard</p> },
       { path: 'users', element: <UsersTablePage /> },
+      { path: 'my-tasks', element: <TasksTablePage /> },
       { path: 'projects/create', element: <ProjectCreatePage />, loader: projectsCreateLoader },
       { path: '*', element: <p>Not found</p> },
+            { path: 'test', element: <TasksPage/> },
+
     ],
   },
 ]);

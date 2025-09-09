@@ -13,7 +13,6 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AgentController;
 
-//Unauthenticated APIs
 Route::group(["prefix" => "guest"], function () {
     Route::post("/login", [AuthController::class, "login"]);
 });
@@ -25,9 +24,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get("/positions", [PositionController::class, "getPositions"]);
     Route::get("/roles", [RoleController::class, "getRoles"]);
     Route::get("/clients", [ClientController::class, "getClients"]);
-
     Route::post("/tasks/editStatus/{taskId}", [TaskController::class, "editStatus"]);
-
 
     Route::prefix('agent')->group(function () {
         Route::post('/reopened-tasks', [AgentController::class, 'reopenedTasks']);
@@ -38,5 +35,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get("/users", [UserController::class, "getUsers"]);
         Route::post("/users/create", [UserController::class, "createUser"]);
         Route::post("/tasks/create/{parentTask?}", [TaskController::class, "createTask"]);
+    });
+    Route::prefix('employee')->middleware(RoleMiddleware::class . ':employee')->group(function () {
+        Route::get("/tasks", [TaskController::class, "employeeTasks"]);
+        Route::get("/tasks/{taskId?}", [TaskController::class, "taskDetails"]);
+    });
+
+    Route::prefix('pm')->middleware(RoleMiddleware::class . ':pm')->group(function () {
+        Route::post('/recommend-assignee', [AgentController::class, 'recommend']);
     });
 });

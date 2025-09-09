@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\AgentService;
-use Illuminate\Http\Request;
+use App\Services\Agent\LLM\LLMClient;
+use App\Services\Agent\AssigneeRecommenderService;
+use App\Http\Requests\RecommendAssigneeRequest;
 
 class AgentController extends Controller
 {
 
-    /**
-     * POST /api/agent/reopened-tasks
-     * Body: { "project_id": 123, "limit": 20 }
-     */
+    public function recommend(RecommendAssigneeRequest $request)
+    {
+        try {
+            $result = AssigneeRecommenderService::recommend($request->validated());
+            return $this->success($result, 'Successfully Logged In.');
+        } catch (\Throwable $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+    }
+
     public function reopenedTasks(Request $request)
     {
         try {
