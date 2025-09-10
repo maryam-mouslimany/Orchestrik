@@ -1,3 +1,4 @@
+// src/routes/rootLoader.ts
 import { store } from '../../redux/store';
 import { fetchSkills } from '../../redux/skillsSlice';
 import { fetchPositions } from '../../redux/positionsSlice';
@@ -5,34 +6,16 @@ import { fetchProjects } from '../../redux/projectsSlice';
 import { fetchUsers } from '../../redux/usersSlice';
 
 export async function rootLoader() {
-  const state = store.getState();
+  const s = store.getState();
+  const jobs: Array<Promise<any>> = [];
 
-  const skillsLoaded = state.skills.list.length > 0;
-  const skillsLoading = state.skills.loading;
+  if (!s.skills.list.length && !s.skills.loading)           jobs.push(store.dispatch(fetchSkills()));
+  if (!s.positions.positionsList.length && !s.positions.loading) jobs.push(store.dispatch(fetchPositions()));
+  if (!s.projects.projectsList.length && !s.projects.loading)     jobs.push(store.dispatch(fetchProjects()));
+  if (!s.users.usersList.length && !s.users.loading)              jobs.push(store.dispatch(fetchUsers()));
 
-  if (!skillsLoaded && !skillsLoading) {
-    await store.dispatch(fetchSkills());
-  }
-
-  const positionsLoaded = state.positions.positionsList.length > 0;
-  const positionsLoading = state.positions.loading;
-
-  if (!positionsLoaded && !positionsLoading) {
-    await store.dispatch(fetchPositions());
-  }
-
-  const projectsLoaded = state.projects.projectsList.length > 0;
-  const projectsLoading = state.projects.loading;
-
-  if (!projectsLoaded && !projectsLoading) {
-    await store.dispatch(fetchProjects());
-  }
-
-  const usersLoaded = state.users.usersList.length > 0;
-  const usersLoading = state.users.loading;
-
-  if (!usersLoaded && !usersLoading) {
-    await store.dispatch(fetchUsers());
+  if (jobs.length) {
+    await Promise.allSettled(jobs); // parallel; do not block serially
   }
   return null;
 }

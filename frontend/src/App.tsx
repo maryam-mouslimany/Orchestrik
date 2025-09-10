@@ -6,6 +6,7 @@ import { RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
+import { useEffect } from 'react';
 
 function App() {
 

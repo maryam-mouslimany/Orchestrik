@@ -1,4 +1,4 @@
-import Login from '../features/Login/pages';
+import Login from '../features/Common/Login';
 import { AppLayout } from '../layouts/AppLayout';
 import { rootLoader } from './loaders/rootLoader';
 import { createBrowserRouter } from 'react-router-dom';
@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
           { path: 'dashboard', element: <p>dashboard</p> },
           { path: 'test', element: <TasksPage /> },
           { path: 'forbbiden', element: <p>Unauthorized</p> },
-          { path: 'tasks/create', element: <TaskCreatePage/> },
+          { path: 'tasks/create', element: <TaskCreatePage /> },
 
           {
             element: <AdminLayout />,
@@ -35,8 +35,7 @@ export const router = createBrowserRouter([
               { path: 'users', element: <UsersTablePage /> },
               { path: 'projects/create', element: <ProjectCreatePage />, loader: projectsCreateLoader },
             ],
-          },
-
+          }, 
           {
             element: <PmLayout />,
             children: [
