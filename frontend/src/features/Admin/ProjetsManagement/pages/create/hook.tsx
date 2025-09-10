@@ -1,39 +1,139 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from '../../../../../hooks/useForm';
 import { useLoaderData } from 'react-router-dom';
-import { PROJECTSTATUSES } from '../../../../../constants/constants';
+import apiCall from '../../../../../services/apiCallService';
+import { useSelector } from 'react-redux';
 
-type Client = { id: number | string; name: string };
-
-type LoaderData = {
-  clients: Client[];
-};
+export type MultiOption = { id: number; name: string };
+type ProjectsCreateLoader = { clients: Array<{ id: number; name: string }> };
 
 export type ProjectForm = {
   name: string;
   description: string;
-  client_id: string | number | '';
+  client_id: number | '';
   status: string | '';
+  pm_id: number | '';
+  members: number[];
 };
 
-export const useProjectCreate = () => {
-  const { clients } = useLoaderData() as LoaderData;
+const MIN_DESC = 20; // description length threshold
 
-  const { values, setField, reset } = useForm<ProjectForm>({
+export const useProjectCreate = () => {
+  const { clients } = useLoaderData() as ProjectsCreateLoader;
+  const { usersList: usersOptions } = useSelector((s: any) => s.users);
+
+  const { values, setField } = useForm<ProjectForm>({
     name: '',
     description: '',
     client_id: '',
     status: '',
+    pm_id: '',
+    members: [],
   });
 
-  const clientOptions = useMemo(() => clients ?? [], [clients]);
-  const statusOptions = useMemo(() => PROJECTSTATUSES ?? [], []);
+  const [creating, setCreating] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const clientOptions = useMemo<MultiOption[]>(
+    () => (clients ?? []).map(c => ({ id: c.id, name: c.name })),
+    [clients]
+  );
+
+  const pmOptions = useMemo<MultiOption[]>(
+    () =>
+      (usersOptions ?? [])
+        .filter((u: any) => Number(u.role_id) === 2)
+        .map((u: any) => ({
+          id: Number(u.id),
+          name: `${u.name} — ${u.position?.name ?? 'No position'}`,
+        })),
+    [usersOptions]
+  );
+
+  const employeeOptions = useMemo<MultiOption[]>(
+    () =>
+      (usersOptions ?? [])
+        .filter((u: any) => Number(u.role_id) !== 2)
+        .map((u: any) => ({
+          id: Number(u.id),
+          name: `${u.name} — ${u.position?.name ?? 'No position'}`,
+        })),
+    [usersOptions]
+  );
+
+  // Combine members + pm (pm is included if selected)
+  const combinedMembers = useMemo<number[]>(
+    () =>
+      Array.from(
+        new Set([
+          ...(values.pm_id ? [Number(values.pm_id)] : []),
+          ...values.members.map(Number),
+        ])
+      ),
+    [values.pm_id, values.members]
+  );
+
+  // Live flags for inline hints
+  const descTooShort = useMemo(
+    () => values.description.trim().length > 0 && values.description.trim().length < MIN_DESC,
+    [values.description]
+  );
+  const membersTooFew = useMemo(
+    () => combinedMembers.length > 0 && combinedMembers.length < 3,
+    [combinedMembers.length]
+  );
+
+  const createProject = async () =>
+    apiCall('admin/projects/create', {
+      method: 'POST',
+      requiresAuth: true,
+      data: {
+        name: values.name,
+        description: values.description,
+        client_id: values.client_id || null,
+        status: values.status,
+        members: combinedMembers,
+      },
+    });
+
+  const handleCreateClick = async () => {
+    if (creating) return;
+
+    // Minimal validation (required + constraints)
+    const nameOk = values.name.trim().length > 0;
+    const descOk = values.description.trim().length >= MIN_DESC;
+    const clientOk = !!values.client_id;
+    const pmOk = !!values.pm_id;
+    const membersOk = combinedMembers.length >= 3;
+
+    if (!nameOk || !descOk || !clientOk || !pmOk || !membersOk) {
+      setFormError(
+        'Please fill all required fields.'
+      );
+      return;
+    }
+
+    setFormError(null);
+    setCreating(true);
+    try {
+      await createProject();
+      // success UI is yours; keeping it minimal per request
+      console.log('success');
+    } finally {
+      setCreating(false);
+    }
+  };
 
   return {
     values,
     setField,
-    reset,
     clientOptions,
-    statusOptions,
+    pmOptions,
+    employeeOptions,
+    handleCreateClick,
+    creating,
+    formError,
+    descTooShort,
+    membersTooFew,
   };
 };

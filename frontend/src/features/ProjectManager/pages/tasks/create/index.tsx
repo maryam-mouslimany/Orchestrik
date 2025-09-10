@@ -6,6 +6,7 @@ import { TaskPriorities } from '../../../../../constants/constants';
 import Button from '../../../../../components/Button';
 import styles from './styles.module.css';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import DateField from '../../../../../components/DatePicker';
 
 const TaskCreatePage: React.FC = () => {
   const {
@@ -50,13 +51,13 @@ const TaskCreatePage: React.FC = () => {
         </div>
 
         <div className={styles.fieldWrap}>
-          <Input
+
+          <DateField
             label="Deadline"
-            placeholder="Task Deadline"
-            value={values.deadline}
-            type="date"
+            value={values.deadline}                             
             onChange={(e) => setField('deadline', e.target.value)}
           />
+
         </div>
       </div>
 

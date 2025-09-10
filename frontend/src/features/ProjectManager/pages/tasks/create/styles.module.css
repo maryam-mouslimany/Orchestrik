@@ -113,7 +113,11 @@
   color: #991b1b;
   font-size: 13px;
 }
-
+.error {
+    font-size: 0.85rem;
+    color: #e63946;
+    margin: 0;
+}
 .infoToast {
   margin-top: 8px;
   padding: 10px 12px;

@@ -1,0 +1,19 @@
+/* components/DateField/styles.module.css */
+.wrapper {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  margin: 0;
+  text-align: left;
+  align-self: flex-start;
+  font-weight: 600;
+}
+.textField :global(.MuiOutlinedInput-root) {
+  height: 40px;            
+  border-radius: 8px;      
+}

@@ -1,0 +1,125 @@
+/* Make the form wider and FIXED width so it won't grow with chips */
+.form {
+    display: grid;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 8px 24px rgba(0, 0, 0, 0.06);
+
+    width: 700px;
+    /* choose 800–920px if you prefer */
+    max-width: 100%;
+    /* prevents overflow on small screens */
+    box-sizing: border-box;
+    min-width: 0;
+    /* critical inside flex parents */
+}
+
+/* Two-column row specifically for Client + PM */
+.rowTwo {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+    /* mobile: stack */
+}
+
+@media (min-width: 720px) {
+    .rowTwo {
+        grid-template-columns: 1fr 1fr;
+        /* desktop: 2 columns */
+    }
+}
+
+/* Keep existing .row if other places need it; no change required */
+
+/* Ensure any selects (including the multiselect chips) never push width */
+.fieldWrap :global(.MuiFormControl-root),
+.fieldWrap :global(.MuiInputBase-root) {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Value area of MUI Select — keeps width fixed, wraps to new lines */
+.fieldWrap :global(.MuiSelect-select) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    white-space: normal;
+    min-height: 40px;
+    padding: 6px 12px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Smaller chips fit better in rows */
+.fieldWrap :global(.MuiChip-root) {
+    height: 24px;
+    font-size: 13px;
+}
+
+.formHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.formTitle {
+    margin: 0;
+    font-size: 1.25rem;
+    /* ~20px */
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: #0f172a;
+    /* slate-900 */
+    position: relative;
+    padding-bottom: 6px;
+}
+
+.formTitle::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 56px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--primary-color);
+}
+
+.fieldHintError {
+    margin: 4px 2px 0 2px;
+    font-size: 12px;
+    color: #b91c1c;
+    /* red-700 */
+}
+
+.errorBanner {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #fef2f2;
+    color: #991b1b;
+    font-size: 13px;
+}
+
+.error {
+    margin: 4px 0 0 0;
+    /* small gap, no horizontal offset */
+    font-size: 12px;
+    color: #e63946;
+    /* red-700 */
+    text-align: left;
+    /* always align to left */
+    width: 100%;
+    /* ensures it follows the field width */
+    display: block;
+    /* forces full-width alignment */
+    box-sizing: border-box;
+}
