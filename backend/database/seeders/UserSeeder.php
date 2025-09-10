@@ -134,9 +134,9 @@ class UserSeeder extends Seeder
             ]);
 
             $skillMap = [
-                'layla@company.com'   => ['Graphic Design', 'Branding', 'Content Planning'],
+                'mouslimanymaryam@gmail.com'   => ['Graphic Design', 'Branding', 'Content Planning'],
 
-                'omar@company.com'    => ['Campaign Management', 'Content Planning', 'Marketing Analytics (GA4)'],
+                '92210054@students.liu.edu.lb'    => ['Campaign Management', 'Content Planning', 'Marketing Analytics (GA4)'],
                 'rania@company.com'   => ['Campaign Management', 'Content Planning', 'SEO'],
                 'nabil@company.com'   => ['Campaign Management', 'Content Planning', 'Media Buying'],
 

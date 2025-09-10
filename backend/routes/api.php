@@ -11,14 +11,15 @@ use App\Http\Controllers\SkillController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\AgentController;
+use App\http\Controllers\AgentController;
 
 Route::group(["prefix" => "guest"], function () {
     Route::post("/login", [AuthController::class, "login"]);
 });
 
 //Authenticated Apis
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['jwt.auth'])->group(function () {
+    Route::get('/auth/validate', [AuthController::class, 'validateToken']);
     Route::get("/projects", [ProjetController::class, "getProjects"]);
     Route::get("/skills", [SkillController::class, "getSkills"]);
     Route::get("/positions", [PositionController::class, "getPositions"]);
@@ -34,7 +35,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post("/projects/create", [ProjetController::class, "createProject"]);
         Route::get("/users", [UserController::class, "getUsers"]);
         Route::post("/users/create", [UserController::class, "createUser"]);
-        Route::post("/tasks/create/{parentTask?}", [TaskController::class, "createTask"]);
     });
     Route::prefix('employee')->middleware(RoleMiddleware::class . ':employee')->group(function () {
         Route::get("/tasks", [TaskController::class, "employeeTasks"]);
@@ -43,5 +43,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('pm')->middleware(RoleMiddleware::class . ':pm')->group(function () {
         Route::post('/recommend-assignee', [AgentController::class, 'recommend']);
+        Route::get("/projects/members/{projectId?}", [ProjetController::class, "projectMembers"]);
+        Route::post("/tasks/create/{parentTask?}", [TaskController::class, "createTask"]);
     });
 });
