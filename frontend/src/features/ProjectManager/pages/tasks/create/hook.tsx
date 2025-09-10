@@ -52,7 +52,7 @@ export const useTaskCreate = () => {
       setRecLoading(true);
       const res = await apiCall('pm/recommend-assignee', {
         method: 'POST', requiresAuth: true,
-        data: { project_id: values.project_id, title: values.title , description: values.description  }
+        data: { project_id: values.project_id, title: values.title, description: values.description }
       });
       const user = res?.data?.user; const why = res?.data?.why;
       if (user?.id) setField('assigned_to', +user.id);
@@ -78,8 +78,8 @@ export const useTaskCreate = () => {
           project_id: values.project_id,
           assigned_to: values.assigned_to,
         },
-      } );
-      console.log('created',res)
+      });
+      console.log('created', res)
     } finally { setCreateLoading(false); }
   };
   return {

@@ -2,13 +2,22 @@ import React from 'react';
 import Input from '../../../../../components/Input';
 import SelectFilter from '../../../../../components/SelectFilter';
 import { useProjectCreate } from './hook';
+import Button from '../../../../../components/Button';
+import { PROJECTSTATUSES } from '../../../../../constants/constants';
+import MultipleSelectChip from '../../../../../components/MultipleSelectFilter';
 
 const ProjectCreatePage: React.FC = () => {
-  const { values, setField, clientOptions, statusOptions } = useProjectCreate();
+  const {
+    values,
+    setField,
+    clientOptions,
+    pmOptions,
+    employeeOptions,
+    createProject,
+  } = useProjectCreate();
 
   return (
     <form>
-      {/* Name */}
       <Input
         label="Project Name"
         placeholder="e.g., Smush Burger"
@@ -16,7 +25,6 @@ const ProjectCreatePage: React.FC = () => {
         onChange={(e) => setField('name', e.target.value)}
       />
 
-      {/* Description */}
       <Input
         label="Description"
         placeholder="Short description"
@@ -24,23 +32,40 @@ const ProjectCreatePage: React.FC = () => {
         onChange={(e) => setField('description', e.target.value)}
       />
 
-      {/* Client (from loader) */}
       <SelectFilter
         label="Client"
-        options={clientOptions}    
+        options={clientOptions}
         selected={values.client_id}
         onChange={(val) => setField('client_id', val)}
         placeholder="Select a client"
       />
 
-      {/* Status (from constants PROJECT_STATUSES) */}
+      {/* PM (single select) */}
+      <SelectFilter
+        label="Project Manager"
+        options={pmOptions}
+        selected={values.pm_id}
+        onChange={(val) => setField('pm_id', val as number)}
+        placeholder="Select a project manager"
+      />
+
       <SelectFilter
         label="Status"
-        options={statusOptions}     // supports {value,label} or {name,label} via your normalizer
-        selected={values.status}    // string | ''
+        options={PROJECTSTATUSES}
+        selected={values.status}
         onChange={(val) => setField('status', val)}
         placeholder="Select status"
       />
+
+      {/* Members (multi-select) */}
+      <MultipleSelectChip
+        label="Members"
+        options={employeeOptions}
+        selected={values.members}
+        onChange={(next) => setField('members', next as number[])}
+      />
+
+      <Button onClick={createProject} label="Create Project" />
     </form>
   );
 };
