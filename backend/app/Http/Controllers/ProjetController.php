@@ -8,15 +8,15 @@ use App\Http\Requests\StoreProjectRequest;
 
 class ProjetController extends Controller
 {
-    function getProjects()
+    function getProjects(Request $request)
     {
         try {
-            $projects = ProjectService::getProjects();
+            $projects = ProjectService::getProjects($request);
             if (!$projects)
                 return $this->error('Projects Not Found');
             return $this->success($projects);
         } catch (\Exception $e) {
-            return $this->error('Something went wrong', 500);
+            return $this->error($e->getMessage(), 500);
         }
     }
 

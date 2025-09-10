@@ -1,60 +1,61 @@
-import React from 'react';
-import { useLogin } from './hook';
-import Input from '../../../components/Input';
-import Button from '../../../components/Button';
-import logo from '../../../assets/images/logo.png';
-import styles from './styles.module.css';
+import React from "react";
+import styles from "./styles.module.css"; // placeholder; create later
+import { useProjectCard } from "./hook";
+import type { Project } from "../../../../../routes/loaders/projectsViewLoader";
+import Pill from "../../../../../components/Pill";
 
-const Login: React.FC = () => {
-    const {
-        email,
-        password,
-        setEmail,
-        setPassword,
-        isValid,
-        handleLogin,
-        emailError,
-        passwordError,
-    } = useLogin();
+type Props = { project: Project };
 
-    return (
-        <div className={styles.loginContainer}>
-            <div className={styles.loginBox}>
-                <img src={logo} alt="Logo" className={styles.logo} />
-                <h2 className={styles.title}>Sign In to Your Account</h2>
+const ProjectCard: React.FC<Props> = ({ project }) => {
+  const {
+    clientName,
+    membersCount,
+    badge,
+    total,
+    pending,
+    completed,
+    overdue,
+    status,
+  } = useProjectCard(project);
 
-                <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
-                    <div className={styles.formGroup}>
-                        <Input
-                            label="Email"
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                        {emailError && <p className={styles.error}>{emailError}</p>}
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <Input
-                            label="Password"
-                            type="password"
-                            placeholder="Enter your password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        {passwordError && <p className={styles.error}>{passwordError}</p>}
-                    </div>
-
-                    <Button
-                        label="Login"
-                        onClick={handleLogin}
-                        disabled={!isValid}
-                    />
-                </form>
-            </div>
+  return (
+    <div className={styles.card}>
+      <div className={styles.header}>
+        <div>
+          <div className={styles.title}>{project.name}</div>
+          <div className={styles.client}>{clientName}</div>
         </div>
-    );
+        <Pill label={status}/>
+      </div>
+
+      <div className={styles.stats}>
+        <div className={styles.statCol}>
+          <div className={styles.statNumber}>{total}</div>
+          <div className={styles.statLabel}>Total Tasks</div>
+        </div>
+
+        <div className={styles.statCol}>
+          <div className={`${styles.statNumber} ${styles.pending}`}>{pending}</div>
+          <div className={styles.statLabel}>Pending</div>
+        </div>
+
+        <div className={styles.statCol}>
+          <div className={styles.statNumber}>{overdue}</div>
+          <div className={styles.statLabel}>Overdue</div>
+        </div>
+
+        <div className={styles.statCol}>
+          <div className={`${styles.statNumber} ${styles.completed}`}>{completed}</div>
+          <div className={styles.statLabel}>Completed</div>
+        </div>
+      </div>
+
+      <button className={styles.membersBtn} type="button" disabled>
+        <span className={styles.membersIcon} aria-hidden>👥</span>
+        View Members ({membersCount})
+      </button>
+    </div>
+  );
 };
 
-export default Login;
+export default ProjectCard;

@@ -1,6 +1,9 @@
 services:
   app:
-    build: .
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
     container_name: laravel-app
     working_dir: /var/www/html
     # For dev: mount code so you can edit live. In prod, drop this volume.

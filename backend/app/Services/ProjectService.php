@@ -6,18 +6,35 @@ use App\Models\Project;
 use App\Events\ProjectCreated;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class ProjectService
 {
-    static function getProjects()
+    static function getProjects($request)
     {
         $user = Auth::user();
+        $withTaskStats = $request->boolean('withTaskStats');
 
-        if ($user->role->name === 'admin') {
-            return Project::where('created_by', $user->id)->with(['creator', 'client', 'members'])->get();
+        $query = ($user->role->name === 'admin')
+            ? Project::where('created_by', $user->id)
+            : $user->projects()->getQuery();
+
+        $query->with(['creator', 'client', 'members']);
+
+        if ($withTaskStats) {
+            $now = Carbon::now();
+            $query->withCount([
+                'tasks as total',
+                'tasks as pending' => fn($q) => $q->where('status', 'pending'),
+                'tasks as completed' => fn($q) => $q->where('status', 'completed'),
+                'tasks as overdue' => fn($q) => $q
+                    ->where('deadline', '<', $now)
+                    ->where('status', '!=', 'completed'),
+            ]);
         }
-        return $user->projects()->with(['creator', 'client', 'members'])->get();
+        return $query->get();
     }
+
 
     static function createProject($data)
     {
@@ -43,7 +60,7 @@ class ProjectService
         $request->validate(['projectId' => 'required|integer|min:1|exists:projects,id',]);
         $project = Project::find($request['projectId']);
         $users = $project->members()
-            ->with(['position:id,name'])                
+            ->with(['position:id,name'])
             ->get(['users.id', 'users.name', 'users.email', 'users.position_id', 'users.role_id']);
 
         $pmUser    = $users->firstWhere('role_id', 2);
@@ -64,9 +81,8 @@ class ProjectService
         ])->values();
 
         return [
-            'pm'      => $pm,      
-            'members' => $members,  
+            'pm'      => $pm,
+            'members' => $members,
         ];
-
     }
 }

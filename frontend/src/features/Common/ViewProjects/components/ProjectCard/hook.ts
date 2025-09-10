@@ -1,58 +1,27 @@
-import { useState } from 'react';
-import apiCall from '../../../services/apiCallService';
-import { useAuth } from '../../../contexts/AuthContext';
+import type { Project } from "../../../../../routes/loaders/projectsViewLoader";
 
-export const useLogin = () => {
-    const defaultRouteByRole: Record<string, string> = {
-        admin: '/dashboard',
-        pm: '/projects',
-        member: '/my-tasks',
-    };
+export const useProjectCard = (project: Project) => {
+  const clientName = project.client?.name ?? "—";
+  const membersCount = project.members?.length ?? 0;
+  const status = project.status;
 
-    // ✅ Use Auth Context to set user globally
-    const { setUser } = useAuth();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const badge =
+    project.status ??
+    ((project.overdue ?? 0) > 0 ? "Delayed" : "On Track");
 
-    // Validation
-    const isEmailValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
-    const isPasswordValid = password.length >= 6;
-    const isValid = isEmailValid && isPasswordValid;
+  const total = project.total ?? 0;
+  const pending = project.pending ?? 0;
+  const completed = project.completed ?? 0;
+  const overdue = project.overdue ?? 0;
 
-    const emailError = email && !isEmailValid ? 'Please enter a valid email.' : '';
-    const passwordError = password && !isPasswordValid ? 'Password must be at least 6 characters.' : '';
-
-    const handleLogin = async () => {
-        if (!isValid) { return; }
-
-        try {
-
-            const res = await apiCall('/guest/login', { method: 'POST', data: { email, password } });
-            const data = res?.data ?? res;
-
-            const user = {
-                ...data,
-                defaultRoute: defaultRouteByRole[data.role.name] ?? '/dashboard',
-                lastRoute: defaultRouteByRole[data.role.name] ?? '/dashboard',
-            };
-            setUser(user);
-
-            console.log('Login successful:', user);
-
-        } catch (error) {
-            console.error('Login failed:', error);
-            alert('Login failed, please try again.');
-        }
-    };
-
-    return {
-        email,
-        password,
-        setEmail,
-        setPassword,
-        isValid,
-        handleLogin,
-        emailError,
-        passwordError,
-    };
+  return {
+    clientName,
+    membersCount,
+    badge,
+    total,
+    pending,
+    completed,
+    overdue,
+    status
+  };
 };
