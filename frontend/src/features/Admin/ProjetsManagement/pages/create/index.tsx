@@ -1,9 +1,9 @@
+// index.tsx
 import React from 'react';
 import Input from '../../../../../components/Input';
 import SelectFilter from '../../../../../components/SelectFilter';
 import { useProjectCreate } from './hook';
 import Button from '../../../../../components/Button';
-import { PROJECTSTATUSES } from '../../../../../constants/constants';
 import MultipleSelectChip from '../../../../../components/MultipleSelectFilter';
 
 const ProjectCreatePage: React.FC = () => {
@@ -13,11 +13,14 @@ const ProjectCreatePage: React.FC = () => {
     clientOptions,
     pmOptions,
     employeeOptions,
-    createProject,
+    handleCreateClick,
+    creating,
+
   } = useProjectCreate();
 
+
   return (
-    <form>
+    <form onSubmit={(e) => e.preventDefault()}>
       <Input
         label="Project Name"
         placeholder="e.g., Smush Burger"
@@ -36,11 +39,10 @@ const ProjectCreatePage: React.FC = () => {
         label="Client"
         options={clientOptions}
         selected={values.client_id}
-        onChange={(val) => setField('client_id', val)}
+        onChange={(val) => setField('client_id', val as number)}
         placeholder="Select a client"
       />
 
-      {/* PM (single select) */}
       <SelectFilter
         label="Project Manager"
         options={pmOptions}
@@ -49,15 +51,6 @@ const ProjectCreatePage: React.FC = () => {
         placeholder="Select a project manager"
       />
 
-      <SelectFilter
-        label="Status"
-        options={PROJECTSTATUSES}
-        selected={values.status}
-        onChange={(val) => setField('status', val)}
-        placeholder="Select status"
-      />
-
-      {/* Members (multi-select) */}
       <MultipleSelectChip
         label="Members"
         options={employeeOptions}
@@ -65,7 +58,10 @@ const ProjectCreatePage: React.FC = () => {
         onChange={(next) => setField('members', next as number[])}
       />
 
-      <Button onClick={createProject} label="Create Project" />
+      <Button
+        onClick={handleCreateClick}
+        label={creating ? 'Creating…' : 'Create Project'}
+      />
     </form>
   );
 };

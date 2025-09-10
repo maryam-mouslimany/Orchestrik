@@ -1,13 +1,11 @@
-import { useMemo } from 'react';
+// useProjectCreate.ts
+import { useMemo, useState } from 'react';
 import { useForm } from '../../../../../hooks/useForm';
 import { useLoaderData } from 'react-router-dom';
 import apiCall from '../../../../../services/apiCallService';
 import { useSelector } from 'react-redux';
 
-type Position = { name: string | null };
-type User = { id: number; name: string; role_id: number; position?: Position | null };
 export type MultiOption = { id: number; name: string };
-
 type ProjectsCreateLoader = { clients: Array<{ id: number; name: string }> };
 
 export type ProjectForm = {
@@ -21,6 +19,7 @@ export type ProjectForm = {
 
 export const useProjectCreate = () => {
   const { clients } = useLoaderData() as ProjectsCreateLoader;
+  const { usersList: usersOptions } = useSelector((s: any) => s.users);
 
   const { values, setField } = useForm<ProjectForm>({
     name: '',
@@ -31,6 +30,8 @@ export const useProjectCreate = () => {
     members: [],
   });
 
+  const [creating, setCreating] = useState(false);
+
   const clientOptions = useMemo<MultiOption[]>(
     () => (clients ?? []).map(c => ({ id: c.id, name: c.name })),
     [clients]
@@ -39,26 +40,25 @@ export const useProjectCreate = () => {
   const pmOptions = useMemo<MultiOption[]>(
     () =>
       (usersOptions ?? [])
-        .filter(u => u.role_id === 2)
-        .map(u => ({ id: u.id, name: `${u.name} — ${u.position?.name ?? 'No position'}` })),
+        .filter(u => Number(u.role_id) === 2)
+        .map(u => ({ id: Number(u.id), name: `${u.name} — ${u.position?.name ?? 'No position'}` })),
     [usersOptions]
   );
 
   const employeeOptions = useMemo<MultiOption[]>(
     () =>
       (usersOptions ?? [])
-        .filter(u => u.role_id !== 2)
-        .map(u => ({ id: u.id, name: `${u.name} — ${u.position?.name ?? 'No position'}` })),
+        .filter(u => Number(u.role_id) !== 2)
+        .map(u => ({ id: Number(u.id), name: `${u.name} — ${u.position?.name ?? 'No position'}` })),
     [usersOptions]
   );
 
   const createProject = async () => {
-    const membersCombined = [
-      ...(values.pm_id ? [values.pm_id] : []),
-      ...values.members,
-    ].filter((v, i, a) => a.indexOf(v) === i);
+    const membersCombined = Array.from(
+      new Set([...(values.pm_id ? [Number(values.pm_id)] : []), ...values.members.map(Number)])
+    );
 
-    await apiCall('admin/projects/create', {
+    return apiCall('admin/projects/create', {
       method: 'POST',
       requiresAuth: true,
       data: {
@@ -69,6 +69,19 @@ export const useProjectCreate = () => {
         members: membersCombined,
       },
     });
+
+  };
+
+  const handleCreateClick = async () => {
+    if (creating) return;
+    setCreating(true);
+    try {
+      await createProject();
+      console.log('success')
+
+    } finally {
+      setCreating(false);
+    }
   };
 
   return {
@@ -77,6 +90,7 @@ export const useProjectCreate = () => {
     clientOptions,
     pmOptions,
     employeeOptions,
-    createProject,
+    handleCreateClick,
+    creating,
   };
 };
