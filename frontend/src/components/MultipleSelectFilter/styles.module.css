@@ -1,0 +1,61 @@
+.formControl {
+  width: 100%;           /* fill container */
+  min-width: 0;          /* IMPORTANT if parent is a flex item */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Lock the input to container width */
+.selectRoot {
+  display: block;        /* avoid inline width expansion */
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;          /* allow shrinking within flex parents */
+  box-sizing: border-box;
+}
+
+/* OutlinedInput root also needs to obey width */
+.selectRoot.MuiInputBase-root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* The visible value zone (chips container) */
+.selectRoot .MuiSelect-select {
+  display: flex;
+  flex-wrap: wrap;       /* wrap to next row */
+  align-items: center;
+  gap: 6px;
+  white-space: normal;   /* allow wrapping */
+  width: 100%;
+  max-width: 100%;
+  min-height: 40px;      /* compact baseline */
+  padding: 6px 12px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Keep chips compact so more fit per row */
+.selectRoot .MuiChip-root {
+  height: 24px;
+  font-size: 13px;
+}
+
+/* Placeholder style when nothing selected */
+.placeholder {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  margin: 0;
+  text-align: left;
+  align-self: flex-start;
+  font-weight: 600;
+}
+

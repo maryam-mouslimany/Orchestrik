@@ -12,9 +12,20 @@ const SelectFilter = ({ label, options, selected, onChange, placeholder = "All" 
   const { normalized } = useSelectOptions(options);
 
   const handleChange = (e) => {
-    const raw = e.target.value;
-    const match = normalized.find(o => o.value === raw || String(o.value) === String(raw));
+    const raw = e.target.value; // this will be a string because we stringify below
+    const match = normalized.find(o => String(o.value) === String(raw));
+    // Return the ORIGINAL option type back to parent (number or string), no parsing here
     onChange(match ? match.value : raw);
+  };
+
+  // Value we pass to MUI must match MenuItem.value type -> use string consistently
+  const selectValue = selected === "" ? "" : String(selected);
+
+  // Explicit label rendering so CSS won't hide it
+  const renderSelected = (val) => {
+    if (val === "") return <span className={styles.placeholder}>{placeholder}</span>;
+    const item = normalized.find(o => String(o.value) === String(val));
+    return item ? <span className={styles.valueLabel}>{item.label}</span> : "";
   };
 
   return (
@@ -23,21 +34,18 @@ const SelectFilter = ({ label, options, selected, onChange, placeholder = "All" 
 
       <FormControl fullWidth className={styles.control}>
         <Select
-          value={selected ?? ""}
+          value={selectValue}
           onChange={handleChange}
           input={<OutlinedInput />}
           displayEmpty
-          className={styles.select}            // custom size
-          renderValue={(val) =>
-            val === "" ? <span className={styles.placeholder}>{placeholder}</span> : undefined
-          }
+          className={styles.select}
+          renderValue={renderSelected}
           MenuProps={{ PaperProps: { className: styles.menuPaper } }}
         >
-          {/* Keep an empty item so clear is possible */}
           <MenuItem value="">{placeholder}</MenuItem>
 
           {normalized.map(opt => (
-            <MenuItem key={String(opt.value)} value={opt.value}>
+            <MenuItem key={String(opt.value)} value={String(opt.value)}>
               {opt.label}
             </MenuItem>
           ))}
