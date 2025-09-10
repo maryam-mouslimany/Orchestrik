@@ -1,4 +1,3 @@
-
 .sidebar {
   position: fixed;     
   top: 0;
@@ -7,22 +6,25 @@
   width: 240px;
   min-width: 260px;
   z-index: 1000; 
-  background-color: white;      
+  background-color: white;
+  border-right: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
+
 .header {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 16px 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  background: white;
 }
 
 .logo {
   width: 36px;
   height: 36px;
   object-fit: contain;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.06);
+  background: #f8fafc;
 }
 
 .brand {
@@ -32,33 +34,35 @@
 }
 
 .title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
-  letter-spacing: 0.3px;
-  color: #f4f6fa;
+  letter-spacing: -0.025em;
+  color: #1f2937;
 }
 
 .role {
   margin-top: 2px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
-  opacity: 0.8;
-  color: #c7cbd6;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* Nav list */
 .nav {
-  padding: 10px 8px;
+  padding: 16px 12px;
   overflow: auto;
+  height: calc(100% - 84px);
 }
 
 .list {
   list-style: none;
   margin: 0;
-  padding: 6px;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .item {
@@ -69,48 +73,63 @@
 .link {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 10px;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
-  color: #cfd3dd;
+  color: #374151;
   text-decoration: none;
   outline: none;
-  transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  margin: 1px 0;
 }
 
 /* Hover (non-active) */
-.link:hover {
-  background: var(--primary-color);
-  color: #eef1f7;
+.link:hover:not(.isActive) {
+  background: #f9fafb;
+  color: #111827;
+  transform: translateX(2px);
 }
 
 /* Active state uses your theme variable */
 .isActive {
-  background: var(--primary-color) ;
+  background: var(--primary-color);
   color: #ffffff;
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--primary-color) 35%, transparent);
+  font-weight: 600;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Optional stronger left accent for active */
+/* Optional left accent for active */
 .isActive::before {
   content: '';
-  width: 4px;
-  height: 70%;
-  margin-right: 6px;
-  border-radius: 6px;
-  background: var(--primary-color);
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  border-radius: 0 2px 2px 0;
+  background: rgba(255, 255, 255, 0.8);
 }
 
 /* Icon + label */
 .icon {
   display: inline-flex;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   align-items: center;
   justify-content: center;
-  opacity: 0.95;
+  opacity: 0.8;
+  transition: opacity 200ms ease;
+}
+
+.isActive .icon {
+  opacity: 1;
 }
 
 .label {
@@ -122,19 +141,20 @@
 
 /* Keyboard focus */
 .link:focus-visible {
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary-color) 50%, transparent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  outline: none;
 }
 
 /* Scrollbar (subtle) */
 .nav::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
 }
 .nav::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.08);
-  border-radius: 8px;
+  background: #d1d5db;
+  border-radius: 3px;
 }
 .nav::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.12);
+  background: #9ca3af;
 }
 .nav::-webkit-scrollbar-track {
   background: transparent;
@@ -142,5 +162,35 @@
 
 /* Small screens: let it shrink a bit */
 @media (max-width: 1024px) {
-  .sidebar { width: 232px; min-width: 232px; }
+  .sidebar { 
+    width: 232px; 
+    min-width: 232px; 
+  }
+}
+
+/* Additional professional touches */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent 0%, #e5e7eb 20%, #e5e7eb 80%, transparent 100%);
+}
+
+/* Subtle animation for the entire sidebar */
+.sidebar {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
