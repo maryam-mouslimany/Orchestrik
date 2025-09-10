@@ -26,13 +26,14 @@ export const useLogin = () => {
         if (!isValid) { return; }
 
         try {
-            const res = await apiCall('/guest/login', {method:'POST', data:{ email, password }});
-            const data = res?.data ?? res; 
+
+            const res = await apiCall('/guest/login', { method: 'POST', data: { email, password } });
+            const data = res?.data ?? res;
 
             const user = {
                 ...data,
-                defaultRoute: defaultRouteByRole[data.role.name] ?? '/dashboard', 
-                lastRoute: defaultRouteByRole[data.role.name] ?? '/dashboard',   
+                defaultRoute: defaultRouteByRole[data.role.name] ?? '/dashboard',
+                lastRoute: defaultRouteByRole[data.role.name] ?? '/dashboard',
             };
             setUser(user);
 

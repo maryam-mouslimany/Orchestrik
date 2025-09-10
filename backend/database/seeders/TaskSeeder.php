@@ -71,7 +71,7 @@ class TaskSeeder extends Seeder
 
                 $priority   = $this->pickWeighted($this->PRIORITY_WEIGHTS);
                 $createdAt  = $this->randomCreatedAt($project->created_at);
-                $deadline   = (clone $createdAt)->addDays(random_int(2, 45))->setTime(17, random_int(0, 59));
+                $deadline   = (clone $createdAt)->addDays(random_int(2, 45));
                 $final      = $this->pickWeighted($this->FINAL_STATUS_WEIGHTS);
 
                 $title = $this->fakeTitle();

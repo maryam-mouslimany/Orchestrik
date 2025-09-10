@@ -35,7 +35,6 @@ Route::middleware(['jwt.auth'])->group(function () {
         Route::post("/projects/create", [ProjetController::class, "createProject"]);
         Route::get("/users", [UserController::class, "getUsers"]);
         Route::post("/users/create", [UserController::class, "createUser"]);
-        Route::post("/tasks/create/{parentTask?}", [TaskController::class, "createTask"]);
     });
     Route::prefix('employee')->middleware(RoleMiddleware::class . ':employee')->group(function () {
         Route::get("/tasks", [TaskController::class, "employeeTasks"]);
@@ -44,5 +43,7 @@ Route::middleware(['jwt.auth'])->group(function () {
 
     Route::prefix('pm')->middleware(RoleMiddleware::class . ':pm')->group(function () {
         Route::post('/recommend-assignee', [AgentController::class, 'recommend']);
+        Route::get("/projects/members/{projectId?}", [ProjetController::class, "projectMembers"]);
+        Route::post("/tasks/create/{parentTask?}", [TaskController::class, "createTask"]);
     });
 });

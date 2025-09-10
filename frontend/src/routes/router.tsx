@@ -11,21 +11,24 @@ import { AuthLayout } from '../layouts/AuthLayout';
 import { AdminLayout } from '../layouts/AdminLayout';
 import { PmLayout } from '../layouts/PmLayout';
 import { EmployeeLayout } from '../layouts/EmployeeLayout';
+import TaskCreatePage from '../features/ProjectManager/pages/tasks/create';
 
 export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
 
   {
-    element: <AuthLayout />,             
+    element: <AuthLayout />,
     children: [
       {
-        element: <AppLayout />,           
+        element: <AppLayout />,
         loader: rootLoader,
         children: [
           { index: true, element: <p>dashboard</p> },
           { path: 'dashboard', element: <p>dashboard</p> },
           { path: 'test', element: <TasksPage /> },
           { path: 'forbbiden', element: <p>Unauthorized</p> },
+          { path: 'tasks/create', element: <TaskCreatePage/> },
+
           {
             element: <AdminLayout />,
             children: [
