@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import apiCall from "../../../../services/apiCallService";
-
 export type ProjectOption = { id: number; name: string };
 
 export const useProjectsSearch = () => {
