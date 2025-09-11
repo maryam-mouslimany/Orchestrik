@@ -1,58 +1,59 @@
+// src/features/auth/useLogin.ts
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import apiCall from '../../../services/apiCallService';
 import { useAuth } from '../../../contexts/AuthContext';
+import { roleHome } from '../../../constants/constants'; // e.g. { admin:'/dashboard', pm:'/projects', member:'/my-tasks' }
 
 export const useLogin = () => {
-    const defaultRouteByRole: Record<string, string> = {
-        admin: '/dashboard',
-        pm: '/projects',
-        member: '/my-tasks',
-    };
+  const DEFAULT_HOME = '/dashboard';
 
-    // ✅ Use Auth Context to set user globally
-    const { setUser } = useAuth();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
 
-    // Validation
-    const isEmailValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
-    const isPasswordValid = password.length >= 6;
-    const isValid = isEmailValid && isPasswordValid;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const emailError = email && !isEmailValid ? 'Please enter a valid email.' : '';
-    const passwordError = password && !isPasswordValid ? 'Password must be at least 6 characters.' : '';
+  // basic validation
+  const isEmailValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
+  const isPasswordValid = password.length >= 6;
+  const isValid = isEmailValid && isPasswordValid;
 
-    const handleLogin = async () => {
-        if (!isValid) { return; }
+  const emailError = email && !isEmailValid ? 'Please enter a valid email.' : '';
+  const passwordError = password && !isPasswordValid ? 'Password must be at least 6 characters.' : '';
 
-        try {
+  const handleLogin = async () => {
+    if (!isValid) return;
 
-            const res = await apiCall('/guest/login', { method: 'POST', data: { email, password } });
-            const data = res?.data ?? res;
+    try {
+      const res = await apiCall('/guest/login', { method: 'POST', data: { email, password } });
+      const data = res?.data ?? res;
 
-            const user = {
-                ...data,
-                defaultRoute: defaultRouteByRole[data.role.name] ?? '/dashboard',
-                lastRoute: defaultRouteByRole[data.role.name] ?? '/dashboard',
-            };
-            setUser(user);
+      const role = String(data?.role?.name || '').toLowerCase();
+      const dest = roleHome[role] || DEFAULT_HOME;
 
-            console.log('Login successful:', user);
+      const user = {
+        ...data,
+        defaultRoute: dest,
+        lastRoute: dest,
+      };
 
-        } catch (error) {
-            console.error('Login failed:', error);
-            alert('Login failed, please try again.');
-        }
-    };
+      setUser(user);
+      navigate(dest, { replace: true });
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert('Login failed, please try again.');
+    }
+  };
 
-    return {
-        email,
-        password,
-        setEmail,
-        setPassword,
-        isValid,
-        handleLogin,
-        emailError,
-        passwordError,
-    };
+  return {
+    email,
+    password,
+    setEmail,
+    setPassword,
+    isValid,
+    handleLogin,
+    emailError,
+    passwordError,
+  };
 };

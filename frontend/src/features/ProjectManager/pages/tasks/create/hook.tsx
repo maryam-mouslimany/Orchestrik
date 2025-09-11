@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux'; 
 import { useForm } from '../../../../../hooks/useForm';
 import apiCall from '../../../../../services/apiCallService';
@@ -66,7 +66,7 @@ export const useTaskCreate = () => {
       });
       const user = res?.data?.user; const why = res?.data?.why;
       if (user?.id) setField('assigned_to', +user.id);
-      if (why) { setRecReason(String(why)); setTimeout(() => setRecReason(''), 20000); }
+      if (why) { setRecReason(String(why)); setTimeout(() => setRecReason(''), 100000); }
     } finally { setRecLoading(false); }
   };
 
