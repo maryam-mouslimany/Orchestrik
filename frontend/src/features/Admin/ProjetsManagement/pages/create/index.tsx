@@ -21,7 +21,7 @@ const ProjectCreatePage: React.FC = () => {
   } = useProjectCreate();
 
   return (
-    <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+    <div className={styles.form}>
       <div className={styles.formHeader}>
         <h2 className={styles.formTitle}>Create Project</h2>
       </div>
@@ -94,7 +94,7 @@ const ProjectCreatePage: React.FC = () => {
           label={creating ? 'Creating…' : 'Create Project'}
         />
       </div>
-    </form>
+    </div>
   );
 };
 

@@ -2,9 +2,12 @@
 FROM oven/bun:1 AS build
 WORKDIR /app
 
-# 1) Cache deps
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile
+# Cache deps
+COPY package.json ./
+# If you later commit a bun.lockb, uncomment the next line for better caching:
+# COPY bun.lockb ./
+RUN bun install
+
 
 # 2) Build app
 COPY . .

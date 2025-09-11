@@ -10,9 +10,10 @@ export type AppUser = {
   projects: Array<{ id: number; name: string }>;
   defaultRoute?: string;
   lastRoute?: string;
+  token?: string;   // optional JWT/Bearer token attached at login
 };
 
-const USER_KEY  = 'auth:user';
+const USER_KEY = 'auth:user';
 const TOKEN_KEY = 'token';
 
 type StoredUser = Omit<AppUser, 'token'>;

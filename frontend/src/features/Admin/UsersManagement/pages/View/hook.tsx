@@ -1,7 +1,9 @@
 import apiCall from '../../../../../services/apiCallService';
 import { type Column } from '../../../../../components/Table';
 import { useCallback, useState, useMemo, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useLoaderData } from "react-router-dom";
+import { type Skill, type Position } from '../../../../../routes/loaders/usersLoader';
+import { useSelector, useDispatch } from 'react-redux';
 
 export type UserRow = {
   id: number;
@@ -14,19 +16,24 @@ export type UserRow = {
 
 export const useUsersTable = () => {
   // filters fields
-  const [skills, setSkills] = useState<Array<number | string>>([]); // was skillId
+  const [skills, setSkills] = useState<Array<number | string>>([]);
   const [positionId, setPositionId] = useState<string | null>(null);
   const [roleId, setRoleId] = useState<string | null>(null);
 
-  // skills and positions from redux
-  const { list: skillsOptions } = useSelector((s: any) => s.skills);
-  const { positionsList: positionsOptions } = useSelector((s: any) => s.positions);
 
-  const filters = useMemo(() => ({
-    roleId: roleId ? Number(roleId) : undefined,
-    positionId: positionId ? Number(positionId) : undefined,
-    skills: (skills ?? []).map((v) => Number(v)),
-  }), [roleId, positionId, skills]);
+  const skillsOptions = useLoaderData() as Skill[];
+  const positionsOptions = useLoaderData() as Position[];
+
+  const filters = useMemo(() => {
+    const skillsIds = (skills ?? [])
+      .map((v) => Number(v))
+      .filter((n) => !Number.isNaN(n));
+    return {
+      roleId: roleId ? Number(roleId) : undefined,
+      positionId: positionId ? Number(positionId) : undefined,
+      skills: skillsIds.length ? skillsIds : undefined,
+    };
+  }, [roleId, positionId, skills]);
 
   const [rows, setRows] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

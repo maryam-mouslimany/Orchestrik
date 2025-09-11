@@ -4,6 +4,7 @@ import { AppLayout } from '../layouts/AppLayout';
 import { rootLoader } from './loaders/rootLoader';
 import { AuthLayout } from '../layouts/AuthLayout';
 import { AdminLayout } from '../layouts/AdminLayout';
+import { skillsLoader } from './loaders/usersLoader';
 import { createBrowserRouter } from 'react-router-dom';
 import { EmployeeLayout } from '../layouts/EmployeeLayout';
 import { projectsLoader } from './loaders/projectsViewLoader';
@@ -32,7 +33,7 @@ export const router = createBrowserRouter([
             element: <AdminLayout />,
             children: [
               { path: 'dashboard', element: <p>dashboard</p> },
-              { path: 'users', element: <UsersTablePage /> },
+              { path: 'users', element: <UsersTablePage />, loader: skillsLoader},
               { path: 'projects/create', element: <ProjectCreatePage />, loader: projectsCreateLoader },
             ],
           },
