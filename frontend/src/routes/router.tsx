@@ -7,7 +7,7 @@ import { AdminLayout } from '../layouts/AdminLayout';
 import { skillsLoader } from './loaders/usersLoader';
 import { createBrowserRouter } from 'react-router-dom';
 import { EmployeeLayout } from '../layouts/EmployeeLayout';
-import { projectsLoader } from './loaders/projectsViewLoader';
+import { dashboardLoader } from './loaders/dashboardLoader';
 import ViewProjects from '../features/Common/ViewProjects/pages';
 import TasksTablePage from '../features/Employee/pages/tasks/view';
 import { projectsCreateLoader } from './loaders/projectsCreateLoader';
@@ -15,6 +15,7 @@ import TasksPage from '../features/Admin/ProjetsManagement/pages/create';
 import TaskCreatePage from '../features/ProjectManager/pages/tasks/create';
 import { UsersTablePage } from '../features/Admin/UsersManagement/pages/View';
 import ProjectCreatePage from '../features/Admin/ProjetsManagement/pages/create';
+import AdminDashboard from '../features/Admin/Dashboard/pages';
 export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
 
@@ -31,7 +32,7 @@ export const router = createBrowserRouter([
           {
             element: <AdminLayout />,
             children: [
-              { path: 'dashboard', element: <p>dashboard</p> },
+              { path: 'dashboard', element: <AdminDashboard/>, loader: dashboardLoader},
               { path: 'users', element: <UsersTablePage />, loader: skillsLoader},
               { path: 'projects/create', element: <ProjectCreatePage />, loader: projectsCreateLoader },
             ],

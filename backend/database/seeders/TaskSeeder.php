@@ -92,13 +92,13 @@ class TaskSeeder extends Seeder
 
                 // Build a long-ish, coherent status history per your rules
                 [$logs, $lastTs] = $this->buildStatusLogs(
-                    taskId:       $taskId,
-                    finalStatus:  $final,
-                    createdAt:    $createdAt,
-                    deadline:     $deadline,
-                    pmUserId:     $pmForThisProject,
-                    members:      $members,
-                    assigneeId:   $assignedTo
+                    taskId: $taskId,
+                    finalStatus: $final,
+                    createdAt: $createdAt,
+                    deadline: $deadline,
+                    pmUserId: $pmForThisProject,
+                    members: $members,
+                    assigneeId: $assignedTo
                 );
 
                 $logBuffer = array_merge($logBuffer, $logs);
@@ -112,7 +112,7 @@ class TaskSeeder extends Seeder
         }
     }
 
-    // ---------------- helpers ----------------
+    // ---------------- helpers ---------------
 
     private function loadProjectMembers(): array
     {
@@ -125,7 +125,10 @@ class TaskSeeder extends Seeder
         return $map;
     }
 
-    private function pick(array $arr) { return $arr[array_rand($arr)]; }
+    private function pick(array $arr)
+    {
+        return $arr[array_rand($arr)];
+    }
 
     private function pickWeighted(array $weights)
     {
@@ -142,14 +145,14 @@ class TaskSeeder extends Seeder
     private function randomCreatedAt($projectCreatedAt): Carbon
     {
         $base = $projectCreatedAt ? Carbon::parse($projectCreatedAt) : Carbon::now()->subMonths(6);
-        return $base->copy()->addDays(random_int(0, 120))->setTime(random_int(9,18), random_int(0,59));
+        return $base->copy()->addDays(random_int(0, 120))->setTime(random_int(9, 18), random_int(0, 59));
     }
 
     private function fakeTitle(): string
     {
-        $verbs = ['Draft','Design','Shoot','Edit','Review','Optimize','Publish','QA','Brief','Storyboard'];
-        $items = ['Reel','Static Post','Carousel','Landing Page','Ad Set','Campaign','Storyboard','Logo Variations','Billboard Mock'];
-        $topic = ['Autumn','Holiday','New Product','Awareness','Engagement','Retargeting','UGC','Event Teaser'];
+        $verbs = ['Draft', 'Design', 'Shoot', 'Edit', 'Review', 'Optimize', 'Publish', 'QA', 'Brief', 'Storyboard'];
+        $items = ['Reel', 'Static Post', 'Carousel', 'Landing Page', 'Ad Set', 'Campaign', 'Storyboard', 'Logo Variations', 'Billboard Mock'];
+        $topic = ['Autumn', 'Holiday', 'New Product', 'Awareness', 'Engagement', 'Retargeting', 'UGC', 'Event Teaser'];
         return "{$this->pick($verbs)} {$this->pick($items)} – {$this->pick($topic)}";
     }
 
@@ -182,8 +185,7 @@ class TaskSeeder extends Seeder
         int $pmUserId,
         array $members,
         int $assigneeId
-    ): array
-    {
+    ): array {
         $t = (clone $createdAt);
         $logs = [];
 
@@ -195,15 +197,15 @@ class TaskSeeder extends Seeder
 
                 // 0–3 extra “still in progress” hops (no notes)
                 $extra = random_int(0, 3);
-                for ($i=0; $i<$extra; $i++) {
+                for ($i = 0; $i < $extra; $i++) {
                     $by = (random_int(1, 100) <= 70) ? $assigneeId : $this->pick($members);
                     $logs[] = $this->log($taskId, 'in progress', 'in progress', $by, $t = $this->tick($t));
                 }
 
                 // Complete (with note)
                 // 30% chance completion happens AFTER deadline to create overdue completions
-                if (random_int(1,100) <= 30) {
-                    $t = (clone $deadline)->addDays(random_int(1,7))->setTime(random_int(9,18), random_int(0,59));
+                if (random_int(1, 100) <= 30) {
+                    $t = (clone $deadline)->addDays(random_int(1, 7))->setTime(random_int(9, 18), random_int(0, 59));
                 } else {
                     $t = $this->tick($t);
                 }
@@ -214,7 +216,7 @@ class TaskSeeder extends Seeder
                 // pending -> in progress (+ extras), stays in progress (no note at the end)
                 $logs[] = $this->log($taskId, 'pending', 'in progress', $assigneeId, $t = $this->tick($t));
                 $extra = random_int(1, 4);
-                for ($i=0; $i<$extra; $i++) {
+                for ($i = 0; $i < $extra; $i++) {
                     $by = (random_int(1, 100) <= 70) ? $assigneeId : $this->pick($members);
                     $logs[] = $this->log($taskId, 'in progress', 'in progress', $by, $t = $this->tick($t));
                 }
@@ -222,7 +224,7 @@ class TaskSeeder extends Seeder
 
             case 'pending':
                 // stays pending (no transitions or just a PM acknowledgment hop)
-                if (random_int(1,100) <= 30) {
+                if (random_int(1, 100) <= 30) {
                     $logs[] = $this->log($taskId, 'pending', 'pending', $pmUserId, $t = $this->tick($t));
                 }
                 break;
@@ -233,10 +235,10 @@ class TaskSeeder extends Seeder
                 $logs[] = $this->log($taskId, 'in progress', 'reopened', $pmUserId, $t = $this->tick($t), $this->reopenReason());
 
                 // Optional more work after reopen
-                if (random_int(1,100) <= 60) {
+                if (random_int(1, 100) <= 60) {
                     $logs[] = $this->log($taskId, 'reopened', 'in progress', $assigneeId, $t = $this->tick($t));
                     // maybe another reopen cycle
-                    if (random_int(1,100) <= 25) {
+                    if (random_int(1, 100) <= 25) {
                         $logs[] = $this->log($taskId, 'in progress', 'reopened', $pmUserId, $t = $this->tick($t), $this->reopenReason());
                     }
                 }
@@ -250,26 +252,26 @@ class TaskSeeder extends Seeder
     private function tick(Carbon $t): Carbon
     {
         // Advance 1–7 days, set to working-hours time
-        return $t->copy()->addDays(random_int(1,7))->setTime(random_int(9,18), random_int(0,59));
+        return $t->copy()->addDays(random_int(1, 7))->setTime(random_int(9, 18), random_int(0, 59));
+    }
+private function log(int $taskId, string $from, string $to, int $by, Carbon $ts, ?string $note = null): array
+{
+    // Enforce: notes only when to_status is completed or reopened
+    if (!in_array($to, ['completed','reopened'], true)) {
+        $note = null;
     }
 
-    private function log(int $taskId, string $from, string $to, int $by, Carbon $ts, ?string $note = null): array
-    {
-        // Enforce: notes only when to_status is completed or reopened
-        if (!in_array($to, ['completed','reopened'], true)) {
-            $note = null;
-        }
-
-        return [
-            'task_id'     => $taskId,
-            'from_status' => $from,
-            'to_status'   => $to,
-            'changed_by'  => $by,
-            'note'        => $note,
-            'created_at'  => $ts,
-            'updated_at'  => $ts,
-        ];
-    }
+    return [
+        'task_id'        => $taskId,
+        'from_status'    => $from,
+        'to_status'      => $to,
+        'changed_by'     => $by,
+        'note'           => $note,
+        'duration' => $to === 'completed' ? $this->randDurationHours() : null,
+        'created_at'     => $ts,
+        'updated_at'     => $ts,
+    ];
+}
 
     private function completionNote(): string
     {
@@ -292,5 +294,9 @@ class TaskSeeder extends Seeder
             'Specs mismatch for OOH; revise dimensions.',
         ];
         return 'PM Reopen: ' . $reasons[array_rand($reasons)];
+    }
+    private function randDurationHours(): float
+    {
+        return round(mt_rand(10, 100) / 10, 1);
     }
 }

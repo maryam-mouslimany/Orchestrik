@@ -14,6 +14,7 @@ return new class extends Migration
             $table->foreignId('task_id')->constrained()->onDelete('cascade');
             $table->string('from_status');
             $table->string('to_status');
+            $table->float('duration')->nullable();
             $table->foreignId('changed_by')->constrained('users')->onDelete('cascade');
             $table->string('note')->nullable();
             $table->timestamps();
