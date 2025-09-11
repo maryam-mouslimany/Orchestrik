@@ -14,12 +14,15 @@ class ProjectService
     {
         $user = Auth::user();
         $withTaskStats = $request->boolean('withTaskStats');
-
+        $name = $request->query('name', $request->query('nameFilter'));
         $query = ($user->role->name === 'admin')
             ? Project::where('created_by', $user->id)
             : $user->projects()->select('projects.*');
 
         $query->with(['creator', 'client', 'members']);
+        if (is_string($name) && $name !== '') {
+            $query->where('projects.name', 'LIKE', '%' . $name . '%');
+        }
 
         if ($withTaskStats) {
             $now = Carbon::now();

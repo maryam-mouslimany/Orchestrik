@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
           { index: true, element: <p>dashboard</p> },
           { path: 'test', element: <TasksPage /> },
           { path: 'forbbiden', element: <p>Unauthorized</p> },
-          { path: "/projects", element: <ViewProjects />, loader: projectsLoader },
+          { path: "/projects", element: <ViewProjects /> },
           {
             element: <AdminLayout />,
             children: [
