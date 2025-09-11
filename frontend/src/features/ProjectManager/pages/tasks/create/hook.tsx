@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux'; 
 import { useForm } from '../../../../../hooks/useForm';
 import apiCall from '../../../../../services/apiCallService';
+import { fetchProjects, selectProjectsLoad } from '../../../../../redux/projectsSlice';
 
 type Member = { id: number; name: string };
 export type TaskForm = {
@@ -10,7 +11,17 @@ export type TaskForm = {
 };
 
 export const useTaskCreate = () => {
+
   const { projectsList: projectsOptions } = useSelector((s: any) => s.projects);
+  console.log(projectsOptions)
+  const dispatch = useDispatch();
+  const loadingProjects = useSelector(selectProjectsLoad);
+
+  useEffect(() => {
+    if (!loadingProjects && (!projectsOptions || projectsOptions.length === 0)) {
+      dispatch(fetchProjects());
+    }
+  }, [dispatch, loadingProjects, projectsOptions]);
 
   const { values, setField, reset } = useForm<TaskForm>({
     title: '', description: '', priority: '', deadline: '', project_id: '', assigned_to: '',
@@ -20,9 +31,8 @@ export const useTaskCreate = () => {
   const [recLoading, setRecLoading] = useState(false);
   const [recReason, setRecReason] = useState('');
   const [createLoading, setCreateLoading] = useState(false);
-  const [formError, setFormError] = useState(''); // banner
+  const [formError, setFormError] = useState('');
 
-  // fetch members when project changes
   useEffect(() => {
     const pid = Number(values.project_id);
     if (!pid) { setMembers([]); setField('assigned_to', '' as any); return; }
@@ -56,16 +66,14 @@ export const useTaskCreate = () => {
       });
       const user = res?.data?.user; const why = res?.data?.why;
       if (user?.id) setField('assigned_to', +user.id);
-      if (why) { setRecReason(String(why)); setTimeout(() => setRecReason(''), 20000); }
+      if (why) { setRecReason(String(why)); setTimeout(() => setRecReason(''), 100000); }
     } finally { setRecLoading(false); }
   };
 
   const createTask = async () => {
-
     const valid = !!values.project_id && !!values.priority;
     if (!valid) { setFormError('All fields are required.'); return; }
     setFormError('');
-
     try {
       setCreateLoading(true);
       const res = await apiCall('pm/tasks/create', {
@@ -82,6 +90,7 @@ export const useTaskCreate = () => {
       console.log('created', res)
     } finally { setCreateLoading(false); }
   };
+
   return {
     values, setField, reset,
     projectsOptions, members,

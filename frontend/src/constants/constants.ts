@@ -15,3 +15,10 @@ export const TaskSTATUSES = [
 export const TaskPriorities = [
   'low', 'medium', 'high'
 ]
+
+export const roleHome: Record<string, string> = {
+  admin:   "/dashboard",
+  pm: "/projects",
+  employee:"my-tasks",
+};
+

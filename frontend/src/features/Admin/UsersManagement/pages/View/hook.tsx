@@ -1,7 +1,17 @@
-import apiCall from '../../../../../services/apiCallService';
+// src/pages/admin/users/components/Table/hook.ts
 import { type Column } from '../../../../../components/Table';
 import { useCallback, useState, useMemo, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useLoaderData } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+
+import {
+  fetchUsers,
+  selectUsersRaw,
+  selectUsersLoading,
+  selectUsersError,
+} from '../../../../../redux/usersSlice';
+
+import { type Skill, type Position } from '../../../../../routes/loaders/usersLoader';
 
 export type UserRow = {
   id: number;
@@ -13,56 +23,48 @@ export type UserRow = {
 };
 
 export const useUsersTable = () => {
-  // filters fields
-  const [skills, setSkills] = useState<Array<number | string>>([]); // was skillId
+  const [skills, setSkills] = useState<Array<number | string>>([]);
   const [positionId, setPositionId] = useState<string | null>(null);
   const [roleId, setRoleId] = useState<string | null>(null);
 
-  // skills and positions from redux
-  const { list: skillsOptions } = useSelector((s: any) => s.skills);
-  const { positionsList: positionsOptions } = useSelector((s: any) => s.positions);
+  const skillsOptions = useLoaderData() as Skill[];
+  const positionsOptions = useLoaderData() as Position[];
 
-  const filters = useMemo(() => ({
-    roleId: roleId ? Number(roleId) : undefined,
-    positionId: positionId ? Number(positionId) : undefined,
-    skills: (skills ?? []).map((v) => Number(v)),
-  }), [roleId, positionId, skills]);
+  const filters = useMemo(() => {
+    const skillsIds = (skills ?? [])
+      .map((v) => Number(v))
+      .filter((n) => !Number.isNaN(n));
+    return {
+      roleId: roleId ? Number(roleId) : undefined,
+      positionId: positionId ? Number(positionId) : undefined,
+      skills: skillsIds.length ? skillsIds : undefined,
+    };
+  }, [roleId, positionId, skills]);
 
-  const [rows, setRows] = useState<UserRow[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const rawUsers = useSelector(selectUsersRaw);
+  const loading  = useSelector(selectUsersLoading);
+  const error    = useSelector(selectUsersError);
 
-  const fetchUsers = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  useEffect(() => {
+    dispatch(fetchUsers(filters));
+  }, [dispatch, filters]);
 
-      const res = await apiCall('/admin/users', {
-        method: 'GET',
-        requiresAuth: true,
-        params: { filters },
-      });
+  const rows: UserRow[] = useMemo(() => {
+    const list = Array.isArray(rawUsers) ? rawUsers : [];
+    return list.map((u: any) => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: u?.role?.name ?? '',
+      position: u?.position?.name ?? '',
+      skills: Array.isArray(u?.skills) ? u.skills.map((s: any) => s.name).join(', ') : '',
+    }));
+  }, [rawUsers]);
 
-      const list: any[] = Array.isArray(res.data) ? res.data : [];
-      const mapped: UserRow[] = list.map((u) => ({
-        id: u.id,
-        name: u.name,
-        email: u.email,
-        role: u?.role?.name ?? '',
-        position: u?.position?.name ?? '',
-        skills: Array.isArray(u?.skills) ? u.skills.map((s: any) => s.name).join(', ') : '',
-      }));
-
-      setRows(mapped);
-    } catch (e: any) {
-      setError(e?.message ?? 'Failed to load users');
-      setRows([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [filters]);
-
-  useEffect(() => { void fetchUsers(); }, [fetchUsers]);
+  const refresh = useCallback(() => {
+    dispatch(fetchUsers(filters));
+  }, [dispatch, filters]);
 
   const columns: Column<UserRow>[] = useMemo(() => ([
     { key: 'id', label: 'ID', width: 80 },
@@ -75,7 +77,7 @@ export const useUsersTable = () => {
   ]), []);
 
   return {
-    rows, columns, loading, error, refresh: fetchUsers,
+    rows, columns, loading, error, refresh,
     roleId, setRoleId,
     positionId, setPositionId,
     skills, setSkills,

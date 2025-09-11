@@ -20,7 +20,7 @@ class UserService
             $q->where('role_id', $roleId);
         }
 
-        if (!empty($filters['skills'])) {
+        if (!empty($filters['positionId'])) {
             $q->where('position_id', $positionId);
         }
 

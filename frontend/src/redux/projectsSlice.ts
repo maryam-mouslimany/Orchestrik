@@ -1,30 +1,24 @@
 // src/redux/projectsSlice.ts
 import apiCall from '../services/apiCallService';
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-
-export type Project = { id: number; name: string };
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 type ProjectsState = {
-  projectsList: Project[];
-  filtered: Project[];
+  projectsList: any[];        // keep raw API data
   loading: boolean;
   error: string | null;
 };
 
 const initialState: ProjectsState = {
   projectsList: [],
-  filtered: [],
   loading: false,
   error: null,
 };
 
-// Fetch projects from API
-export const fetchProjects = createAsyncThunk<Project[]>(
+export const fetchProjects = createAsyncThunk<any[]>(
   'projects/fetchAll',
   async () => {
     const res = await apiCall('/projects', { method: 'GET', requiresAuth: true });
-    console.log('projects from api', res.data);
-    return res.data;
+    return Array.isArray(res.data) ? res.data : [];
   }
 );
 
@@ -34,9 +28,8 @@ const projectsSlice = createSlice({
   reducers: {
     emptyProjects(state) {
       state.projectsList = [];
-      state.filtered = [];
-      state.error = null;
       state.loading = false;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -45,11 +38,9 @@ const projectsSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProjects.fulfilled, (state, action: PayloadAction<Project[]>) => {
+      .addCase(fetchProjects.fulfilled, (state, action) => {
         state.projectsList = action.payload;
-        state.filtered = action.payload;
         state.loading = false;
-        state.error = null;
       })
       .addCase(fetchProjects.rejected, (state, action) => {
         state.loading = false;
@@ -60,3 +51,8 @@ const projectsSlice = createSlice({
 
 export const { emptyProjects } = projectsSlice.actions;
 export default projectsSlice.reducer;
+
+// selectors (minimal)
+export const selectProjectsList   = (s: any) => s.projects.projectsList;
+export const selectProjectsLoad   = (s: any) => s.projects.loading;
+export const selectProjectsError  = (s: any) => s.projects.error;

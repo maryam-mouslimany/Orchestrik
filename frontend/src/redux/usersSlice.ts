@@ -1,29 +1,31 @@
+// src/redux/usersSlice.ts
 import apiCall from '../services/apiCallService';
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export type User = { id: number; name: string };
+export type UsersFilters = { roleId?: number; positionId?: number; skills?: number[] };
 
 type UsersState = {
-  usersList: User[];
-  filtered: User[];
+  usersList: any[];            // keep raw API data (no view types here)
   loading: boolean;
   error: string | null;
 };
 
 const initialState: UsersState = {
   usersList: [],
-  filtered: [],
   loading: false,
   error: null,
 };
 
-// Fetch users from API
-export const fetchUsers = createAsyncThunk<User[]>(
+// GET /admin/users with filters (optional)
+export const fetchUsers = createAsyncThunk<any[], UsersFilters | undefined>(
   'users/fetchAll',
-  async () => {
-    const res = await apiCall('/admin/users', { method: 'GET', requiresAuth: true });
-    console.log('users from api', res.data);
-    return res.data;
+  async (filters) => {
+    const res = await apiCall('/admin/users', {
+      method: 'GET',
+      requiresAuth: true,
+      params: { filters: filters ?? {} },
+    });
+    return Array.isArray(res.data) ? res.data : [];
   }
 );
 
@@ -33,9 +35,8 @@ const usersSlice = createSlice({
   reducers: {
     emptyUsers(state) {
       state.usersList = [];
-      state.filtered = [];
-      state.error = null;
       state.loading = false;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -44,11 +45,9 @@ const usersSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
+      .addCase(fetchUsers.fulfilled, (state, action) => {
         state.usersList = action.payload;
-        state.filtered = action.payload;
         state.loading = false;
-        state.error = null;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
@@ -59,3 +58,8 @@ const usersSlice = createSlice({
 
 export const { emptyUsers } = usersSlice.actions;
 export default usersSlice.reducer;
+
+// Minimal selectors
+export const selectUsersRaw     = (s: any) => s.users.usersList;
+export const selectUsersLoading = (s: any) => s.users.loading;
+export const selectUsersError   = (s: any) => s.users.error;

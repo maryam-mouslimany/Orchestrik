@@ -2,7 +2,8 @@
 import apiCall from '../../../../../services/apiCallService';
 import { type Column } from '../../../../../components/Table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProjects, selectProjectsLoad, selectProjectsList } from '../../../../../redux/projectsSlice';
 import Pill from '../../../../../components/Pill';
 
 export type TaskRow = {
@@ -22,8 +23,25 @@ export const useTasksTable = () => {
   const [priority, setPriority] = useState<string | null>(null);
 
   //projects from redux
-  const { projectsList: projectsOptions } = useSelector((s: any) => s.projects);
+  const dispatch = useDispatch();
+  const projectsList = useSelector(selectProjectsList);
+  const loadingProjects = useSelector(selectProjectsLoad);
 
+  // fetch projects if store is empty (no root loader)
+  useEffect(() => {
+    if (!loadingProjects && (!projectsList || projectsList.length === 0)) {
+      dispatch(fetchProjects());
+    }
+  }, [dispatch, loadingProjects, projectsList]);
+
+  // normalized options -> [{id:number, name:string}]
+  const projectsOptions = useMemo(
+    () => (Array.isArray(projectsList) ? projectsList : [])
+      .map((p: any) => ({ id: Number(p?.id), name: String(p?.name ?? p?.title ?? '') }))
+      .filter(o => Number.isFinite(o.id) && o.name.length > 0),
+    [projectsList]
+  );
+  
   // build filters object and drop undefineds
   const filters = useMemo(() => {
     const f: any = {};

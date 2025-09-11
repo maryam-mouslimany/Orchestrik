@@ -8,7 +8,6 @@ type ApiCallParams = {
   params?: {},
   requiresAuth?: boolean
 }
-//axios instance
 const api = axios.create({
   baseURL,
   headers: {

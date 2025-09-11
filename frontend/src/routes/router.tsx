@@ -1,18 +1,20 @@
-import Login from '../features/Login/pages';
+import Login from '../features/Common/Login';
+import { PmLayout } from '../layouts/PmLayout';
 import { AppLayout } from '../layouts/AppLayout';
 import { rootLoader } from './loaders/rootLoader';
-import { createBrowserRouter } from 'react-router-dom';
-import { projectsCreateLoader } from './loaders/projectsCreateLoader';
-import { UsersTablePage } from '../features/Admin/UsersManagement/pages/View';
-import ProjectCreatePage from '../features/Admin/ProjetsManagement/pages/create';
-import TasksTablePage from '../features/Employee/pages/tasks/view';
-import TasksPage from '../features/Admin/ProjetsManagement/pages/create';
 import { AuthLayout } from '../layouts/AuthLayout';
 import { AdminLayout } from '../layouts/AdminLayout';
-import { PmLayout } from '../layouts/PmLayout';
+import { skillsLoader } from './loaders/usersLoader';
+import { createBrowserRouter } from 'react-router-dom';
 import { EmployeeLayout } from '../layouts/EmployeeLayout';
+import { projectsLoader } from './loaders/projectsViewLoader';
+import ViewProjects from '../features/Common/ViewProjects/pages';
+import TasksTablePage from '../features/Employee/pages/tasks/view';
+import { projectsCreateLoader } from './loaders/projectsCreateLoader';
+import TasksPage from '../features/Admin/ProjetsManagement/pages/create';
 import TaskCreatePage from '../features/ProjectManager/pages/tasks/create';
-
+import { UsersTablePage } from '../features/Admin/UsersManagement/pages/View';
+import ProjectCreatePage from '../features/Admin/ProjetsManagement/pages/create';
 export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
 
@@ -21,26 +23,23 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <AppLayout />,
-        loader: rootLoader,
         children: [
           { index: true, element: <p>dashboard</p> },
-          { path: 'dashboard', element: <p>dashboard</p> },
           { path: 'test', element: <TasksPage /> },
           { path: 'forbbiden', element: <p>Unauthorized</p> },
-          { path: 'tasks/create', element: <TaskCreatePage/> },
-
+          { path: "/projects", element: <ViewProjects /> },
           {
             element: <AdminLayout />,
             children: [
-              { path: 'users', element: <UsersTablePage /> },
+              { path: 'dashboard', element: <p>dashboard</p> },
+              { path: 'users', element: <UsersTablePage />, loader: skillsLoader},
               { path: 'projects/create', element: <ProjectCreatePage />, loader: projectsCreateLoader },
             ],
           },
-
           {
             element: <PmLayout />,
             children: [
-              // { path: 'pm/reports', element: <PmReportsPage /> },
+              { path: 'tasks/create', element: <TaskCreatePage /> },
             ],
           },
 

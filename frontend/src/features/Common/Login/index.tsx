@@ -23,7 +23,7 @@ const Login: React.FC = () => {
                 <img src={logo} alt="Logo" className={styles.logo} />
                 <h2 className={styles.title}>Sign In to Your Account</h2>
 
-                <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
+                <div className={styles.form}>
                     <div className={styles.formGroup}>
                         <Input
                             label="Email"
@@ -51,7 +51,7 @@ const Login: React.FC = () => {
                         onClick={handleLogin}
                         disabled={!isValid}
                     />
-                </form>
+                </div>
             </div>
         </div>
     );

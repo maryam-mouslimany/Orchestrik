@@ -14,7 +14,7 @@ const TaskCreatePage: React.FC = () => {
     recommendAssignee, recLoading, recReason, createTask, createLoading, formError } = useTaskCreate();
 
   return (
-    <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+    <div className={styles.form} >
       <div className={styles.formHeader}>
         <h2 className={styles.formTitle}>Create Task</h2>
       </div>
@@ -45,7 +45,7 @@ const TaskCreatePage: React.FC = () => {
             label="Priority"
             options={TaskPriorities}
             selected={values.priority}
-            onChange={(val) => setField('priority', val)}
+            onChange={(val) => setField('priority', String(val))}
             placeholder="Select a priority"
           />
         </div>
@@ -54,7 +54,7 @@ const TaskCreatePage: React.FC = () => {
 
           <DateField
             label="Deadline"
-            value={values.deadline}                             
+            value={values.deadline}
             onChange={(e) => setField('deadline', e.target.value)}
           />
 
@@ -102,7 +102,7 @@ const TaskCreatePage: React.FC = () => {
       </div>
 
       {recReason && <div className={styles.infoToast}>{recReason}</div>}
-    </form>
+    </div>
 
 
   );
