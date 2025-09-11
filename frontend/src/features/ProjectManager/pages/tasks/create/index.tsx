@@ -45,7 +45,7 @@ const TaskCreatePage: React.FC = () => {
             label="Priority"
             options={TaskPriorities}
             selected={values.priority}
-            onChange={(val) => setField('priority', e.target.val)}
+            onChange={(val) => setField('priority', String(val))}
             placeholder="Select a priority"
           />
         </div>
@@ -54,7 +54,7 @@ const TaskCreatePage: React.FC = () => {
 
           <DateField
             label="Deadline"
-            value={values.deadline}                             
+            value={values.deadline}
             onChange={(e) => setField('deadline', e.target.value)}
           />
 

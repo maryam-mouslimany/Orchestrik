@@ -2,7 +2,11 @@ import { useMemo, useState } from 'react';
 import { useForm } from '../../../../../hooks/useForm';
 import { useLoaderData } from 'react-router-dom';
 import apiCall from '../../../../../services/apiCallService';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUsers, selectUsersRaw, selectUsersLoading, selectUsersError } from '../../../../../redux/usersSlice';
+import { useEffect } from 'react';
+import { fetchProjects, selectProjectsLoad } from '../../../../../redux/projectsSlice';
+
 
 export type MultiOption = { id: number; name: string };
 type ProjectsCreateLoader = { clients: Array<{ id: number; name: string }> };
@@ -20,7 +24,17 @@ const MIN_DESC = 20; // description length threshold
 
 export const useProjectCreate = () => {
   const { clients } = useLoaderData() as ProjectsCreateLoader;
-  const { usersList: usersOptions } = useSelector((s: any) => s.users);
+
+  const dispatch = useDispatch();
+  const usersOptions  = useSelector(selectUsersRaw);       // any[]
+  const usersLoad = useSelector(selectUsersLoading);   // boolean
+
+  useEffect(() => {
+    if (!usersLoad && (!usersOptions  || usersOptions .length === 0)) {
+      dispatch(fetchUsers(undefined)); // no filters
+    }
+  }, [dispatch, usersLoad, usersOptions ]);
+
 
   const { values, setField } = useForm<ProjectForm>({
     name: '',

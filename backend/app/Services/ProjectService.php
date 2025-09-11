@@ -17,7 +17,7 @@ class ProjectService
 
         $query = ($user->role->name === 'admin')
             ? Project::where('created_by', $user->id)
-            : $user->projects()->getQuery();
+            : $user->projects()->select('projects.*');
 
         $query->with(['creator', 'client', 'members']);
 

@@ -23,7 +23,6 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <AppLayout />,
-        loader: rootLoader,
         children: [
           { index: true, element: <p>dashboard</p> },
           { path: 'test', element: <TasksPage /> },
