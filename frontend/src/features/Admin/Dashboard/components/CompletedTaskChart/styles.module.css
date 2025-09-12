@@ -1,0 +1,84 @@
+:root {
+  --primary-color: #3b82f6;
+  --card-bg: #fff;
+  --card-fg: #0f172a;
+  --muted-foreground: #6b7280;
+  --border-color: #e5e7eb;
+  --tooltip-bg: #fff;
+  --tooltip-border: #e5e7eb;
+  --tooltip-text: #0f172a;
+  --tooltip-cursor: rgba(0, 0, 0, .04);
+}
+
+/* Card */
+.card {
+  background: var(--card-bg);
+  color: var(--card-fg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 8px 24px rgba(2, 6, 23, .06);
+  height:240px;
+  /* chart width = this container's width */
+  max-width: 450px;
+  /* ← CONTROL WIDTH HERE (change/override as needed) */
+}
+
+/* Header / KPIs */
+.head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.title {
+  margin: 0;
+  font: 700 16px/1.2 system-ui;
+}
+
+.sub {
+  margin: 4px 0 0;
+  font: 12px system-ui;
+  color: var(--muted-foreground);
+}
+
+.kpis {
+  display: flex;
+  gap: 14px;
+  text-align: right;
+}
+
+.kL {
+  font: 11px system-ui;
+  color: var(--muted-foreground);
+}
+
+.kV {
+  font: 800 18px/1 system-ui;
+}
+
+/* Chart box (controls height) */
+.chartWrap {
+  width: 100%;
+  height: 200px;
+  /* ← CONTROL HEIGHT HERE */
+  margin-top: 6px;
+}
+
+/* Tooltip */
+.tooltip {
+  background: var(--tooltip-bg);
+  border: 1px solid var(--tooltip-border);
+  color: var(--tooltip-text);
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(2, 6, 23, .08);
+  font-size: 12px;
+}
+
+.trow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}

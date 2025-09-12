@@ -14,4 +14,8 @@ class TaskStatusLog extends Model
         'note',
         
     ];
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
 }
