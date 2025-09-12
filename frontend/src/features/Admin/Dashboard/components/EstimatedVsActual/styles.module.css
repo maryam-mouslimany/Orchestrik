@@ -1,0 +1,35 @@
+.card {
+  background: #fff;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(2,6,23,.06);
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.chart {
+  width: 100%;
+  min-height: 220px; /* safety for SSR */
+}
+
+/* pick one height bucket for this card */
+.h360 { height: 360px; }
+
+/* tooltip (optional) */
+.tooltip {
+  background: #fff;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 10px;
+  padding: 8px 10px;
+  box-shadow: 0 8px 24px rgba(2,6,23,.08);
+  font-size: 12px;
+  color: #0f172a;
+}
+.tooltip span { color: #64748b; }
+
+.refLine {
+  stroke: var(--muted-foreground, #64748b);
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+}
