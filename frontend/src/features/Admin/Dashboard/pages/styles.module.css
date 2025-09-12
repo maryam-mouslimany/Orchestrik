@@ -1,0 +1,33 @@
+.flexShell {
+  display: flex;
+  flex-direction: row;   /* left | right */
+  gap: 16px;             /* gap between left and right */
+  align-items: stretch;  /* make right match left column height */
+  margin-bottom:16px;
+}
+
+/* LEFT column: stack Completed + Skills vertically */
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;             /* vertical gap between the two cards */
+  flex: 1 1 0;           /* take available width */
+  min-width: 0;
+}
+
+/* RIGHT column: one card that fills full height */
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;           /* same width weight as left; adjust as you like */
+  min-width: 0;
+}
+.rightCol > * {
+  flex: 1 1 auto;        /* make the card fill the column height */
+}
+
+/* Responsive: stack columns */
+@media (max-width: 900px) {
+  .flexShell { flex-direction: column; }
+  .rightCol > * { flex: 0 0 auto; } /* natural height on mobile */
+}

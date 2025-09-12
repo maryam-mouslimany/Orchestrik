@@ -30,4 +30,28 @@ class AdminDashboardController extends Controller
             return $this->error($e->getMessage(), 500);
         }
     }
+
+    function positionsDistribution()
+    {
+        try {
+            $res = AdminDashboardService::positionsDistribution();
+            if (!$res)
+                return $this->error('Not Found');
+            return $this->success($res);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+    }
+
+    function skillsDistribution()
+    {
+        try {
+            $res = AdminDashboardService::skillsDistribution();
+            if (!$res)
+                return $this->error('Not Found');
+            return $this->success($res);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+    }
 }

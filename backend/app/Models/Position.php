@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Position extends Model
 {
     use HasFactory;
-    protected $guarded = [];  
+    protected $guarded = [];
 
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

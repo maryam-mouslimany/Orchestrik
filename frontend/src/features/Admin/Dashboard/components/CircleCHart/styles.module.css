@@ -1,0 +1,30 @@
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 10px 24px rgba(2,6,23,.06);
+  display: grid;
+  gap: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+.meta {
+  font-size: 12px;
+  color: #475569;
+}
+
+.chartWrap {
+  width: 100%;
+  min-height: 220px; /* safety */
+}

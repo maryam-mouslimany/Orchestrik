@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\TaskStatusLog;
 use App\Models\User;
+use App\Models\Skill;
+use App\Models\Position;
 
 class AdminDashboardService
 {
@@ -40,7 +42,7 @@ class AdminDashboardService
     {
 
         return User::query()
-            ->where('role_id', '3') // ← added
+            ->where('role_id', '3')
             ->withCount([
                 'tasks as pending'     => fn($q) => $q->where('status', 'pending'),
                 'tasks as in_progress' => fn($q) => $q->where('status', 'in_progress'),
@@ -53,5 +55,50 @@ class AdminDashboardService
                 'total'       => (int) ($u->pending + $u->in_progress),
             ])
             ->sortByDesc('total')->values()->all();
+    }
+
+    public static function positionsDistribution()
+    {
+        $totalUsers = User::count();
+
+        $positions = Position::query()
+            ->withCount('users')
+            ->orderByDesc('users_count')
+            ->get(['id', 'name']);
+
+        return $positions->map(function (Position $s) use ($totalUsers) {
+            $count = (int) $s->users_count;
+            $pct   = $totalUsers > 0 ? round(($count / $totalUsers) * 100, 2) : 0.0;
+
+            return [
+                'id'         => (int) $s->id,
+                'name'       => (string) $s->name,
+                'count'      => $count,
+                'percentage' => $pct,
+            ];
+        })->all();
+    }
+
+
+    public static function skillsDistribution()
+    {
+        $totalUsers = User::count();
+
+        $skills = Skill::query()
+            ->withCount('users')
+            ->orderByDesc('users_count')
+            ->get(['id', 'name']);
+
+        return $skills->map(function (Skill $s) use ($totalUsers) {
+            $count = (int) $s->users_count;
+            $pct   = $totalUsers > 0 ? round(($count / $totalUsers) * 100, 2) : 0.0;
+
+            return [
+                'id'         => (int) $s->id,
+                'name'       => (string) $s->name,
+                'count'      => $count,
+                'percentage' => $pct,
+            ];
+        })->all();
     }
 }

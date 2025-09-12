@@ -38,6 +38,8 @@ Route::middleware(['jwt.auth'])->group(function () {
         Route::post("/users/create", [UserController::class, "createUser"]);
         Route::get("/analytics/tasks/durations", [AdminDashboardController::class, "getTopAndLeastCompletedDurations"]);
         Route::get("/analytics/employees/workload", [AdminDashboardController::class, "employeesWorkload"]);
+        Route::get("/analytics/employees/positions", [AdminDashboardController::class, "positionsDistribution"]);
+        Route::get("/analytics/employees/skills", [AdminDashboardController::class, "skillsDistribution"]);
     });
     Route::prefix('employee')->middleware(RoleMiddleware::class . ':employee')->group(function () {
         Route::get("/tasks", [TaskController::class, "employeeTasks"]);

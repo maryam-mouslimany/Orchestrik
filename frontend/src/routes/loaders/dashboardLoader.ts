@@ -12,20 +12,30 @@ export type Workload = {
 export type DashboardBundle = {
   durations: Durations;
   workload: Workload;
-  //completedTimeline: CompletedPoint[];
+  positions: PositionDistribution;
+  skills:PositionDistribution;
+};
+export type PositionDistribution = {
+  id: number;
+  position: string;
+  count: number;
+  percentage?: number;
 };
 
 export async function dashboardLoader(): Promise<DashboardBundle> {
-  const [durationsRes, workloadRes] = await Promise.all([
+  const [durationsRes, workloadRes, positionsDistributionRes, skillsDistributionRes] = await Promise.all([
     apiCall("/admin/analytics/tasks/durations", { method: "GET", requiresAuth: true }),
     apiCall("/admin/analytics/employees/workload", { method: "GET", requiresAuth: true }),
+    apiCall("/admin/analytics/employees/positions", { method: "GET", requiresAuth: true }),
+    apiCall("/admin/analytics/employees/skills", { method: "GET", requiresAuth: true }),
 
-    //apiCall("/admin/analytics/tasks/completed-per-day?days=7", { method: "GET", requiresAuth: true }),
   ]);
-
+  console.log(positionsDistributionRes.data)
   return {
     durations: durationsRes.data,
     workload: workloadRes.data,
-    //completedTimeline: timelineRes.data,    
+    positions: positionsDistributionRes.data,
+    skills: skillsDistributionRes.data,
+
   };
 }
