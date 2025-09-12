@@ -1,7 +1,6 @@
 import Login from '../features/Common/Login';
 import { PmLayout } from '../layouts/PmLayout';
 import { AppLayout } from '../layouts/AppLayout';
-import { rootLoader } from './loaders/rootLoader';
 import { AuthLayout } from '../layouts/AuthLayout';
 import { AdminLayout } from '../layouts/AdminLayout';
 import { skillsLoader } from './loaders/usersLoader';
@@ -16,6 +15,9 @@ import TaskCreatePage from '../features/ProjectManager/pages/tasks/create';
 import { UsersTablePage } from '../features/Admin/UsersManagement/pages/View';
 import ProjectCreatePage from '../features/Admin/ProjetsManagement/pages/create';
 import AdminDashboard from '../features/Admin/Dashboard/pages';
+import UserCreatePage from '../features/Admin/UsersManagement/pages/create';
+import {usersCreateLoader} from './loaders/usersCreateLoader';
+
 export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
 
@@ -32,9 +34,11 @@ export const router = createBrowserRouter([
           {
             element: <AdminLayout />,
             children: [
-              { path: 'dashboard', element: <AdminDashboard/>, loader: dashboardLoader},
-              { path: 'users', element: <UsersTablePage />, loader: skillsLoader},
+              { path: 'dashboard', element: <AdminDashboard />, loader: dashboardLoader },
+              { path: 'users', element: <UsersTablePage />, loader: skillsLoader },
+              { path: 'users/create', element: <UserCreatePage />, loader: usersCreateLoader },
               { path: 'projects/create', element: <ProjectCreatePage />, loader: projectsCreateLoader },
+
             ],
           },
           {

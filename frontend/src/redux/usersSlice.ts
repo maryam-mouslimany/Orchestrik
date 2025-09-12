@@ -5,15 +5,19 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 export type UsersFilters = { roleId?: number; positionId?: number; skills?: number[] };
 
 type UsersState = {
-  usersList: any[];            // keep raw API data (no view types here)
+  usersList: any[];
   loading: boolean;
   error: string | null;
+  creating: boolean;
+  createError: string | null;
 };
 
 const initialState: UsersState = {
   usersList: [],
   loading: false,
   error: null,
+  creating: false,
+  createError: null,
 };
 
 // GET /admin/users with filters (optional)
@@ -28,7 +32,22 @@ export const fetchUsers = createAsyncThunk<any[], UsersFilters | undefined>(
     return Array.isArray(res.data) ? res.data : [];
   }
 );
-
+export const createUser = createAsyncThunk<any, Record<string, any>>(
+  'users/create',
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await apiCall('/admin/users', {
+        method: 'POST',
+        requiresAuth: true,
+        data: payload,
+      });
+      return res.data; // expect the created user object
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.message || 'Failed to create user';
+      return rejectWithValue(msg);
+    }
+  }
+);
 const usersSlice = createSlice({
   name: 'users',
   initialState,
@@ -52,14 +71,32 @@ const usersSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? 'Failed to load users';
+      })
+      .addCase(createUser.pending, (state) => {
+        state.creating = true;
+        state.createError = null;
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.creating = false;
+        // Option 1 (recommended): don't mutate usersList here; refetch after create
+        // state.lastCreated = action.payload;
+
+        // Option 2 (optimistic append — only if you really want it):
+        // if (Array.isArray(state.usersList)) state.usersList.unshift(action.payload);
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.creating = false;
+        state.createError = (action.payload as string) ?? action.error.message ?? 'Failed to create user';
       });
+
   },
 });
 
 export const { emptyUsers } = usersSlice.actions;
 export default usersSlice.reducer;
 
-// Minimal selectors
-export const selectUsersRaw     = (s: any) => s.users.usersList;
+export const selectUsersCreating   = (s: any) => s.users.creating;
+export const selectUsersCreateErr  = (s: any) => s.users.createError;
+export const selectUsersRaw = (s: any) => s.users.usersList;
 export const selectUsersLoading = (s: any) => s.users.loading;
-export const selectUsersError   = (s: any) => s.users.error;
+export const selectUsersError = (s: any) => s.users.error;
