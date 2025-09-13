@@ -4,6 +4,7 @@ namespace App\services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserService
 {
@@ -14,7 +15,7 @@ class UserService
         $skills = $filters['skills'] ?? [];
         $nameFilter = $filters['nameFilter'] ?? [];
         $q = User::query()
-            ->with(['role', 'position', 'skills']);
+            ->withTrashed()->with(['role', 'position', 'skills']);
 
         if (!empty($filters['nameFilter'])) {
             $q->where('name', 'LIKE', '%' . $nameFilter . '%');
@@ -49,5 +50,29 @@ class UserService
         $user->skills()->attach($data['skills']);
 
         return $user->load(['role', 'position', 'skills']);
+    }
+
+    static function delete($request)
+    {
+        $id = $request->validate(['id' => 'required|integer|exists:users,id']);
+
+        User::where('id', $id)->delete();
+
+        return 'deleted';
+    }
+
+    static public function restore($request)
+    {
+        $id = $request->validate([
+            'id' => [
+                'required',
+                'integer',
+                Rule::exists('users', 'id')->whereNotNull('deleted_at'),
+            ],
+        ]);
+        User::withTrashed()->whereKey($id)->restore();
+        $user = User::find($id);
+
+        return $user;
     }
 }
