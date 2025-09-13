@@ -7,7 +7,8 @@ import { useUsersTable } from './hook';
 import MultipleSelectChip from '../../../../../components/MultipleSelectFilter';
 import SearchBar from '../../../../../components/SearchBar';
 import LoadingIndicator from '../../../../../components/Loading';
-import styles from './styles.module.css'
+import styles from './styles.module.css';
+
 export const UsersTablePage: React.FC = () => {
   const {
     rows, columns, loading, error,
@@ -64,7 +65,6 @@ export const UsersTablePage: React.FC = () => {
             onChange={setSkillId}
           />
         </div>
-
       </div>
 
       <SimpleMuiTable

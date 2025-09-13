@@ -12,11 +12,13 @@ import TasksTablePage from '../features/Employee/pages/tasks/view';
 import { projectsCreateLoader } from './loaders/projectsCreateLoader';
 import TasksPage from '../features/Admin/ProjetsManagement/pages/create';
 import TaskCreatePage from '../features/ProjectManager/pages/tasks/create';
-import { UsersTablePage } from '../features/Admin/UsersManagement/pages/View';
+import UsersTablePage from '../features/Admin/UsersManagement/pages/View';
 import ProjectCreatePage from '../features/Admin/ProjetsManagement/pages/create';
 import AdminDashboard from '../features/Admin/Dashboard/pages';
 import UserCreatePage from '../features/Admin/UsersManagement/pages/create';
-import {usersCreateLoader} from './loaders/usersCreateLoader';
+import { usersCreateLoader } from './loaders/usersCreateLoader';
+import ForbiddenPage from '../components/ForbiddenPage';
+import { usersEditLoader } from './loaders/usersEditLoader';
 
 export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
@@ -29,7 +31,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <p>dashboard</p> },
           { path: 'test', element: <TasksPage /> },
-          { path: 'forbbiden', element: <p>Unauthorized</p> },
+          { path: 'forbidden', element: <ForbiddenPage /> },
           { path: "/projects", element: <ViewProjects /> },
           {
             element: <AdminLayout />,
@@ -38,7 +40,7 @@ export const router = createBrowserRouter([
               { path: 'users', element: <UsersTablePage />, loader: skillsLoader },
               { path: 'users/create', element: <UserCreatePage />, loader: usersCreateLoader },
               { path: 'projects/create', element: <ProjectCreatePage />, loader: projectsCreateLoader },
-
+              { path: 'users/edit/{userId}', element: <UserCreatePage />, loader: usersEditLoader },
             ],
           },
           {

@@ -4,16 +4,16 @@
 .filterRow {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;   /* align baselines */
+  align-items: flex-end;
   gap: 12px;
   margin-bottom: 12px;
 }
 
 /* Search: fixed small box, pushed left with auto gap */
 .filterSearch {
-  flex: 0 0 150px;         /* width = 150px */
-width:200px;
-  margin-right: auto;      /* << pushes the selects to the right */
+  flex: 0 0 150px;
+  width: 200px;
+  margin-right: auto;
 }
 
 /* Make the SearchBar itself 32px tall */
@@ -25,7 +25,7 @@ width:200px;
   padding: 0 8px;
   box-sizing: border-box;
 }
-.filterSearch span {        /* search icon wrapper */
+.filterSearch span {
   height: 32px;
   display: flex;
   align-items: center;
@@ -41,4 +41,34 @@ width:200px;
   display: block;
   margin: 0 0 6px;
   line-height: 1.2;
+}
+
+/* --- NEW: action icons --- */
+.actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  color: var(--primary-color);
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.9;
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+.icon:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+.red {
+  color: red;
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.9;
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+.red:hover {
+  opacity: 1;
+  transform: translateY(-1px);
 }

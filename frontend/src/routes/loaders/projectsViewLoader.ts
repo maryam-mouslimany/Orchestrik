@@ -18,7 +18,6 @@ export type Project = {
   created_by: number;
   created_at: string;
   updated_at: string;
-  // task stats (returned only when withTaskStats=1)
   total?: number;
   pending?: number;
   completed?: number;
