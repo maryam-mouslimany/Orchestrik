@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export type MenuItem = {
   key: string;
@@ -30,6 +31,8 @@ const MENU_BY_ROLE: Record<'admin' | 'pm' | 'employee', MenuItem[]> = {
 export const useSidebar = () => {
   const { user } = useAuth();
   const location = useLocation();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const roleName = (user?.role?.name as 'admin' | 'pm' | 'employee');
 
@@ -37,9 +40,15 @@ export const useSidebar = () => {
 
   const activePath = location.pathname;
 
+    const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
+
   return {
     items,
     activePath,
     roleName,
+    handleLogout,
   };
 }
