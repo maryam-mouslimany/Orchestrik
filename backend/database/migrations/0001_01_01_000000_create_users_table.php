@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('password');
             $table->integer('role_id');
             $table->unsignedBigInteger('position_id');
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });

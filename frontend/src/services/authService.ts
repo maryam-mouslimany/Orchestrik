@@ -10,7 +10,7 @@ export type AppUser = {
   projects: Array<{ id: number; name: string }>;
   defaultRoute?: string;
   lastRoute?: string;
-  token?: string;   // optional JWT/Bearer token attached at login
+  token?: string;   
 };
 
 const USER_KEY = 'auth:user';

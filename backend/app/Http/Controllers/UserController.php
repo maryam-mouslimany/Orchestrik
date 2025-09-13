@@ -33,4 +33,27 @@ class UserController extends Controller
             return $this->error('Something went wrong', 500);
         }
     }
+
+    public function delete(Request $request)
+    {
+        try {
+            $user = UserService::delete($request);
+            if (!$user)
+                return $this->error('User Not Deleted');
+            return $this->success($user);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+    }
+    public function restore(Request $request)
+    {
+        try {
+            $user = UserService::restore($request);
+            if (!$user)
+                return $this->error('User Not restored');
+            return $this->success($user);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+    }
 }

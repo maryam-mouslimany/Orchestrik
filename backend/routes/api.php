@@ -1,6 +1,4 @@
 <?php
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjetController;
@@ -20,12 +18,12 @@ Route::group(["prefix" => "guest"], function () {
 
 //Authenticated Apis
 Route::middleware(['jwt.auth'])->group(function () {
-    Route::get('/auth/validate', [AuthController::class, 'validateToken']);
-    Route::get("/projects", [ProjetController::class, "getProjects"]);
     Route::get("/skills", [SkillController::class, "getSkills"]);
     Route::get("/positions", [PositionController::class, "getPositions"]);
     Route::get("/roles", [RoleController::class, "getRoles"]);
     Route::get("/clients", [ClientController::class, "getClients"]);
+    Route::get('/auth/validate', [AuthController::class, 'validateToken']);
+    Route::get("/projects", [ProjetController::class, "getProjects"]);
     Route::post("/tasks/editStatus/{taskId}", [TaskController::class, "editStatus"]);
 
     Route::prefix('agent')->group(function () {
@@ -34,8 +32,12 @@ Route::middleware(['jwt.auth'])->group(function () {
 
     Route::prefix('admin')->middleware(RoleMiddleware::class . ':admin')->group(function () {
         Route::post("/projects/create", [ProjetController::class, "createProject"]);
+
         Route::get("/users", [UserController::class, "getUsers"]);
         Route::post("/users/create", [UserController::class, "createUser"]);
+        Route::post("/users/restore", [UserController::class, "restore"]);
+        Route::post("/users/delete", [UserController::class, "delete"]);
+
         Route::get("/analytics/tasks/durations", [AdminDashboardController::class, "getTopAndLeastCompletedDurations"]);
         Route::get("/analytics/employees/workload", [AdminDashboardController::class, "employeesWorkload"]);
         Route::get("/analytics/employees/positions", [AdminDashboardController::class, "positionsDistribution"]);

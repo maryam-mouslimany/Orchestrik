@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 import logo from '../../assets/images/logo.png';
 
 const Sidebar: React.FC = () => {
-    const { items, roleName } = useSidebar();
+    const { items, roleName, handleLogout } = useSidebar();
     console.log(roleName)
     return (
         <aside className={styles.sidebar} data-role={roleName}>
@@ -32,6 +32,7 @@ const Sidebar: React.FC = () => {
                             </NavLink>
                         </li>
                     ))}
+                    <button onClick={handleLogout}>Logout</button>
                 </ul>
             </nav>
         </aside>

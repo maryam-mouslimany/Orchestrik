@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiCall from '../../../services/apiCallService';
 import { useAuth } from '../../../contexts/AuthContext';
-import { roleHome } from '../../../constants/constants'; // e.g. { admin:'/dashboard', pm:'/projects', member:'/my-tasks' }
+import { roleHome } from '../../../constants/constants';
+import { authService } from '../../../services/authService';
 
 export const useLogin = () => {
   const DEFAULT_HOME = '/dashboard';
@@ -34,10 +35,11 @@ export const useLogin = () => {
 
       const user = {
         ...data,
+        token: data?.token,
         defaultRoute: dest,
         lastRoute: dest,
       };
-
+      authService.setUser(user);
       setUser(user);
       navigate(dest, { replace: true });
     } catch (error) {

@@ -1,0 +1,136 @@
+.form {
+    display: grid;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 8px 24px rgba(0, 0, 0, 0.06);
+
+    width: 700px;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+/* Title section */
+.formHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.formTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: #0f172a;
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.formTitle::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 56px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--primary-color);
+}
+
+.fieldWrap {}
+
+.row {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 720px) {
+  .row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.inlineGroup {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 8px;
+}
+
+.autoAssign {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid color-mix(in srgb, var(--primary-color) 45%, transparent);
+  cursor: pointer;
+  transition: background .15s ease, transform .05s ease, opacity .15s;
+}
+
+.autoAssign:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+}
+
+.autoAssign:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.autoAssign:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.autoAssignIcon {
+  font-size: 18px;
+}
+
+.autoAssignText {
+  font-size: 0.9rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.errorBanner {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fef2f2;
+  color: #991b1b;
+  font-size: 13px;
+}
+.error {
+    font-size: 0.85rem;
+    color: #e63946;
+    margin: 0;
+}
+.infoToast {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f0f9ff;
+  color: #075985;
+  font-size: 13px;
+  animation: fadeOut .4s ease-in-out 3.6s forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    height: 0;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}

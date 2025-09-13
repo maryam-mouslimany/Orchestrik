@@ -3,43 +3,68 @@
   gap: 6px;
 }
 
-/* Keep your existing label look */
+/* Compact variant hook */
+.sm { gap: 4px; }
+
+/* Label */
 .label {
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 600;
   color: #4b5563;
   margin: 0;
   text-align: left;
-  align-self: flex-start;
+}
+.sm .label {
+  font-size: 0.75rem; /* 12px */
   font-weight: 600;
 }
-/* Tighten the select height to ~40px (adjust if your input differs) */
+
+/* Control root height */
 .control :global(.MuiOutlinedInput-root) {
-  height: 40px;                /* match your input height */
-  border-radius: 8px;          /* optional to match inputs */
+  height: 40px;
+  border-radius: 8px;
+}
+.controlSm :global(.MuiOutlinedInput-root) {
+  height: 32px;                 /* smaller control */
+  border-radius: 6px;
 }
 
-/* Reduce inner padding */
+/* Select inner padding */
 .select :global(.MuiSelect-select) {
   padding: 8px 12px;
   display: flex;
   align-items: center;
 }
+.selectSm :global(.MuiSelect-select) {
+  padding: 4px 10px;            /* tighter */
+}
 
 /* Placeholder style */
-.placeholder {
-  color: #94a3b8;              /* slate-400-ish */
+.placeholder { color: #94a3b8; }
+
+/* Menu sizing */
+.menuPaper { max-height: 240px; }           /* ~5 rows at 48px */
+.menuPaper :global(.MuiMenuItem-root) { min-height: 40px; }
+
+.menuPaperSm { max-height: 192px; }         /* ~6 rows at 32px */
+.menuPaperSm :global(.MuiMenuItem-root) {
+  min-height: 32px;
+  font-size: 0.875rem; /* 14px */
 }
 
-/* Optional: menu size tweaks */
-.menuPaper {
-  max-height: 48px * 5;        /* ~5 rows */
-}
-
-/* Remove blue native look – MUI handles menu; we only style focus ring */
-.control :global(.MuiOutlinedInput-notchedOutline) {
-  border-color: #e2e8f0;       /* slate-200 */
-}
+/* Outline colors */
+.control :global(.MuiOutlinedInput-notchedOutline) { border-color: #e2e8f0; }
 .control :global(.Mui-focused .MuiOutlinedInput-notchedOutline) {
   border-color: var(--primary-color, #2563eb);
+}
+/* 1) Really enforce the 32px compact height */
+.controlSm :global(.MuiInputBase-root),
+.controlSm :global(.MuiOutlinedInput-root) {
+  height: 32px;
+  min-height: 32px;  /* prevents MUI min-height from overriding */
+}
+
+/* 2) Selected value size in sm = option size (14px) */
+.selectSm .valueLabel {
+  font-size: 0.875rem; /* 14px, matches menu items in .menuPaperSm */
 }

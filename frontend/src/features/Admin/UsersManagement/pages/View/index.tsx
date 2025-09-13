@@ -1,57 +1,77 @@
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
-import CircularProgress from '@mui/material/CircularProgress';
 import SimpleMuiTable from '../../../../../components/Table';
 import SelectFilter from '../../../../../components/SelectFilter';
 import { ROLES } from '../../../../../constants/constants';
 import { useUsersTable } from './hook';
 import MultipleSelectChip from '../../../../../components/MultipleSelectFilter';
+import SearchBar from '../../../../../components/SearchBar';
+import LoadingIndicator from '../../../../../components/Loading';
+import styles from './styles.module.css';
 
 export const UsersTablePage: React.FC = () => {
   const {
     rows, columns, loading, error,
     roleId, setRoleId,
     positionId, setPositionId,
-    skills, setSkills,
+    skillId, setSkillId,
     skillsOptions, positionsOptions,
+    nameInput, setNameInput, applyNameFilter,
   } = useUsersTable();
 
-  return (
+  return loading ? (
+    <LoadingIndicator />
+  ) : (
     <Box>
+      {error && <Alert severity="error" className={styles.errorAlert}>{error}</Alert>}
 
-      {loading && (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-          <CircularProgress size={18} /> Loading users…
-        </Box>
-      )}
-      {error && <Alert severity="error" sx={{ mb: 1 }}>{error}</Alert>}
+      {/* Filters row */}
+      <div className={styles.filterRow}>
+        <div className={styles.filterSearch}>
+          <SearchBar
+            placeholder="Search by name…"
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
+            applyOnEnter
+            onApply={applyNameFilter}
+          />
+        </div>
 
-      <SelectFilter
-        label="PositiRolesons"
-        options={ROLES}
-        selected={roleId}
-        onChange={setRoleId}
-      />
+        <div className={styles.filterItem}>
+          <SelectFilter
+            sm
+            label="Roles"
+            options={ROLES}
+            selected={roleId}
+            onChange={setRoleId}
+          />
+        </div>
 
-      <SelectFilter
-        label="Positions"
-        options={positionsOptions}
-        selected={positionId}
-        onChange={setPositionId}
-      />
+        <div className={styles.filterItemWide}>
+          <SelectFilter
+            sm
+            label="Positions"
+            options={positionsOptions}
+            selected={positionId}
+            onChange={setPositionId}
+          />
+        </div>
+        <div className={styles.filterItemWide}>
+          <SelectFilter
+            sm
+            label="Skills"
+            options={skillsOptions}
+            selected={skillId}
+            onChange={setSkillId}
+          />
+        </div>
+      </div>
 
-      <MultipleSelectChip
-        label="Skills"
-        options={skillsOptions}
-        selected={skills}
-        onChange={setSkills}
-      />
-    
       <SimpleMuiTable
         rows={rows}
         columns={columns}
         getRowId={(r: any) => r.id}
-        sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2, opacity: loading ? 0.7 : 1 }}
+        className={styles.table}
       />
     </Box>
   );

@@ -19,6 +19,7 @@ class GetUserRequest extends FormRequest
             'filters.positionId' => ['nullable', 'integer', 'exists:positions,id'],
             'filters.skills'     => ['nullable', 'array'],
             'filters.skills.*'   => ['integer', 'exists:skills,id'],
+            'filters.nameFilter'     => ['nullable', 'string'],
         ];
     }
 }

@@ -76,13 +76,7 @@ const ProjectCreatePage: React.FC = () => {
 
       {/* Members — full width + live hint */}
       <div className={styles.fieldWrap}>
-        <MultipleSelectChip
-          label="Members"
-          options={employeeOptions}
-          selected={values.members}
-          onChange={(next) => setField('members', next as number[])}
-          placeholder="Select members of this project"
-        />
+       
         {membersTooFew && (
           <p className={styles.error}>At least 3 members including the PM</p>
         )}

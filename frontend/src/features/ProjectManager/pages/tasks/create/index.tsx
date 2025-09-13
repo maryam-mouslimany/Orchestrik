@@ -2,7 +2,6 @@ import React from 'react';
 import Input from '../../../../../components/Input';
 import SelectFilter from '../../../../../components/SelectFilter';
 import { useTaskCreate } from './hook';
-import { TaskPriorities } from '../../../../../constants/constants';
 import Button from '../../../../../components/Button';
 import styles from './styles.module.css';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
