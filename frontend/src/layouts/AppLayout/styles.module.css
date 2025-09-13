@@ -1,15 +1,17 @@
 :root {
   --sidebar-w: 240px;
+  margin:0px;
 }
 
 /* full-height app shell */
 .shell {
   min-height: 100dvh;
+  padding:0px
 }
 
 /* right side (to the right of the fixed sidebar) */
 .right {
-  margin-left: var(--sidebar-w);
+  margin:0px;
   /* match the fixed sidebar width */
   min-height: 100dvh;
   display: flex;
@@ -34,6 +36,7 @@
   min-width: 0;
   padding: 0px;
   background: #ffffff;
+  margin:0px;
 }
 
 /* keep margin in sync on smaller screens if you shrink the sidebar */

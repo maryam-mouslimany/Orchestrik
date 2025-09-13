@@ -1,0 +1,44 @@
+.errorAlert { margin-bottom: 12px; }
+
+/* Row: search left, selects right */
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;   /* align baselines */
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* Search: fixed small box, pushed left with auto gap */
+.filterSearch {
+  flex: 0 0 150px;         /* width = 150px */
+width:200px;
+  margin-right: auto;      /* << pushes the selects to the right */
+}
+
+/* Make the SearchBar itself 32px tall */
+.filterSearch > * { height: 32px; }
+.filterSearch input[type="text"],
+.filterSearch input[type="search"] {
+  height: 32px !important;
+  line-height: 32px !important;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+.filterSearch span {        /* search icon wrapper */
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+/* Select widths (roles, positions, skills) */
+.filterItem     { width: 180px; }
+.filterItemWide { width: 230px; }
+.filterSkills   { width: 200px; }
+
+/* Label spacing (your custom components) */
+.filterRow label {
+  display: block;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}

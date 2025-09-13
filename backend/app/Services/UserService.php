@@ -12,10 +12,13 @@ class UserService
         $roleId = $filters['roleId'] ?? null;
         $positionId = $filters['positionId'] ?? null;
         $skills = $filters['skills'] ?? [];
-
+        $nameFilter = $filters['nameFilter'] ?? [];
         $q = User::query()
             ->with(['role', 'position', 'skills']);
 
+        if (!empty($filters['nameFilter'])) {
+            $q->where('name', 'LIKE', '%' . $nameFilter . '%');
+        }
         if (!empty($filters['roleId'])) {
             $q->where('role_id', $roleId);
         }

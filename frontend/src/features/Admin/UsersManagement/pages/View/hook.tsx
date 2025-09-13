@@ -23,23 +23,27 @@ export type UserRow = {
 };
 
 export const useUsersTable = () => {
-  const [skills, setSkills] = useState<Array<number | string>>([]);
+  const [skillId, setSkillId] = useState<string | null>(null);
   const [positionId, setPositionId] = useState<string | null>(null);
   const [roleId, setRoleId] = useState<string | null>(null);
+
+  const [nameInput, setNameInput] = useState<string>('');
+  const [nameFilter, setNameFilter] = useState<string>('');
 
   const skillsOptions = useLoaderData() as Skill[];
   const positionsOptions = useLoaderData() as Position[];
 
   const filters = useMemo(() => {
-    const skillsIds = (skills ?? [])
-      .map((v) => Number(v))
-      .filter((n) => !Number.isNaN(n));
+    const skillsArr =
+      skillId && !Number.isNaN(Number(skillId)) ? [Number(skillId)] : undefined;
+
     return {
       roleId: roleId ? Number(roleId) : undefined,
       positionId: positionId ? Number(positionId) : undefined,
-      skills: skillsIds.length ? skillsIds : undefined,
+      skills: skillsArr,
+      nameFilter: nameFilter.trim().length ? nameFilter.trim() : undefined, // use "name" key
     };
-  }, [roleId, positionId, skills]);
+  }, [roleId, positionId, skillId, nameFilter]);
 
   const dispatch = useDispatch();
   const rawUsers = useSelector(selectUsersRaw);
@@ -66,6 +70,10 @@ export const useUsersTable = () => {
     dispatch(fetchUsers(filters));
   }, [dispatch, filters]);
 
+  const applyNameFilter = useCallback(() => {
+    setNameFilter(nameInput.trim());
+  }, [nameInput]);
+
   const columns: Column<UserRow>[] = useMemo(() => ([
     { key: 'id', label: 'ID', width: 80 },
     { key: 'name', label: 'Name' },
@@ -80,8 +88,9 @@ export const useUsersTable = () => {
     rows, columns, loading, error, refresh,
     roleId, setRoleId,
     positionId, setPositionId,
-    skills, setSkills,
-    skillsOptions,
-    positionsOptions,
+    skillId, setSkillId,         
+    skillsOptions, positionsOptions,
+    nameInput, setNameInput, applyNameFilter,
   };
 };
+

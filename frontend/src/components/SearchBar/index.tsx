@@ -7,6 +7,8 @@ type SearchBarProps = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  onApply?: (value: string) => void;
+  applyOnEnter?: boolean;
 };
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -14,7 +16,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
   value,
   onChange,
   className = "",
+  onApply,
+  applyOnEnter = false,
 }) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!applyOnEnter || !onApply) return;
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onApply(value);
+    }
+  };
+
   return (
     <div className={`${styles.wrapper} ${className}`}>
       <span className={styles.icon} aria-hidden="true">
@@ -26,6 +38,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onKeyDown={handleKeyDown} 
         aria-label={placeholder}
       />
     </div>

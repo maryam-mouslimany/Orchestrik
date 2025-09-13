@@ -20,12 +20,12 @@ Route::group(["prefix" => "guest"], function () {
 
 //Authenticated Apis
 Route::middleware(['jwt.auth'])->group(function () {
-    Route::get('/auth/validate', [AuthController::class, 'validateToken']);
-    Route::get("/projects", [ProjetController::class, "getProjects"]);
     Route::get("/skills", [SkillController::class, "getSkills"]);
     Route::get("/positions", [PositionController::class, "getPositions"]);
     Route::get("/roles", [RoleController::class, "getRoles"]);
     Route::get("/clients", [ClientController::class, "getClients"]);
+    Route::get('/auth/validate', [AuthController::class, 'validateToken']);
+    Route::get("/projects", [ProjetController::class, "getProjects"]);
     Route::post("/tasks/editStatus/{taskId}", [TaskController::class, "editStatus"]);
 
     Route::prefix('agent')->group(function () {
