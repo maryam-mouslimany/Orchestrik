@@ -10,6 +10,8 @@ import SimpleMuiTable from '../../../../../components/Table';
 import SelectFilter from '../../../../../components/SelectFilter';
 import { TaskPriorities, TaskSTATUSES } from '../../../../../constants/constants';
 import Pagination from '../../../../../components/Pgination';
+import CreateButton from '../../../../../components/CreateButton/Button';
+
 export const PmTasksTablePage: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
@@ -49,6 +51,7 @@ export const PmTasksTablePage: React.FC = () => {
       {error && <Alert severity="error" sx={{ mb: 1 }}>{error}</Alert>}
 
       <div className={styles.filterRow}>
+
         <SelectFilter
           sm
           label="Priority"
@@ -77,6 +80,8 @@ export const PmTasksTablePage: React.FC = () => {
           selected={assigneeId}
           onChange={setAssigneeId}
         />
+        <CreateButton to="/tasks/create" />
+
       </div>
 
       <SimpleMuiTable

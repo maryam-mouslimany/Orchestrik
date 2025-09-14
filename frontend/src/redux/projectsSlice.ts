@@ -1,9 +1,8 @@
-// src/redux/projectsSlice.ts
 import apiCall from '../services/apiCallService';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 type ProjectsState = {
-  projectsList: any[];        // keep raw API data
+  projectsList: any[];      
   loading: boolean;
   error: string | null;
 };

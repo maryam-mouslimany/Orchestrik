@@ -5,6 +5,7 @@ import apiCall from '../../../../../services/apiCallService';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, selectUsersRaw, selectUsersLoading } from '../../../../../redux/usersSlice';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export type MultiOption = { id: number; name: string };
 type ProjectsCreateLoader = { clients: Array<{ id: number; name: string }> };
@@ -21,6 +22,7 @@ export type ProjectForm = {
 const MIN_DESC = 20; // description length threshold
 
 export const useProjectCreate = () => {
+  const navigate = useNavigate();
   const { clients } = useLoaderData() as ProjectsCreateLoader;
 
   const dispatch = useDispatch();
@@ -129,7 +131,7 @@ export const useProjectCreate = () => {
     setCreating(true);
     try {
       await createProject();
-      // success UI is yours; keeping it minimal per request
+      navigate('/projects', { replace: true });
       console.log('success');
     } finally {
       setCreating(false);
@@ -137,10 +139,10 @@ export const useProjectCreate = () => {
   };
 
   return {
-    values,setField,
-    clientOptions,pmOptions,employeeOptions,
+    values, setField,
+    clientOptions, pmOptions, employeeOptions,
     handleCreateClick,
     creating,
-    formError,descTooShort,membersTooFew,
+    formError, descTooShort, membersTooFew,
   };
 };

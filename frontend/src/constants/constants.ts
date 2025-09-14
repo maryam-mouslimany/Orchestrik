@@ -19,6 +19,6 @@ export const TaskPriorities = [
 export const roleHome: Record<string, string> = {
   admin: "/dashboard",
   pm: "/projects",
-  employee:"my-tasks",
+  employee:"/my-tasks",
 };
 

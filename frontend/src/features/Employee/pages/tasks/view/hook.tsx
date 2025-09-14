@@ -22,27 +22,32 @@ export const useTasksTable = () => {
   const [status, setStatus] = useState<string | null>(null);
   const [priority, setPriority] = useState<string | null>(null);
 
-  //projects from redux
+  // pagination (same as PM page)
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [isPaginated, setIsPaginated] = useState(false);
+
+  // projects from redux
   const dispatch = useDispatch();
   const projectsList = useSelector(selectProjectsList);
   const loadingProjects = useSelector(selectProjectsLoad);
 
-  // fetch projects if store is empty (no root loader)
   useEffect(() => {
     if (!loadingProjects && (!projectsList || projectsList.length === 0)) {
       dispatch(fetchProjects());
     }
   }, [dispatch, loadingProjects, projectsList]);
 
-  // normalized options -> [{id:number, name:string}]
+  // normalized options
   const projectsOptions = useMemo(
     () => (Array.isArray(projectsList) ? projectsList : [])
       .map((p: any) => ({ id: Number(p?.id), name: String(p?.name ?? p?.title ?? '') }))
       .filter(o => Number.isFinite(o.id) && o.name.length > 0),
     [projectsList]
   );
-  
-  // build filters object and drop undefineds
+
+  // filters (ONLY filters here; pagination is top-level)
   const filters = useMemo(() => {
     const f: any = {};
     if (projectId) f.projectId = Number(projectId);
@@ -63,10 +68,18 @@ export const useTasksTable = () => {
       const res = await apiCall('/employee/tasks', {
         method: 'GET',
         requiresAuth: true,
-        params: { filters },
+        params: { page, per_page: perPage, filters }, // SAME way as PM page
       });
 
-      const list: any[] = Array.isArray(res.data) ? res.data : [];
+      const payload = res.data;
+
+      // list extraction (supports plain array OR Laravel paginator top-level OR wrapped under data)
+      const list: any[] =
+        Array.isArray(payload) ? payload :
+        Array.isArray(payload?.data) ? payload.data :
+        Array.isArray(payload?.data?.data) ? payload.data.data :
+        [];
+
       const mapped: TaskRow[] = list.map((t) => ({
         id: t.id,
         title: t.title ?? '',
@@ -76,26 +89,40 @@ export const useTasksTable = () => {
         deadline: t.deadline ?? '',
         project: t.project?.name ?? '',
       }));
-
       setRows(mapped);
+
+      // meta detection (top-level or nested)
+      const meta =
+        (payload && typeof payload === 'object' && 'total' in payload) ? payload :
+        (payload?.data && typeof payload.data === 'object' && 'total' in payload.data) ? payload.data :
+        null;
+
+      const paged = !!meta;
+      setIsPaginated(paged);
+      setTotal(paged ? Number(meta.total ?? mapped.length) : mapped.length);
+
+      if (paged && typeof meta.current_page === 'number') setPage(meta.current_page);
+      if (paged && typeof meta.per_page === 'number') setPerPage(meta.per_page);
+
     } catch (e: any) {
       setError(e?.message ?? 'Failed to load tasks');
       setRows([]);
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [page, perPage, filters]);
 
   useEffect(() => { void fetchTasks(); }, [fetchTasks]);
 
   const columns: Column<TaskRow>[] = useMemo(() => ([
     { key: 'id', label: 'ID', width: 40 },
     { key: 'title', label: 'Title', width: 200 },
-    { key: 'status', label: 'Status', width: 50, render: (value) => <Pill label={value} />, },
+    { key: 'status', label: 'Status', width: 50, render: (value) => <Pill label={value} /> },
     { key: 'description', label: 'Description', width: 260 },
-    { key: 'priority', label: 'Priority', width: 50, render: (value) => <Pill label={value} />, },
+    { key: 'priority', label: 'Priority', width: 50, render: (value) => <Pill label={value} /> },
     { key: 'deadline', label: 'Deadline', width: 160 },
   ]), []);
+
   return {
     rows, columns, loading, error,
     refresh: fetchTasks,
@@ -103,7 +130,10 @@ export const useTasksTable = () => {
     projectId, setProjectId,
     status, setStatus,
     priority, setPriority,
-
     projectsOptions,
+    isPaginated,
+    page, setPage,
+    perPage, setPerPage,
+    total,
   };
 };

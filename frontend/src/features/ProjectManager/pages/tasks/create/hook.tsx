@@ -1,8 +1,9 @@
-import { useEffect, useState} from 'react';
-import { useDispatch, useSelector } from 'react-redux'; 
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '../../../../../hooks/useForm';
 import apiCall from '../../../../../services/apiCallService';
 import { fetchProjects, selectProjectsLoad } from '../../../../../redux/projectsSlice';
+import { useNavigate } from 'react-router-dom';
 
 type Member = { id: number; name: string };
 export type TaskForm = {
@@ -12,6 +13,7 @@ export type TaskForm = {
 
 export const useTaskCreate = () => {
 
+  const navigate = useNavigate();
   const { projectsList: projectsOptions } = useSelector((s: any) => s.projects);
   console.log(projectsOptions)
   const dispatch = useDispatch();
@@ -88,6 +90,8 @@ export const useTaskCreate = () => {
         },
       });
       console.log('created', res)
+      navigate('/tasks', { replace: true });
+
     } finally { setCreateLoading(false); }
   };
 

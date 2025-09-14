@@ -1,13 +1,20 @@
-import { useCallback, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
-export const useForm = <T extends Record<string, any>>(initial: T) => {
-  const [values, setValues] = useState<T>(initial);
+export const useForm = (initial: Record<string, any>) => {
+  const [values, setValues] = useState<Record<string, any>>(initial);
 
-  const setField = useCallback(<K extends keyof T>(name: K, value: T[K]) => {
+  const initialRef = useRef(initial);
+  useEffect(() => {
+    initialRef.current = initial;
+  }, [initial]);
+
+  function setField(name: string, value: any) {
     setValues(v => ({ ...v, [name]: value }));
-  }, []);
+  }
 
-  const reset = useCallback(() => setValues(initial), [initial]);
+  function reset() {
+    setValues(initialRef.current);
+  }
 
   return { values, setField, setValues, reset };
 };

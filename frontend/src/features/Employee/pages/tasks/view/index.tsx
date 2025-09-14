@@ -9,6 +9,7 @@ import SelectFilter from '../../../../../components/SelectFilter';
 import EditTaskModal from '../../../components/EditTaskModal';
 import LoadingIndicator from '../../../../../components/Loading';
 import { TaskPriorities, TaskSTATUSES } from '../../../../../constants/constants';
+import Pagination from '../../../../../components/Pgination';
 
 export const TasksTablePage: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -16,7 +17,8 @@ export const TasksTablePage: React.FC = () => {
 
   const {
     rows, columns: baseColumns, loading, error,
-    projectId, setProjectId, status, setStatus, priority, setPriority, projectsOptions,
+    projectId, setProjectId, status, setStatus, priority, setPriority, projectsOptions, isPaginated,
+    page, setPage,perPage, setPerPage,total,
   } = useTasksTable();
 
   const columnsWithActions = useMemo(() => {
@@ -83,6 +85,16 @@ export const TasksTablePage: React.FC = () => {
         onClose={() => setOpen(false)}
         taskId={selectedTaskId}
       />
+      {isPaginated && (
+        <Pagination
+          page={page}
+          perPage={perPage}
+          total={total}
+          onPageChange={(p) => setPage(p)}
+          disabled={loading}
+        />
+      )}
+
     </Box>
   );
 };
