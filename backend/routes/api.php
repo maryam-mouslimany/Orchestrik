@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjetController;
@@ -25,6 +26,7 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/auth/validate', [AuthController::class, 'validateToken']);
     Route::get("/projects", [ProjetController::class, "getProjects"]);
     Route::post("/tasks/editStatus/{taskId}", [TaskController::class, "editStatus"]);
+    Route::get("/users", [UserController::class, "getUsers"]);
 
     Route::prefix('agent')->group(function () {
         Route::post('/reopened-tasks', [AgentController::class, 'reopenedTasks']);
@@ -33,7 +35,6 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::prefix('admin')->middleware(RoleMiddleware::class . ':admin')->group(function () {
         Route::post("/projects/create", [ProjetController::class, "createProject"]);
 
-        Route::get("/users", [UserController::class, "getUsers"]);
         Route::post("/users/create", [UserController::class, "createUser"]);
         Route::post("/users/restore", [UserController::class, "restore"]);
         Route::post("/users/delete", [UserController::class, "delete"]);
@@ -52,5 +53,7 @@ Route::middleware(['jwt.auth'])->group(function () {
         Route::post('/recommend-assignee', [AgentController::class, 'recommend']);
         Route::get("/projects/members/{projectId?}", [ProjetController::class, "projectMembers"]);
         Route::post("/tasks/create/{parentTask?}", [TaskController::class, "createTask"]);
+        Route::get("/tasks", [TaskController::class, "employeeTasks"]);
+        Route::get("/tasks/{taskId?}", [TaskController::class, "taskDetails"]);
     });
 });

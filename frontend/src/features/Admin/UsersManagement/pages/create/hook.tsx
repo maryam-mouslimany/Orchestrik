@@ -4,6 +4,7 @@ import { useLoaderData } from 'react-router-dom';
 import apiCall from '../../../../../services/apiCallService';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, selectUsersRaw, selectUsersLoading } from '../../../../../redux/usersSlice';
+import { useNavigate } from 'react-router-dom';
 
 export type MultiOption = { id: number; name: string };
 
@@ -23,6 +24,7 @@ export type UserForm = {
   skills: number[];
 };
 
+
 const NAME_NEEDS_FIRST_LAST = (name: string) =>
   /^\s*[A-Za-z][A-Za-z'’-]*\s+[A-Za-z][A-Za-z'’-]*.*$/.test(name.trim());
 
@@ -30,6 +32,7 @@ const EMAIL_OK = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
 export const useUserCreate = () => {
+  const navigate = useNavigate();
   const { roles, positions, skills } = useLoaderData() as UsersCreateLoader;
 
   const dispatch = useDispatch();
@@ -100,7 +103,7 @@ export const useUserCreate = () => {
         role_id: values.role_id || null,
         position_id: values.position_id || null,
         password: values.password,
-        skills: values.skills, 
+        skills: values.skills,
       },
     });
 
@@ -132,6 +135,7 @@ export const useUserCreate = () => {
       await createUser();
       dispatch(fetchUsers(undefined));
       console.log('user created');
+      navigate('/users', { replace: true });
     } finally {
       setCreating(false);
     }

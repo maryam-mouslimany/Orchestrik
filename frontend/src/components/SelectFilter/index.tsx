@@ -1,17 +1,15 @@
 import * as React from "react";
 import styles from "./styles.module.css";
 import { useSelectOptions } from "./hook";
-
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 
-// Add `sm?: boolean`
 type Props = {
   label?: string;
   options: any[];
-  selected: string | number | "";
+  selected: string | number | null;
   onChange: (v: any) => void;
   placeholder?: string;
   sm?: boolean;
@@ -28,12 +26,11 @@ const SelectFilter: React.FC<Props> = ({
   const { normalized } = useSelectOptions(options);
 
   const handleChange = (e: any) => {
-    const raw = e.target.value; // string
+    const raw = e.target.value; 
     const match = normalized.find((o: any) => String(o.value) === String(raw));
     onChange(match ? match.value : raw);
   };
 
-  // value passed to MUI is string
   const selectValue = selected === "" ? "" : String(selected);
 
   const renderSelected = (val: string) => {
@@ -42,7 +39,7 @@ const SelectFilter: React.FC<Props> = ({
     return item ? <span className={styles.valueLabel}>{item.label}</span> : "";
   };
 
-  const size = sm ? "small" : "medium"; // drives MUI density
+  const size = sm ? "small" : "medium"; 
 
   return (
     <div className={`${styles.selectFilter} ${sm ? styles.sm : ""}`}>

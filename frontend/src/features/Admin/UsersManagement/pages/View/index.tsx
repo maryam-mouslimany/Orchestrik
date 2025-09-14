@@ -3,22 +3,58 @@ import Alert from '@mui/material/Alert';
 import SimpleMuiTable from '../../../../../components/Table';
 import SelectFilter from '../../../../../components/SelectFilter';
 import { ROLES } from '../../../../../constants/constants';
-import { useUsersTable } from './hook';
-import MultipleSelectChip from '../../../../../components/MultipleSelectFilter';
+import { useUsersTable, type UserRow } from './hook';
 import SearchBar from '../../../../../components/SearchBar';
 import LoadingIndicator from '../../../../../components/Loading';
 import styles from './styles.module.css';
+import CreateButton from '../../../../../components/CreateButton/Button';
+import { FiEdit3, FiTrash2, FiRotateCcw } from 'react-icons/fi';
 
 export const UsersTablePage: React.FC = () => {
   const {
-    rows, columns, loading, error,
+    rows, loading, error,
     roleId, setRoleId,
     positionId, setPositionId,
     skillId, setSkillId,
-    skillsOptions, positionsOptions,
+    skillsOptions, positionsOptions,  onEdit, onDelete, onRestore,
     nameInput, setNameInput, applyNameFilter,
   } = useUsersTable();
 
+  const columns: Column<UserRow>[] = [
+    { key: 'id', label: 'ID', width: 20 },
+    { key: 'name', label: 'Name', width: 90 },
+    { key: 'email', label: 'Email', width: 100 },
+    { key: 'role', label: 'Role', width: 30 },
+    { key: 'position', label: 'Position', width: 100 },
+    { key: 'skills', label: 'Skills', width: 300 },
+    {
+      key: 'actions',
+      label: 'Actions',
+      width: 50,
+      render: (_value, row) => (
+        <div className={styles.actions}>
+          <FiEdit3
+            className={styles.icon}
+            title="Edit"
+            onClick={() => onEdit(row.id)}
+          />
+          {row.deleted ? (
+            <FiRotateCcw
+              className={styles.icon}
+              title="Restore"
+              onClick={() => onRestore(row.id)}
+            />
+          ) : (
+            <FiTrash2
+              className={styles.red}
+              title="Delete"
+              onClick={() => onDelete(row.id)}
+            />
+          )}
+        </div>
+      ),
+    },
+  ];
   return loading ? (
     <LoadingIndicator />
   ) : (
@@ -65,6 +101,7 @@ export const UsersTablePage: React.FC = () => {
             onChange={setSkillId}
           />
         </div>
+        <CreateButton to="/users/create" />
       </div>
 
       <SimpleMuiTable

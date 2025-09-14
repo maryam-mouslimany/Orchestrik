@@ -3,7 +3,6 @@ import Input from '../../../../../components/Input';
 import SelectFilter from '../../../../../components/SelectFilter';
 import { useProjectCreate } from './hook';
 import Button from '../../../../../components/Button';
-import MultipleSelectChip from '../../../../../components/MultipleSelectFilter';
 import styles from './styles.module.css';
 
 const ProjectCreatePage: React.FC = () => {
@@ -12,7 +11,6 @@ const ProjectCreatePage: React.FC = () => {
     setField,
     clientOptions,
     pmOptions,
-    employeeOptions,
     handleCreateClick,
     creating,
     formError,
@@ -76,7 +74,7 @@ const ProjectCreatePage: React.FC = () => {
 
       {/* Members — full width + live hint */}
       <div className={styles.fieldWrap}>
-       
+
         {membersTooFew && (
           <p className={styles.error}>At least 3 members including the PM</p>
         )}

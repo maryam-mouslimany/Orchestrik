@@ -63,30 +63,58 @@ class TaskService
 
     static function employeeTasks($request)
     {
-        $filters   = $request['filters'] ?? $request;
+        $filters      = $request['filters'] ?? $request;
 
-        $projectId = $filters['projectId'] ?? null;
-        $status = $filters['status'] ?? null;
-        $deadline = $filters['deadline'] ?? [];
-        $priority = $filters['priority'] ?? [];
+        $projectId    = $filters['projectId']   ?? null;
+        $status       = $filters['status']      ?? null;          
+        $priority     = $filters['priority']    ?? null;        
+        $assignedTo   = $filters['assigned_to'] ?? null;
 
-        $user =  auth()->user();
-        $q = Task::with('project')->where('assigned_to', $user->id);
+        // detect pagination (top-level OR inside filters)
+        $page         = request('page',        $filters['page']     ?? null);
+        $perPageInput = request('per_page',    $filters['per_page'] ?? null);
+        $perPage      = $perPageInput !== null ? max(1, min((int)$perPageInput, 100)) : null;
 
-        if (!empty($filters['projectId'])) {
-            $q->where('project_id', $projectId);
+        $user = auth()->user();
+        $role = strtolower((string)($user->role->name ?? ''));
+
+        $q = Task::query()->with(['project', 'assignee']);
+
+        if ($role === 'employee') {
+            $q->where('assigned_to', $user->id);
+        } elseif ($role === 'pm') {
+            $q->where('created_by', $user->id);
         }
-        if (!empty($filters['status'])) {
-            $q->where('status', $status);
+
+        if ($projectId) $q->where('project_id', (int)$projectId);
+
+        if (!empty($assignedTo)) {
+            is_array($assignedTo)
+                ? $q->whereIn('assigned_to', $assignedTo)
+                : $q->where('assigned_to', (int)$assignedTo);
         }
-        if (!empty($filters['priority'])) {
-            $q->where('priority', $priority);
+
+        if (!empty($status)) {
+            is_array($status) ? $q->whereIn('status', $status) : $q->where('status', $status);
+        }
+
+        if (!empty($priority)) {
+            is_array($priority) ? $q->whereIn('priority', $priority) : $q->where('priority', $priority);
+        }
+
+        $q->orderByDesc('updated_at');
+
+        if ($perPage !== null) {
+            return $page !== null
+                ? $q->paginate($perPage, ['*'], 'page', (int)$page)
+                : $q->paginate($perPage);
         }
 
         return $q->get();
     }
 
-    static function taskDetails($request) {
+    static function taskDetails($request)
+    {
         return Task::find($request['taskId']);
     }
 }

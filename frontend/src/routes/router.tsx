@@ -19,6 +19,7 @@ import UserCreatePage from '../features/Admin/UsersManagement/pages/create';
 import { usersCreateLoader } from './loaders/usersCreateLoader';
 import ForbiddenPage from '../components/ForbiddenPage';
 import { usersEditLoader } from './loaders/usersEditLoader';
+import PmTasksTablePage from '../features/ProjectManager/pages/tasks/view';
 
 export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
@@ -47,6 +48,7 @@ export const router = createBrowserRouter([
             element: <PmLayout />,
             children: [
               { path: 'tasks/create', element: <TaskCreatePage /> },
+              { path: 'tasks', element: <PmTasksTablePage /> },
             ],
           },
 

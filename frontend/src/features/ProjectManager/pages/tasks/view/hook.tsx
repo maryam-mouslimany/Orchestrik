@@ -4,12 +4,13 @@ import { type Column } from '../../../../../components/Table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProjects, selectProjectsLoad, selectProjectsList } from '../../../../../redux/projectsSlice';
+import { fetchUsers, selectUsersLoading, selectUsersRaw } from '../../../../../redux/usersSlice';
 import Pill from '../../../../../components/Pill';
 
 export type TaskRow = {
   id: number;
   title: string;
-  description: string;
+  assignee: string;
   status: string;
   priority: string;
   deadline: string;
@@ -21,25 +22,29 @@ export const useTasksTable = () => {
   const [projectId, setProjectId] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [priority, setPriority] = useState<string | null>(null);
+  const [assigneeId, setAssigneeId] = useState<string | null>(null);
 
-  // pagination (same as PM page)
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(10); 
   const [total, setTotal] = useState(0);
   const [isPaginated, setIsPaginated] = useState(false);
 
-  // projects from redux
   const dispatch = useDispatch();
   const projectsList = useSelector(selectProjectsList);
   const loadingProjects = useSelector(selectProjectsLoad);
+  const usersOptions = useSelector(selectUsersRaw);
+  const loadingUsers = useSelector(selectUsersLoading);
 
   useEffect(() => {
     if (!loadingProjects && (!projectsList || projectsList.length === 0)) {
       dispatch(fetchProjects());
     }
-  }, [dispatch, loadingProjects, projectsList]);
+    if (!loadingUsers && (!usersOptions || usersOptions.length === 0)) {
+      (dispatch as any)(fetchUsers(undefined)); // or fetchUsers({ roleId: 3 }) if only employees
+    }
+  }, [dispatch, loadingProjects, loadingUsers, projectsList, usersOptions,]);
 
-  // normalized options
+  // normalized options -> [{id:number, name:string}]
   const projectsOptions = useMemo(
     () => (Array.isArray(projectsList) ? projectsList : [])
       .map((p: any) => ({ id: Number(p?.id), name: String(p?.name ?? p?.title ?? '') }))
@@ -47,14 +52,16 @@ export const useTasksTable = () => {
     [projectsList]
   );
 
-  // filters (ONLY filters here; pagination is top-level)
+  // build filters object and drop undefineds
   const filters = useMemo(() => {
     const f: any = {};
     if (projectId) f.projectId = Number(projectId);
     if (status) f.status = status;
     if (priority) f.priority = priority;
+    if (assigneeId) f.assigned_to = assigneeId;
     return f;
-  }, [projectId, status, priority]);
+  }, [projectId, status, priority, assigneeId, page, perPage]);
+
 
   const [rows, setRows] = useState<TaskRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -65,44 +72,33 @@ export const useTasksTable = () => {
       setLoading(true);
       setError(null);
 
-      const res = await apiCall('/employee/tasks', {
+      const res = await apiCall('/pm/tasks', {
         method: 'GET',
         requiresAuth: true,
-        params: { page, per_page: perPage, filters }, // SAME way as PM page
+        params: { page, per_page:perPage, filters },
       });
-
       const payload = res.data;
-
-      // list extraction (supports plain array OR Laravel paginator top-level OR wrapped under data)
-      const list: any[] =
-        Array.isArray(payload) ? payload :
-        Array.isArray(payload?.data) ? payload.data :
-        Array.isArray(payload?.data?.data) ? payload.data.data :
-        [];
+      const list: any[] = Array.isArray(payload)
+        ? payload : Array.isArray(payload?.data)
+          ? payload.data : [];
 
       const mapped: TaskRow[] = list.map((t) => ({
         id: t.id,
         title: t.title ?? '',
-        description: t.description ?? '',
+        assignee: t?.assignee?.name ?? t?.assignee_name ?? 'Unassigned',
         status: t.status ?? '',
         priority: t.priority ?? '',
         deadline: t.deadline ?? '',
         project: t.project?.name ?? '',
       }));
+
       setRows(mapped);
 
-      // meta detection (top-level or nested)
-      const meta =
-        (payload && typeof payload === 'object' && 'total' in payload) ? payload :
-        (payload?.data && typeof payload.data === 'object' && 'total' in payload.data) ? payload.data :
-        null;
-
-      const paged = !!meta;
+      const paged = !Array.isArray(payload);
       setIsPaginated(paged);
-      setTotal(paged ? Number(meta.total ?? mapped.length) : mapped.length);
-
-      if (paged && typeof meta.current_page === 'number') setPage(meta.current_page);
-      if (paged && typeof meta.per_page === 'number') setPerPage(meta.per_page);
+      setTotal(paged ? Number(payload.total ?? mapped.length) : mapped.length);
+      setPage(paged ? Number(payload.current_page ?? page) : 1);
+      if (paged) setPerPage((prev) => Number((payload.per_page ?? prev) || 20));
 
     } catch (e: any) {
       setError(e?.message ?? 'Failed to load tasks');
@@ -110,27 +106,28 @@ export const useTasksTable = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, perPage, filters]);
+  }, [filters, page]);
 
   useEffect(() => { void fetchTasks(); }, [fetchTasks]);
-
+  console.log(filters)
   const columns: Column<TaskRow>[] = useMemo(() => ([
     { key: 'id', label: 'ID', width: 40 },
     { key: 'title', label: 'Title', width: 200 },
-    { key: 'status', label: 'Status', width: 50, render: (value) => <Pill label={value} /> },
-    { key: 'description', label: 'Description', width: 260 },
-    { key: 'priority', label: 'Priority', width: 50, render: (value) => <Pill label={value} /> },
+    { key: 'status', label: 'Status', width: 50, render: (value) => <Pill label={value} />, },
+    { key: 'assignee', label: 'Assignee', width: 100 },
+    { key: 'priority', label: 'Priority', width: 50, render: (value) => <Pill label={value} />, },
     { key: 'deadline', label: 'Deadline', width: 160 },
   ]), []);
-
+  console.log(page, perPage)
   return {
     rows, columns, loading, error,
     refresh: fetchTasks,
-
     projectId, setProjectId,
     status, setStatus,
     priority, setPriority,
+    usersOptions,
     projectsOptions,
+    assigneeId, setAssigneeId,
     isPaginated,
     page, setPage,
     perPage, setPerPage,

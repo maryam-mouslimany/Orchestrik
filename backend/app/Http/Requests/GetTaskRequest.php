@@ -17,10 +17,10 @@ class GetTaskRequest extends FormRequest
     {
         return [
             'filters' => ['nullable', 'array'],
+            'filters.assigned_to' => ['nullable', 'string', 'exists:users,id'],
             'filters.projectId' => ['nullable', 'integer', 'exists:projects,id'],
             'filters.status' => ['nullable', 'string', Rule::in(['pending', 'in progress', 'completed', 'reopened'])],
             'filters.priority' => ['nullable', 'string', Rule::in(['low', 'medium', 'high'])],
-
         ];
     }
 }

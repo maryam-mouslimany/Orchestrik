@@ -1,11 +1,11 @@
-import { type Column } from '../../../../../components/Table';
-import { useCallback, useState, useMemo, useEffect } from 'react';
-import { useLoaderData, useNavigate } from 'react-router-dom';
+
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchUsers, selectUsersRaw, selectUsersLoading, selectUsersError, deleteUser, restoreUser } from '../../../../../redux/usersSlice';
+import type { AppDispatch } from '../../../../../redux/store';
+import { type Column } from '../../../../../components/Table';
+import { useLoaderData, useNavigate } from 'react-router-dom';
+import { useCallback, useState, useMemo, useEffect } from 'react';
 import { type Skill, type Position } from '../../../../../routes/loaders/usersLoader';
-import { FiEdit3, FiTrash2, FiRotateCcw } from 'react-icons/fi';
-import styles from './styles.module.css';
+import { fetchUsers, selectUsersRaw, selectUsersLoading, selectUsersError, deleteUser, restoreUser } from '../../../../../redux/usersSlice';
 
 export type UserRow = {
   id: number;
@@ -15,6 +15,8 @@ export type UserRow = {
   position: string;
   skills: string;
   actions: React.ReactNode;
+  deleted: boolean;
+
 };
 
 export const useUsersTable = () => {
@@ -40,7 +42,7 @@ export const useUsersTable = () => {
     };
   }, [roleId, positionId, skillId, nameFilter]);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const rawUsers = useSelector(selectUsersRaw);
   const loading = useSelector(selectUsersLoading);
   const error = useSelector(selectUsersError);
@@ -55,26 +57,23 @@ export const useUsersTable = () => {
     dispatch(fetchUsers(filters));
   }, [dispatch, filters]);
 
-  // --- ACTIONS ---
-  const onEdit = useCallback((id: number) => {
-    navigate(`/users/edit/${id}`);
-  }, [navigate]);
-
   const onDelete = useCallback(async (id: number) => {
     await (dispatch as any)(deleteUser(id)).unwrap();
     (dispatch as any)(fetchUsers(filters));
   }, [dispatch, filters]);
 
-  // onRestore: dispatch thunk, then fetchUsers
   const onRestore = useCallback(async (id: number) => {
     await (dispatch as any)(restoreUser(id)).unwrap();
     (dispatch as any)(fetchUsers(filters));
   }, [dispatch, filters]);
 
+  const onEdit = useCallback((id: number) => {
+    navigate(`/users/edit/${id}`);
+  }, [navigate]);
+
   const rows: UserRow[] = useMemo(() => {
     const list = Array.isArray(rawUsers) ? rawUsers : [];
     return list.map((u: any) => {
-      const deleted = !!( u.deleted_at);
       return {
         id: u.id,
         name: u.name,
@@ -82,28 +81,7 @@ export const useUsersTable = () => {
         role: u?.role?.name ?? '',
         position: u?.position?.name ?? '',
         skills: Array.isArray(u?.skills) ? u.skills.map((s: any) => s.name).join(', ') : '',
-        actions: (
-          <div className={styles.actions}>
-            <FiEdit3
-              className={styles.icon}
-              title="Edit"
-              onClick={() => onEdit(u.id)}
-            />
-            {deleted ? (
-              <FiRotateCcw
-                className={styles.icon}
-                title="Restore"
-                onClick={() => onRestore(u.id)}
-              />
-            ) : (
-              <FiTrash2
-                className={styles.red}
-                title="Delete"
-                onClick={() => onDelete(u.id)}
-              />
-            )}
-          </div>
-        ),
+        deleted: Boolean(u.deleted_at),
       };
     });
   }, [rawUsers, onEdit, onDelete, onRestore]);
@@ -112,22 +90,14 @@ export const useUsersTable = () => {
     setNameFilter(nameInput.trim());
   }, [nameInput]);
 
-  const columns: Column<UserRow>[] = useMemo(() => ([
-    { key: 'id', label: 'ID', width: 20 },
-    { key: 'name', label: 'Name', width:90 },
-    { key: 'email', label: 'Email', width: 100 },
-    { key: 'role', label: 'Role', width: 30 },
-    { key: 'position', label: 'Position', width: 100 },
-    { key: 'skills', label: 'Skills', width:300 },
-    { key: 'actions', label: 'Actions', width: 50 },
-  ]), []);
 
   return {
-    rows, columns, loading, error, refresh,
+    rows, loading, error, refresh,
     roleId, setRoleId,
     positionId, setPositionId,
     skillId, setSkillId,
     skillsOptions, positionsOptions,
     nameInput, setNameInput, applyNameFilter,
+    onEdit, onDelete, onRestore,
   };
 };
