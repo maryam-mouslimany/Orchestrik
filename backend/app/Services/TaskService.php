@@ -63,16 +63,20 @@ class TaskService
 
     static function employeeTasks($request)
     {
-        $filters   = $request['filters'] ?? $request;
+        $filters      = $request['filters'] ?? $request;
 
-        $projectId = $filters['projectId'] ?? null;
-        $status = $filters['status'] ?? null;
-        $deadline = $filters['deadline'] ?? [];
-        $priority = $filters['priority'] ?? [];
-        $assigned_to = $filters['assigned_to'] ?? [];
+        $projectId    = $filters['projectId']   ?? null;
+        $status       = $filters['status']      ?? null;          
+        $priority     = $filters['priority']    ?? null;        
+        $assignedTo   = $filters['assigned_to'] ?? null;
+
+        // detect pagination (top-level OR inside filters)
+        $page         = request('page',        $filters['page']     ?? null);
+        $perPageInput = request('per_page',    $filters['per_page'] ?? null);
+        $perPage      = $perPageInput !== null ? max(1, min((int)$perPageInput, 100)) : null;
 
         $user = auth()->user();
-        $role = ($user->role->name ?? '');
+        $role = strtolower((string)($user->role->name ?? ''));
 
         $q = Task::query()->with(['project', 'assignee']);
 
@@ -82,19 +86,28 @@ class TaskService
             $q->where('created_by', $user->id);
         }
 
-        if (!empty($filters['projectId'])) {
-            $q->where('project_id', $projectId);
+        if ($projectId) $q->where('project_id', (int)$projectId);
+
+        if (!empty($assignedTo)) {
+            is_array($assignedTo)
+                ? $q->whereIn('assigned_to', $assignedTo)
+                : $q->where('assigned_to', (int)$assignedTo);
         }
 
-        if (!empty($filters['assigned_to'])) {
-            $q->where('assigned_to', $assigned_to);
+        if (!empty($status)) {
+            is_array($status) ? $q->whereIn('status', $status) : $q->where('status', $status);
         }
 
-        if (!empty($filters['status'])) {
-            $q->where('status', $status);
+        if (!empty($priority)) {
+            is_array($priority) ? $q->whereIn('priority', $priority) : $q->where('priority', $priority);
         }
-        if (!empty($filters['priority'])) {
-            $q->where('priority', $priority);
+
+        $q->orderByDesc('updated_at');
+
+        if ($perPage !== null) {
+            return $page !== null
+                ? $q->paginate($perPage, ['*'], 'page', (int)$page)
+                : $q->paginate($perPage);
         }
 
         return $q->get();

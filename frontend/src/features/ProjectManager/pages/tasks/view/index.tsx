@@ -9,14 +9,15 @@ import LoadingIndicator from '../../../../../components/Loading';
 import SimpleMuiTable from '../../../../../components/Table';
 import SelectFilter from '../../../../../components/SelectFilter';
 import { TaskPriorities, TaskSTATUSES } from '../../../../../constants/constants';
-
+import Pagination from '../../../../../components/Pgination';
 export const PmTasksTablePage: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
 
   const {
     rows, columns: baseColumns, loading, error,
-    projectId, setProjectId, status, setStatus, priority, setPriority, assigneeId, setAssigneeId, projectsOptions, usersOptions
+    projectId, setProjectId, status, setStatus, priority, setPriority, assigneeId, setAssigneeId, projectsOptions, usersOptions,
+    isPaginated, page, setPage, perPage, setPerPage, total,
   } = useTasksTable();
 
   const columnsWithActions = useMemo(() => {
@@ -90,7 +91,19 @@ export const PmTasksTablePage: React.FC = () => {
         onClose={() => setOpen(false)}
         taskId={selectedTaskId}
       />
+      {isPaginated && (
+        <Pagination
+          page={page}
+          perPage={perPage}
+          total={total}
+          onPageChange={(p) => setPage(p)}
+          disabled={loading}
+        />
+      )}
+
     </Box>
+
+
   );
 };
 

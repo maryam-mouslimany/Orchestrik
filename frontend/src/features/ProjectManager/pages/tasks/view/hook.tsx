@@ -24,6 +24,11 @@ export const useTasksTable = () => {
   const [priority, setPriority] = useState<string | null>(null);
   const [assigneeId, setAssigneeId] = useState<string | null>(null);
 
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10); 
+  const [total, setTotal] = useState(0);
+  const [isPaginated, setIsPaginated] = useState(false);
+
   const dispatch = useDispatch();
   const projectsList = useSelector(selectProjectsList);
   const loadingProjects = useSelector(selectProjectsLoad);
@@ -55,7 +60,8 @@ export const useTasksTable = () => {
     if (priority) f.priority = priority;
     if (assigneeId) f.assigned_to = assigneeId;
     return f;
-  }, [projectId, status, priority, assigneeId]);
+  }, [projectId, status, priority, assigneeId, page, perPage]);
+
 
   const [rows, setRows] = useState<TaskRow[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -69,10 +75,13 @@ export const useTasksTable = () => {
       const res = await apiCall('/pm/tasks', {
         method: 'GET',
         requiresAuth: true,
-        params: { filters },
+        params: { page, per_page:perPage, filters },
       });
+      const payload = res.data;
+      const list: any[] = Array.isArray(payload)
+        ? payload : Array.isArray(payload?.data)
+          ? payload.data : [];
 
-      const list: any[] = Array.isArray(res.data) ? res.data : [];
       const mapped: TaskRow[] = list.map((t) => ({
         id: t.id,
         title: t.title ?? '',
@@ -84,16 +93,23 @@ export const useTasksTable = () => {
       }));
 
       setRows(mapped);
+
+      const paged = !Array.isArray(payload);
+      setIsPaginated(paged);
+      setTotal(paged ? Number(payload.total ?? mapped.length) : mapped.length);
+      setPage(paged ? Number(payload.current_page ?? page) : 1);
+      if (paged) setPerPage((prev) => Number((payload.per_page ?? prev) || 20));
+
     } catch (e: any) {
       setError(e?.message ?? 'Failed to load tasks');
       setRows([]);
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters, page]);
 
   useEffect(() => { void fetchTasks(); }, [fetchTasks]);
-console.log(filters)
+  console.log(filters)
   const columns: Column<TaskRow>[] = useMemo(() => ([
     { key: 'id', label: 'ID', width: 40 },
     { key: 'title', label: 'Title', width: 200 },
@@ -102,6 +118,7 @@ console.log(filters)
     { key: 'priority', label: 'Priority', width: 50, render: (value) => <Pill label={value} />, },
     { key: 'deadline', label: 'Deadline', width: 160 },
   ]), []);
+  console.log(page, perPage)
   return {
     rows, columns, loading, error,
     refresh: fetchTasks,
@@ -111,5 +128,9 @@ console.log(filters)
     usersOptions,
     projectsOptions,
     assigneeId, setAssigneeId,
+    isPaginated,
+    page, setPage,
+    perPage, setPerPage,
+    total,
   };
 };
