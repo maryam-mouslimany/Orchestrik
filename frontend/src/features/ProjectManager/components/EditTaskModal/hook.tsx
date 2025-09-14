@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import apiCall from '../../../services/apiCallService';
+import apiCall from '../../../../services/apiCallService';
 
 export type EditTaskModalHookArgs = {
   open: boolean;
@@ -16,8 +16,8 @@ type Task = {
 
 export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArgs) => {
   const [loading, setLoading] = useState(false);
-  const [saving, setSaving]   = useState(false);
-  const [error, setError]     = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // displayed
   const [title, setTitle] = useState('');
@@ -30,17 +30,17 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
   const [originalStatus, setOriginalStatus] = useState<string>(''); // NEW
 
   const isCompleted = status === 'completed';
+  const isReopened = status === 'reopened';
 
-  // CHANGED: canSubmit = only “fields present” check (do NOT include "unchanged" here
-  // so the user can still click and SEE the error message).
   const canSubmit = useMemo(() => {
     if (!status) return false;
-    if (isCompleted) {
-      const durOk = duration.trim() !== '' && !isNaN(Number(duration)) && Number(duration) > 0;
-      return note.trim().length > 0 && durOk;
-    }
-    return true;
-  }, [status, isCompleted, note, duration]);
+
+    return isCompleted
+      ? note.trim().length > 0 && duration.trim() !== '' && !isNaN(Number(duration)) && Number(duration) > 0
+      : isReopened
+        ? note.trim().length > 0
+        : true;
+  }, [status, isCompleted, isReopened, note, duration]);
 
   const resetForm = useCallback((t: Task) => {
     setTitle(t.title ?? '');
@@ -49,21 +49,28 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
     setOriginalStatus(t.status ?? ''); // NEW
     setNote('');
     setDuration('');
-    setError(null); // NEW: clear any previous error when loading a new task
+    setError(null);
   }, []);
 
-  // NEW: minimal validator for visible messages
   const validate = (): string | null => {
     if (!status) return 'Please select a status.';
-    if (status === 'completed') {
-      if (!note.trim()) return 'Note is required to mark as completed.';
-      if (!duration.trim()) return 'Duration is required to mark as completed.';
-      const n = Number(duration);
-      if (isNaN(n) || n <= 0) return 'Duration must be a positive number.';
-    }
-    // unchanged check is a UX rule, not a field requirement
-    if (status === originalStatus) return 'Status is unchanged.';
-    return null;
+    return isCompleted
+      ? (!note.trim()
+        ? 'Note is required to mark as completed.'
+        : !duration.trim()
+          ? 'Duration is required to mark as completed.'
+          : isNaN(Number(duration)) || Number(duration) <= 0
+            ? 'Duration must be a positive number.'
+            : status === originalStatus
+              ? 'Status is unchanged.'
+              : null)
+      : isReopened
+        ? (!note.trim()
+          ? 'Note is required to reopen a task.'
+          : status === originalStatus
+            ? 'Status is unchanged.'
+            : null)
+        : (status === originalStatus ? 'Status is unchanged.' : null);
   };
 
   const fetchDetails = useCallback(async () => {
@@ -107,11 +114,14 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
       setSaving(true);
       setError(null);
 
-      const payload: Record<string, any> = { status };
-      if (status === 'completed') {
-        payload.note = note;
-        payload.duration = duration;
-      }
+      const payload = {
+        status,
+        ...(status === 'completed'
+          ? { note: note.trim(), duration: Number(duration) }
+          : status === 'reopened'
+            ? { note: note.trim() }
+            : {}),
+      };
       console.log('payload', payload)
       await apiCall(`/tasks/editStatus/${taskId}`, {
         method: 'POST',
@@ -126,7 +136,7 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
       setSaving(false);
     }
   }, [taskId, status, note, duration, onClose, originalStatus]); // CHANGED deps (removed canSubmit)
-  
+
   return {
     loading, saving, error,
     title, description,
@@ -134,6 +144,6 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
     note, setNote,
     duration, setDuration,
     isCompleted, canSubmit,
-    submit,
+    submit, isReopened
   };
 };

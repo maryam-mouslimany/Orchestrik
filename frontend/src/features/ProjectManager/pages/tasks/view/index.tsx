@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import styles from './styles.module.css';
 import { FiEdit2 } from 'react-icons/fi';
-import PmEditTaskModal from '../../../EditTaskModal';
+import PmEditTaskModal from '../../../components/EditTaskModal';
 import LoadingIndicator from '../../../../../components/Loading';
 import SimpleMuiTable from '../../../../../components/Table';
 import SelectFilter from '../../../../../components/SelectFilter';

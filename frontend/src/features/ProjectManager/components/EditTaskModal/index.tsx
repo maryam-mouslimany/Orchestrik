@@ -1,9 +1,9 @@
 import React from 'react';
-import Modal from '../../../components/Modal';
-import SelectFilter from '../../../components/SelectFilter';
-import Input from '../../../components/Input';
+import Modal from '../../../../components/Modal';
+import SelectFilter from '../../../../components/SelectFilter';
+import Input from '../../../../components/Input';
 import styles from './styles.module.css';
-import { TaskSTATUSES } from '../../../constants/constants';
+import { TaskSTATUSES } from '../../../../constants/constants';
 import { useEditTaskModal } from './hook';
 
 type Props = {
@@ -19,7 +19,7 @@ const PmEditTaskModal: React.FC<Props> = ({ open, onClose, taskId }) => {
     status, setStatus,
     note, setNote,
     duration, setDuration,
-    isCompleted, canSubmit,
+    isCompleted, canSubmit, isReopened,
     submit,
   } = useEditTaskModal({ open, onClose, taskId });
 
@@ -70,12 +70,23 @@ const PmEditTaskModal: React.FC<Props> = ({ open, onClose, taskId }) => {
             </div>
           )}
 
+          {isReopened && (
+            <div className={styles.row}>
+              <Input
+                label="Note"
+                placeholder="Reson of Reopen"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+              />
+            </div>
+          )}
+
           <div className={styles.actions}>
             <button
               type="button"
               onClick={submit}
               className={styles.btnPrimary}
-              disabled={!canSubmit || saving} 
+              disabled={!canSubmit || saving}
             >
               {saving ? 'Saving…' : 'Save'}
             </button>
