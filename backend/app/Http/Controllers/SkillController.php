@@ -12,7 +12,7 @@ class SkillController extends Controller
         try {
             $skills = SkillService::getSkills();
             if (!$skills)
-                return $this->error('Skills Not Created');
+                return $this->error('Skills Not Found');
             return $this->success($skills);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), 500);

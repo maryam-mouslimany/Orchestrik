@@ -5,6 +5,7 @@ import apiCall from '../../../../../services/apiCallService';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, selectUsersRaw, selectUsersLoading } from '../../../../../redux/usersSlice';
 import { useNavigate } from 'react-router-dom';
+import type { AppDispatch } from '../../../../../redux/store';
 
 export type MultiOption = { id: number; name: string };
 
@@ -35,7 +36,7 @@ export const useUserCreate = () => {
   const navigate = useNavigate();
   const { roles, positions, skills } = useLoaderData() as UsersCreateLoader;
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const usersOptions = useSelector(selectUsersRaw);
   const usersLoad = useSelector(selectUsersLoading);
 

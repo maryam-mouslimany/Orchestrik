@@ -1,7 +1,5 @@
-
 import { useSelector, useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../../../../redux/store';
-import { type Column } from '../../../../../components/Table';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { useCallback, useState, useMemo, useEffect } from 'react';
 import { type Skill, type Position } from '../../../../../routes/loaders/usersLoader';
@@ -16,7 +14,6 @@ export type UserRow = {
   skills: string;
   actions: React.ReactNode;
   deleted: boolean;
-
 };
 
 export const useUsersTable = () => {
@@ -44,6 +41,7 @@ export const useUsersTable = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const rawUsers = useSelector(selectUsersRaw);
+  console.log(rawUsers)
   const loading = useSelector(selectUsersLoading);
   const error = useSelector(selectUsersError);
 

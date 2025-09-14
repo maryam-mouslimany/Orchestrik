@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '../../../../../hooks/useForm';
 import apiCall from '../../../../../services/apiCallService';
 import { fetchProjects, selectProjectsLoad } from '../../../../../redux/projectsSlice';
 import { useNavigate } from 'react-router-dom';
+import type { AppDispatch } from '../../../../../redux/store';
 
 type Member = { id: number; name: string };
 export type TaskForm = {
@@ -15,15 +16,16 @@ export const useTaskCreate = () => {
 
   const navigate = useNavigate();
   const { projectsList: projectsOptions } = useSelector((s: any) => s.projects);
-  console.log(projectsOptions)
-  const dispatch = useDispatch();
+  //console.log(projectsOptions)
+  const dispatch = useDispatch<AppDispatch>();
   const loadingProjects = useSelector(selectProjectsLoad);
 
   useEffect(() => {
-    if (!loadingProjects && (!projectsOptions || projectsOptions.length === 0)) {
-      dispatch(fetchProjects());
-    }
-  }, [dispatch, loadingProjects, projectsOptions]);
+  if (!loadingProjects && projectsOptions.length === 0) {
+    dispatch(fetchProjects());
+  }
+}, [dispatch, loadingProjects]); // ✅ don't depend on the array itself
+
 
   const { values, setField, reset } = useForm<TaskForm>({
     title: '', description: '', priority: '', deadline: '', project_id: '', assigned_to: '',

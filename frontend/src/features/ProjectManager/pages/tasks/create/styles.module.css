@@ -1,7 +1,7 @@
 /* Card-ish form wrapper with subtle shadow */
 .form {
   display: grid;
-  gap: 16px;
+  gap: 8px;
   padding: 20px;
   border-radius: 14px;
   background: #fff;

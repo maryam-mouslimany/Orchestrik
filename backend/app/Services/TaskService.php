@@ -5,33 +5,22 @@ namespace App\services;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\TaskStatusLog;
+use Illuminate\Support\Facades\Auth;
 
 use App\Notifications\TaskCreatedNotification;
 
 class TaskService
 {
-    static function createTask($data, $parentTask)
+    public static function createTask(array $data): Task
     {
-        try {
-            if ($parentTask) {
-                $data['parent_task_id'] = $parentTask;
-            }
-            $creator = auth()->user();
-            $data['created_by'] = $creator->id;
-            $task = Task::create($data);
+        $creator = Auth::user();
+        $data['created_by'] = $creator->id;
+        
+        $task = Task::create($data);
 
-            if ($creator->role->name === 'admin') {
-                // notify project manager
-                $pm = User::whereHas('role', fn($q) => $q->where('name', 'pm'))->first();
-                $pm->notify(new TaskCreatedNotification($task, $creator->role->name));
-            } elseif ($creator->role->name === 'pm') {
-                // notify employee
-                $employee = User::whereHas('role', fn($q) => $q->where('name', 'employee'))->first();
-                $employee->notify(new TaskCreatedNotification($task, $creator->role->name));
-            }
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-        }
+        $employee = User::findOrFail($data['assigned_to']);
+        $employee->notify(new TaskCreatedNotification($task));
+
         return $task;
     }
 
@@ -66,11 +55,10 @@ class TaskService
         $filters      = $request['filters'] ?? $request;
 
         $projectId    = $filters['projectId']   ?? null;
-        $status       = $filters['status']      ?? null;          
-        $priority     = $filters['priority']    ?? null;        
+        $status       = $filters['status']      ?? null;
+        $priority     = $filters['priority']    ?? null;
         $assignedTo   = $filters['assigned_to'] ?? null;
 
-        // detect pagination (top-level OR inside filters)
         $page         = request('page',        $filters['page']     ?? null);
         $perPageInput = request('per_page',    $filters['per_page'] ?? null);
         $perPage      = $perPageInput !== null ? max(1, min((int)$perPageInput, 100)) : null;

@@ -1,13 +1,15 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { useSidebar } from './hook';
-import styles from './styles.module.css';
+import { NavLink } from 'react-router-dom'; 
+import { useSidebar } from './hook'; 
+import styles from './styles.module.css'; 
 import logo from '../../assets/images/logo.png';
+import { FiBell } from 'react-icons/fi';
+import NotificationsModal from '../Notifications';
 
 const Sidebar: React.FC = () => {
-    const { items, roleName, handleLogout } = useSidebar();
-    console.log(roleName)
+    const { items, roleName, handleLogout, unreadCount, openNotifs, setOpenNotifs } = useSidebar();
+
     return (
+        <>
         <aside className={styles.sidebar} data-role={roleName}>
             <div className={styles.header}>
                 <img className={styles.logo} src={logo} alt="App logo" />
@@ -15,6 +17,15 @@ const Sidebar: React.FC = () => {
                     <span className={styles.title}>Menu </span>
                     <span className={styles.role}>{roleName.toUpperCase()}</span>
                 </div>
+
+                <button
+                  type="button"
+                  className={styles.bellBtn}
+                  onClick={() => setOpenNotifs(true)}
+                >
+                  <FiBell size={18} />
+                  {unreadCount > 0 && <span className={styles.badge}>{unreadCount}</span>}
+                </button>
             </div>
 
             <nav className={styles.nav}>
@@ -26,7 +37,7 @@ const Sidebar: React.FC = () => {
                                 className={({ isActive }) =>
                                     `${styles.link} ${isActive ? styles.isActive : ''}`
                                 }
-                                end={['/dashboard', '/my-tasks'].includes(item.to)}//for pages that do not have child routes
+                                end={['/dashboard', '/my-tasks'].includes(item.to)}
                             >
                                 {item.label}
                             </NavLink>
@@ -36,7 +47,10 @@ const Sidebar: React.FC = () => {
                 </ul>
             </nav>
         </aside>
+
+        {/* mount notifications modal */}
+        <NotificationsModal open={openNotifs} onClose={() => setOpenNotifs(false)} />
+        </>
     );
 };
-
 export default Sidebar;
