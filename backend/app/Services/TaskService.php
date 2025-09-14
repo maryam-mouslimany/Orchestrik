@@ -69,13 +69,27 @@ class TaskService
         $status = $filters['status'] ?? null;
         $deadline = $filters['deadline'] ?? [];
         $priority = $filters['priority'] ?? [];
+        $assigned_to = $filters['assigned_to'] ?? [];
 
-        $user =  auth()->user();
-        $q = Task::with('project')->where('assigned_to', $user->id);
+        $user = auth()->user();
+        $role = ($user->role->name ?? '');
+
+        $q = Task::query()->with(['project', 'assignee']);
+
+        if ($role === 'employee') {
+            $q->where('assigned_to', $user->id);
+        } elseif ($role === 'pm') {
+            $q->where('created_by', $user->id);
+        }
 
         if (!empty($filters['projectId'])) {
             $q->where('project_id', $projectId);
         }
+
+        if (!empty($filters['assigned_to'])) {
+            $q->where('assigned_to', $assigned_to);
+        }
+
         if (!empty($filters['status'])) {
             $q->where('status', $status);
         }
@@ -86,7 +100,8 @@ class TaskService
         return $q->get();
     }
 
-    static function taskDetails($request) {
+    static function taskDetails($request)
+    {
         return Task::find($request['taskId']);
     }
 }

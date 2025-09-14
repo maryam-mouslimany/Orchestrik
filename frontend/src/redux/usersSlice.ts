@@ -32,7 +32,7 @@ const initialState: UsersState = {
 export const fetchUsers = createAsyncThunk<any[], UsersFilters | undefined>(
   'users/fetchAll',
   async (filters) => {
-    const res = await apiCall('/admin/users', {
+    const res = await apiCall('/users', {
       method: 'GET',
       requiresAuth: true,
       params: { filters: filters ?? {} },
@@ -44,7 +44,7 @@ export const createUser = createAsyncThunk<any, Record<string, any>>(
   'users/create',
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await apiCall('/admin/users', {
+      const res = await apiCall('/auth/users', {
         method: 'POST',
         requiresAuth: true,
         data: payload,

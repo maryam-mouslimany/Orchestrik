@@ -43,7 +43,7 @@ class TaskController extends Controller
                 return $this->error('Tasks Not found');
             return $this->success($tasks);
         } catch (\Exception $e) {
-            return $this->error('Something went wrong', 500);
+            return $this->error($e->getMessage(), 500);
         }
     }
 
