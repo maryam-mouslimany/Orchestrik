@@ -7,17 +7,15 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class TaskCreatedNotification extends Notification 
+class TaskCreatedNotification extends Notification
 {
     use Queueable;
 
     protected $task;
-    protected $creatorRole;
 
-    public function __construct($task, $creatorRole)
+    public function __construct($task)
     {
         $this->task = $task;
-        $this->creatorRole = $creatorRole;
     }
 
     public function via($notifiable)
@@ -27,22 +25,33 @@ class TaskCreatedNotification extends Notification
 
     public function toArray($notifiable)
     {
+        $project = $this->task->project; 
 
         return [
-            'task_id' => $this->task->id,
-            'project_id' => $this->task->project_id,
-            'title' => $this->task->title,
-            'created_by' => $this->creatorRole,
+            'kind'       => 'task.created',
+            'task_id'    => $this->task->id,
+            'title'      => "New task assigned ({$this->task->title}) {$project?->title}", 
+            'payload'    => [
+                'task_title'    => $this->task->title,
+                'project_title' => $project?->title,
+                'created_by'    => $this->task->created_by,
+            ],
         ];
     }
 
     public function toBroadcast($notifiable)
     {
+        $project = $this->task->project;
+
         return new BroadcastMessage([
-            'task_id' => $this->task->id,
-            'project_id' => $this->task->project_id,
-            'title' => $this->task->title,
-            'created_by' => $this->creatorRole,
+            'kind'       => 'task.created',
+            'task_id'    => $this->task->id,
+            'title'      => "New task assigned ({$this->task->title}) {$project?->title}",
+            'payload'    => [
+                'task_title'    => $this->task->title,
+                'project_title' => $project?->title,
+                'created_by'    => $this->task->created_by,
+            ],
         ]);
     }
 }

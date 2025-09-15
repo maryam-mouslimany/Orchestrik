@@ -17,6 +17,8 @@ export const fetchProjects = createAsyncThunk<any[]>(
   'projects/fetchAll',
   async () => {
     const res = await apiCall('/projects', { method: 'GET', requiresAuth: true });
+        console.log('projects API raw response', res); // ⬅️ check this
+
     return Array.isArray(res.data) ? res.data : [];
   }
 );

@@ -124,5 +124,6 @@ return [
     ],
 
     App\Providers\AgentServiceProvider::class,
+    App\Providers\BroadcastServiceProvider::class,
 
 ];

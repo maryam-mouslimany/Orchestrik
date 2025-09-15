@@ -19,25 +19,11 @@ class StoreTaskRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|in:low,medium,high',
+            'status' => 'required|in:pending, in progress, completed, reopened',
             'deadline' => 'nullable|date',
             'project_id' => 'required|exists:projects,id',
-            'parent_task_id' => 'nullable|exists:tasks,id',
-            'assigned_to' => [
-                'sometimes',
-                'exists:users,id',
-                function ($attribute, $value, $fail) {
-                    $project = Project::with('members')->find($this->input('project_id'));
-
-                    if (!$project) {
-                        $fail('The selected project does not exist.');
-                        return;
-                    }
-
-                    if (! $project->members->pluck('id')->contains($value)) {
-                        $fail('The selected user is not a member of this project.');
-                    }
-                }
-            ],
+            'assigned_to' => 'required|exists:users,id'
+        
         ];
     }
 }

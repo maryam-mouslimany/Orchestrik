@@ -9,275 +9,16 @@
         {
             "url": "/",
             "description": "App root"
-        },
-        {
-            "url": "/api",
-            "description": "API base"
         }
     ],
     "paths": {
-        "/api/guest/login": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Login",
-                "operationId": "a8e82640e34b3bd0e3d4beba60437656",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LoginRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuthUser"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid credentials"
-                    },
-                    "422": {
-                        "description": "Validation error"
-                    }
-                }
-            }
-        },
-        "/api/auth/validate": {
-            "get": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Validate token",
-                "operationId": "64acc37949073fb44b858c993e3cc1ae",
-                "responses": {
-                    "200": {
-                        "description": "Valid token",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuthUser"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid token"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/skills": {
-            "get": {
-                "tags": [
-                    "Lookups"
-                ],
-                "summary": "Get skills",
-                "operationId": "508f54f09f4f5972a22542f164a1368d",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer"
-                                            },
-                                            "name": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/positions": {
-            "get": {
-                "tags": [
-                    "Lookups"
-                ],
-                "summary": "Get positions",
-                "operationId": "88b62c6289454a805411cb4fb7d6cd9d",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer"
-                                            },
-                                            "name": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/roles": {
-            "get": {
-                "tags": [
-                    "Lookups"
-                ],
-                "summary": "Get roles",
-                "operationId": "40ebbe5ea1b23f69941f45dd1c16af6a",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer"
-                                            },
-                                            "name": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/clients": {
-            "get": {
-                "tags": [
-                    "Lookups"
-                ],
-                "summary": "Get clients",
-                "operationId": "a20afc5a21beae031cdc44f083e8e2d6",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer"
-                                            },
-                                            "name": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/users": {
-            "get": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "List users",
-                "operationId": "7e0ea48e2b1274af8e2425815431b7f3",
-                "parameters": [
-                    {
-                        "name": "roleId",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "positionId",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/admin/users/create": {
+        "/api/admin/projects/create": {
             "post": {
                 "tags": [
                     "Admin"
                 ],
-                "summary": "Create user",
-                "operationId": "a2c7e919573f24d0409381d54f1015a0",
+                "summary": "Create a project",
+                "operationId": "1c94258c2100507bf04126c54a000a9a",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -285,33 +26,29 @@
                             "schema": {
                                 "required": [
                                     "name",
-                                    "email",
-                                    "role_id",
-                                    "position_id",
-                                    "password"
+                                    "description",
+                                    "client_id",
+                                    "members"
                                 ],
                                 "properties": {
                                     "name": {
-                                        "type": "string"
-                                    },
-                                    "email": {
                                         "type": "string",
-                                        "format": "email"
+                                        "example": "Website Revamp"
                                     },
-                                    "password": {
+                                    "description": {
                                         "type": "string",
-                                        "minLength": 6
+                                        "example": "Full redesign of marketing site"
                                     },
-                                    "role_id": {
-                                        "type": "integer"
+                                    "client_id": {
+                                        "type": "integer",
+                                        "example": 3
                                     },
-                                    "position_id": {
-                                        "type": "integer"
-                                    },
-                                    "skills": {
+                                    "members": {
+                                        "description": "User IDs to attach to the project",
                                         "type": "array",
                                         "items": {
-                                            "type": "integer"
+                                            "type": "integer",
+                                            "example": 12
                                         }
                                     }
                                 },
@@ -324,8 +61,187 @@
                     "201": {
                         "description": "Created"
                     },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "422": {
                         "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/admin/users/create": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Create a user",
+                "operationId": "0f0f00fb9bd221d6f61dcca647da619e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "position_id",
+                                    "role_id",
+                                    "skills"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Maryam M."
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "maryam@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 6,
+                                        "example": "secret123"
+                                    },
+                                    "position_id": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "role_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "skills": {
+                                        "description": "Array of skill IDs",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 7
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/admin/users/delete": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Soft-delete a user",
+                "operationId": "e655f798cc9ae98238a840a535496565",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "description": "User ID to soft delete",
+                                        "type": "integer",
+                                        "example": 42
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Deleted"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/admin/users/restore": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Restore a soft-deleted user",
+                "operationId": "a0ec3372591e7e8f7453f4b8dd2f0d67",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "description": "Previously deleted user ID",
+                                        "type": "integer",
+                                        "example": 42
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Restored"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/admin/analytics/tasks/durations": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Analytics: top/least task durations",
+                "operationId": "1754a2d5ff5ea5ebed48a1350db580f8",
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -333,104 +249,856 @@
                     "403": {
                         "description": "Forbidden"
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
+                }
+            }
+        },
+        "/api/admin/analytics/employees/workload": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Analytics: employees workload",
+                "operationId": "f476d0cc83c1efb8dc9bc3537e51aa31",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
-                ]
+                }
+            }
+        },
+        "/api/admin/analytics/employees/positions": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Analytics: positions distribution",
+                "operationId": "7baccf644a57ac293871f60a9064c697",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/admin/analytics/employees/skills": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Analytics: skills distribution",
+                "operationId": "09afcdaf0e5168d96bf422895e6a7f92",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/guest/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login",
+                "operationId": "a8e82640e34b3bd0e3d4beba60437656",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 6,
+                                        "example": "secret123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK (returns token and user)"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/skills": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "List all skills",
+                "operationId": "f4f08ca0e5ec6709b6d2f848d3f32f7e",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/positions": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "List all positions",
+                "operationId": "e8125ca006c47407ebe15a5f7b5f813f",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/roles": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "List all roles",
+                "operationId": "a35dccaa1a0f23ccb1c7b71e2f8df95e",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/clients": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "List all clients",
+                "operationId": "1f81f94e98333f93ac6517297a7dfe72",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/projects": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "List projects for the current user",
+                "operationId": "cf63ebce72f13c991939bd778d3f0063",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Filter by project name (partial). Alias: nameFilter",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Website"
+                        }
+                    },
+                    {
+                        "name": "nameFilter",
+                        "in": "query",
+                        "description": "Deprecated alias for 'name'.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Mobile"
+                        }
+                    },
+                    {
+                        "name": "withTaskStats",
+                        "in": "query",
+                        "description": "If true, include task counts (total, pending, completed, overdue).",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "example": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/tasks/editStatus/{taskId}": {
+            "post": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Update a task's status (and optionally log duration/note)",
+                "operationId": "be21bcc8d60d43128b77225b73051a36",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "description": "Task ID to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 123
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "description": "New status (e.g., pending, in_progress, completed)",
+                                        "type": "string",
+                                        "example": "in_progress"
+                                    },
+                                    "duration": {
+                                        "description": "Optional duration to store with the task (units as in your DB)",
+                                        "type": "integer",
+                                        "example": 45
+                                    },
+                                    "note": {
+                                        "description": "Optional note; saved in TaskStatusLog",
+                                        "type": "string",
+                                        "example": "Moved to in_progress after kickoff"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK (returns updated task)"
+                    },
+                    "404": {
+                        "description": "Task not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "List users (with optional filters)",
+                "operationId": "fc151b9b62f5b4ef7e582f2b45cd8c7a",
+                "parameters": [
+                    {
+                        "name": "nameFilter",
+                        "in": "query",
+                        "description": "Filter by name (partial match).",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "maryam"
+                        }
+                    },
+                    {
+                        "name": "roleId",
+                        "in": "query",
+                        "description": "Filter by role ID.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "positionId",
+                        "in": "query",
+                        "description": "Filter by position ID.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        }
+                    },
+                    {
+                        "name": "skills",
+                        "in": "query",
+                        "description": "Filter by multiple skill IDs. Encoded as skills=1&skills=2 (backend also accepts skills[]).",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "example": 7
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/auth/validate": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Validate the current token and return the authenticated user",
+                "operationId": "5059bac8fc9624dd29be99dd32909f35",
+                "responses": {
+                    "200": {
+                        "description": "OK (user object or null)"
+                    }
+                }
+            }
+        },
+        "/api/notifications": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "List unread notifications for the current user",
+                "operationId": "6ffc6016c366684ef908e9cfa6276228",
+                "responses": {
+                    "200": {
+                        "description": "OK (array of notifications)"
+                    }
+                }
+            }
+        },
+        "/api/notifications/read": {
+            "post": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Mark a notification as read",
+                "operationId": "690c904dc4deca95cc485098ef114cf5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "notificationId"
+                                ],
+                                "properties": {
+                                    "notificationId": {
+                                        "description": "Notification ID",
+                                        "type": "string",
+                                        "example": "f7a3b9a5-4b42-4d1f-9f5c-2c1f3f0a8e21"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK (updated notification)"
+                    }
+                }
+            }
+        },
+        "/api/notifications/count": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Get unread notifications count for the current user",
+                "operationId": "5c50ea443bfc6c0a402c8bcdec8382da",
+                "responses": {
+                    "200": {
+                        "description": "OK (integer count)"
+                    }
+                }
+            }
+        },
+        "/api/employee/tasks": {
+            "get": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "List my tasks (filters + optional pagination)",
+                "operationId": "b3ce1888957910935f310f20a1a0a5cd",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    },
+                    {
+                        "name": "assigned_to",
+                        "in": "query",
+                        "description": "One or more assignee IDs (usually your own ID; supported by backend even for arrays).",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "example": 23
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer",
+                                        "example": 23
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "One or more statuses",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "example": "in_progress"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "example": "completed"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "priority",
+                        "in": "query",
+                        "description": "One or more priorities",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "example": "high"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "example": "medium"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number (when paginating)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Items per page (1..100)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "example": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK (paginated or full list)"
+                    }
+                }
+            }
+        },
+        "/api/employee/tasks/{taskId}": {
+            "get": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Get task details by ID",
+                "description": "NOTE: Your route uses an optional path param `{taskId?}`.\nOpenAPI cannot mark path params optional, so it is documented as required.",
+                "operationId": "c41b718d859b02335157e4f2447e9d78",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 123
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK (task object or null)"
+                    },
+                    "404": {
+                        "description": "Task not found"
+                    }
+                }
+            }
+        },
+        "/api/pm/recommend-assignee": {
+            "post": {
+                "tags": [
+                    "Project Manager"
+                ],
+                "summary": "Recommend an assignee for a task (AI)",
+                "operationId": "f0d7896d8c04efad647ee350af4da049",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "project_id",
+                                    "title"
+                                ],
+                                "properties": {
+                                    "project_id": {
+                                        "type": "integer",
+                                        "example": 15
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Build login page"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "React form, validation, API wiring"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK (returns recommended user + why)"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/pm/projects/members/{projectId}": {
+            "get": {
+                "tags": [
+                    "Project Manager"
+                ],
+                "summary": "Get PM and members for a project",
+                "description": "NOTE: Your route is defined with an optional path param `{projectId?}`.\nOpenAPI does not support optional path params; this spec treats it as required.",
+                "operationId": "9ba26d8673afda6dff58d4717734cbda",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Project ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "example": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK (pm + members array)"
+                    },
+                    "404": {
+                        "description": "Project not found or access denied"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/pm/tasks/create": {
+            "post": {
+                "tags": [
+                    "Project Manager"
+                ],
+                "summary": "Create a task",
+                "operationId": "3527d3e675602b87a61887b318d25982",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "project_id",
+                                    "assigned_to",
+                                    "title"
+                                ],
+                                "properties": {
+                                    "project_id": {
+                                        "type": "integer",
+                                        "example": 15
+                                    },
+                                    "assigned_to": {
+                                        "description": "User ID of assignee",
+                                        "type": "integer",
+                                        "example": 23
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Implement task table"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Paginated table with filters"
+                                    },
+                                    "priority": {
+                                        "type": "string",
+                                        "example": "high"
+                                    },
+                                    "deadline": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-09-30T17:00:00Z"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "pending"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created (returns created task)"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/pm/tasks": {
+            "get": {
+                "tags": [
+                    "Project Manager"
+                ],
+                "summary": "List tasks (PM view, with filters and optional pagination)",
+                "operationId": "14ef74e52ac8b4d5322b5361c812122d",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    },
+                    {
+                        "name": "assigned_to",
+                        "in": "query",
+                        "description": "One or more assignee IDs",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "oneOf": [
+                                {
+                                    "type": "integer",
+                                    "example": 23
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer",
+                                        "example": 23
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "One or more statuses",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "example": "in_progress"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "example": "completed"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "priority",
+                        "in": "query",
+                        "description": "One or more priorities",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "example": "high"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "example": "medium"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number (when paginating)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Items per page (1..100)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "example": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK (paginated or full list)"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/pm/tasks/{taskId}": {
+            "get": {
+                "tags": [
+                    "Project Manager"
+                ],
+                "summary": "Get task details by ID",
+                "description": "NOTE: Your route has an optional `{taskId?}`; OpenAPI treats path params as required.",
+                "operationId": "7d99ceef763f63f52f1ce2ae626f6ce4",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 123
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK (task object or null)"
+                    },
+                    "404": {
+                        "description": "Task not found"
+                    }
+                }
             }
         }
     },
     "components": {
-        "schemas": {
-            "LoginRequest": {
-                "required": [
-                    "email",
-                    "password"
-                ],
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "format": "email"
-                    },
-                    "password": {
-                        "type": "string",
-                        "minLength": 6
-                    }
-                },
-                "type": "object"
-            },
-            "Role": {
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "Position": {
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "Skill": {
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "AuthUser": {
-                "properties": {
-                    "token": {
-                        "description": "JWT token",
-                        "type": "string"
-                    },
-                    "user": {
-                        "properties": {
-                            "id": {
-                                "type": "integer"
-                            },
-                            "name": {
-                                "type": "string"
-                            },
-                            "email": {
-                                "type": "string",
-                                "format": "email"
-                            },
-                            "role": {
-                                "$ref": "#/components/schemas/Role"
-                            },
-                            "position": {
-                                "$ref": "#/components/schemas/Position"
-                            },
-                            "skills": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/Skill"
-                                }
-                            }
-                        },
-                        "type": "object"
-                    }
-                },
-                "type": "object"
-            }
-        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
@@ -439,18 +1107,31 @@
             }
         }
     },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
     "tags": [
         {
+            "name": "Common",
+            "description": "Endpoints available to any authenticated user."
+        },
+        {
             "name": "Admin",
-            "description": "Admin-only endpoints"
+            "description": "Admin-only endpoints."
+        },
+        {
+            "name": "Project Manager",
+            "description": "PM endpoints."
+        },
+        {
+            "name": "Employee",
+            "description": "Employee endpoints."
         },
         {
             "name": "Auth",
-            "description": "Authentication endpoints"
-        },
-        {
-            "name": "Lookups",
-            "description": "Lookups"
+            "description": "Authentication endpoints."
         }
     ]
 }

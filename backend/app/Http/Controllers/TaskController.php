@@ -11,15 +11,15 @@ use App\Http\Requests\GetTaskRequest;
 
 class TaskController extends Controller
 {
-    function createTask(StoreTaskRequest $request, $parentTask = null)
+    function createTask(StoreTaskRequest $request)
     {
         try {
-            $task = TaskService::createTask($request->validated(), $parentTask);
+            $task = TaskService::createTask($request->validated());
             if (!$task)
                 return $this->error('Task Not Created');
             return $this->success($task);
         } catch (\Exception $e) {
-            return $this->error('Something went wrong', 500);
+            return $this->error($e->getMessage(), 500);
         }
     }
 

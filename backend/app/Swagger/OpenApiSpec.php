@@ -16,64 +16,23 @@ use OpenApi\Annotations as OA;
  *   securityScheme="bearerAuth",
  *   type="http",
  *   scheme="bearer",
- *   bearerFormat="JWT"
+ *   bearerFormat="JWT",
+ *   description="Click Authorize and paste ONLY the token (no 'Bearer ' prefix)."
  * )
  *
- * @OA\Server(url="/",    description="App root")
- * @OA\Server(url="/api", description="API base")
- *
- * @OA\Tag(name="Admin", description="Admin-only endpoints")
- * @OA\Tag(name="Auth",  description="Authentication endpoints")
- *
- * --------------- SCHEMAS ---------------
- *
- * @OA\Schema(
- *   schema="LoginRequest",
- *   type="object",
- *   required={"email","password"},
- *   @OA\Property(property="email", type="string", format="email"),
- *   @OA\Property(property="password", type="string", minLength=6)
+ * @OA\OpenApi(
+ *   security={{"bearerAuth": {}}}
  * )
  *
- * @OA\Schema(
- *   schema="Role",
- *   type="object",
- *   @OA\Property(property="id", type="integer"),
- *   @OA\Property(property="name", type="string")
+ * @OA\Server(
+ *   url="/",
+ *   description="App root"
  * )
  *
- * @OA\Schema(
- *   schema="Position",
- *   type="object",
- *   @OA\Property(property="id", type="integer"),
- *   @OA\Property(property="name", type="string")
- * )
- *
- * @OA\Schema(
- *   schema="Skill",
- *   type="object",
- *   @OA\Property(property="id", type="integer"),
- *   @OA\Property(property="name", type="string")
- * )
- *
- * @OA\Schema(
- *   schema="AuthUser",
- *   type="object",
- *   @OA\Property(property="token", type="string", description="JWT token"),
- *   @OA\Property(
- *     property="user",
- *     type="object",
- *     @OA\Property(property="id", type="integer"),
- *     @OA\Property(property="name", type="string"),
- *     @OA\Property(property="email", type="string", format="email"),
- *     @OA\Property(property="role", ref="#/components/schemas/Role"),
- *     @OA\Property(property="position", ref="#/components/schemas/Position"),
- *     @OA\Property(
- *       property="skills",
- *       type="array",
- *       @OA\Items(ref="#/components/schemas/Skill")
- *     )
- *   )
- * )
+ * @OA\Tag(name="Common", description="Endpoints available to any authenticated user.")
+ * @OA\Tag(name="Admin", description="Admin-only endpoints.")
+ * @OA\Tag(name="Project Manager", description="PM endpoints.")
+ * @OA\Tag(name="Employee", description="Employee endpoints.")
+ * @OA\Tag(name="Auth", description="Authentication endpoints.")
  */
 final class OpenApiSpec {}

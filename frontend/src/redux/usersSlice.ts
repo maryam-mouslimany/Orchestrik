@@ -157,6 +157,7 @@ const usersSlice = createSlice({
         state.createError = null;
       })
       .addCase(createUser.fulfilled, (state, action: PayloadAction<User>) => {
+        state.usersList.push(action.payload)
         state.creating = false;
       })
       .addCase(createUser.rejected, (state, action) => {

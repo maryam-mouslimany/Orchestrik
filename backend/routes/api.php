@@ -12,6 +12,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ClientController;
 use App\http\Controllers\AgentController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\NotificationController;
 
 Route::group(["prefix" => "guest"], function () {
     Route::post("/login", [AuthController::class, "login"]);
@@ -27,10 +28,9 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get("/projects", [ProjetController::class, "getProjects"]);
     Route::post("/tasks/editStatus/{taskId}", [TaskController::class, "editStatus"]);
     Route::get("/users", [UserController::class, "getUsers"]);
-
-    Route::prefix('agent')->group(function () {
-        Route::post('/reopened-tasks', [AgentController::class, 'reopenedTasks']);
-    });
+    Route::get('/notifications', [NotificationController::class, 'getNotifications']);
+    Route::post('/notifications/read', [NotificationController::class, 'markAsRead']);
+    Route::get('/notifications/count', [NotificationController::class, 'count']);
 
     Route::prefix('admin')->middleware(RoleMiddleware::class . ':admin')->group(function () {
         Route::post("/projects/create", [ProjetController::class, "createProject"]);
@@ -52,7 +52,7 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::prefix('pm')->middleware(RoleMiddleware::class . ':pm')->group(function () {
         Route::post('/recommend-assignee', [AgentController::class, 'recommend']);
         Route::get("/projects/members/{projectId?}", [ProjetController::class, "projectMembers"]);
-        Route::post("/tasks/create/{parentTask?}", [TaskController::class, "createTask"]);
+        Route::post("/tasks/create", [TaskController::class, "createTask"]);
         Route::get("/tasks", [TaskController::class, "employeeTasks"]);
         Route::get("/tasks/{taskId?}", [TaskController::class, "taskDetails"]);
     });

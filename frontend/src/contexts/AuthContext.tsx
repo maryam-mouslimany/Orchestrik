@@ -26,7 +26,6 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   }, [user]);
 
   const setUser = (u: AppUser | null) => {
-    console.log('[Auth] setUser called with:', u);
     setUserState(u);
   };
 
