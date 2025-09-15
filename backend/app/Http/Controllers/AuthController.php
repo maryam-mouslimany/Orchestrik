@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\services\AuthService;
+use App\Services\AuthService;
 use App\Http\Requests\LoginRequest;
 
 class AuthController extends Controller

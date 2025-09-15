@@ -1,6 +1,6 @@
 <?php
 
-namespace App\services;
+namespace App\Services;
 use App\Events\UnreadCountUpdated;
 
 use App\Models\Task;

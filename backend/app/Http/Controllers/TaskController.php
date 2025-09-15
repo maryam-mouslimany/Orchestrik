@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreTaskRequest;
-use App\services\TaskService;
+use App\Services\TaskService;
 use App\Models\Task;
 use App\Http\Requests\UpdateTaskStatusRequest;
 use App\Http\Requests\GetTaskRequest;
