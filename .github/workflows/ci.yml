@@ -1,0 +1,143 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (Laravel PHP tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      # CI runs tests on SQLite (no MySQL needed here)
+      APP_ENV: testing
+      APP_DEBUG: false
+      APP_URL: http://localhost
+      APP_KEY: ${{ secrets.APP_KEY }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      # Force sqlite for CI tests
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /tmp/sqlite.testing.db  # file-based sqlite so migrations persist across test process
+
+      CACHE_DRIVER: file
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+      BROADCAST_DRIVER: log
+      MAIL_MAILER: array
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, intl, pdo, sqlite, pdo_sqlite, bcmath, ctype, fileinfo, json, openssl, tokenizer, xml
+          coverage: none
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: backend/vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Install Composer deps
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Create .env for CI
+        run: |
+          cp .env.ci .env
+          # Ensure key exists even if secret missing (keeps command idempotent)
+          php artisan key:generate --force
+
+      - name: Prepare SQLite DB (file)
+        run: |
+          rm -f $DB_DATABASE
+          touch $DB_DATABASE
+          php artisan migrate --force
+
+      - name: Run PHPUnit
+        run: |
+          php artisan config:clear
+          php artisan test --colors=always
+
+      - name: Upload Backend Coverage (if any)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-logs-and-coverage
+          path: |
+            backend/storage/logs/*
+            backend/tests/_output/**
+          if-no-files-found: ignore
+
+  frontend:
+    name: Frontend (React + Bun)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Cache Bun deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            frontend/node_modules
+            ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('frontend/bun.lockb') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Type-check
+        run: bunx tsc --noEmit
+
+      - name: Unit tests
+        # Adjust the script if you use vitest/jest; examples below
+        run: |
+          if [ -f package.json ] && cat package.json | jq -e '.scripts.test' > /dev/null; then
+            bun run test -- --run
+          else
+            echo "No test script defined, skipping"; 
+          fi
+
+      - name: Build
+        run: |
+          if [ -f package.json ] && cat package.json | jq -e '.scripts.build' > /dev/null; then
+            bun run build
+          else
+            echo "No build script defined, skipping";
+          fi
+
+      - name: Upload Frontend Build
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: |
+            frontend/dist
+            frontend/build
+          if-no-files-found: ignore
