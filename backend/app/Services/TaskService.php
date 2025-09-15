@@ -16,7 +16,10 @@ class TaskService
     {
         $creator = Auth::user();
         $data['created_by'] = $creator->id;
-
+        
+        if (empty($data['status'])) {
+        $data['status'] = 'pending';
+    }
         $task = Task::create($data);
 
         $employee = User::findOrFail($data['assigned_to']);

@@ -50,39 +50,18 @@ export const PmTasksTablePage: React.FC = () => {
     <Box>
       {error && <Alert severity="error" sx={{ mb: 1 }}>{error}</Alert>}
 
+      
       <div className={styles.filterRow}>
+        <SelectFilter sm label="Priority" options={TaskPriorities} selected={priority} onChange={setPriority} />
+        <SelectFilter sm label="Status" options={TaskSTATUSES} selected={status} onChange={setStatus} />
+        <SelectFilter sm label="Project" options={projectsOptions} selected={projectId} onChange={setProjectId} />
+        <SelectFilter sm label="Assignee" options={usersOptions} selected={assigneeId} onChange={setAssigneeId} />
 
-        <SelectFilter
-          sm
-          label="Priority"
-          options={TaskPriorities}
-          selected={priority}
-          onChange={setPriority}
-        />
-        <SelectFilter
-          sm
-          label="Status"
-          options={TaskSTATUSES}
-          selected={status}
-          onChange={setStatus}
-        />
-        <SelectFilter
-          sm
-          label="Project"
-          options={projectsOptions}
-          selected={projectId}
-          onChange={setProjectId}
-        />
-        <SelectFilter
-          sm
-          label="Assignee"
-          options={usersOptions}
-          selected={assigneeId}
-          onChange={setAssigneeId}
-        />
-        <CreateButton to="/tasks/create" />
-
+        <div className={styles.buttonWrapper}>
+          <CreateButton to="/tasks/create" />
+        </div>
       </div>
+
 
       <SimpleMuiTable
         rows={rows}

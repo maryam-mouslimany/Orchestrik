@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '../../../../../hooks/useForm';
 import apiCall from '../../../../../services/apiCallService';
-import { fetchProjects, selectProjectsLoad } from '../../../../../redux/projectsSlice';
+import { fetchProjects, selectProjectsList, selectProjectsLoaded, } from '../../../../../redux/projectsSlice';
 import { useNavigate } from 'react-router-dom';
 import type { AppDispatch } from '../../../../../redux/store';
 
@@ -18,13 +18,14 @@ export const useTaskCreate = () => {
   const { projectsList: projectsOptions } = useSelector((s: any) => s.projects);
   //console.log(projectsOptions)
   const dispatch = useDispatch<AppDispatch>();
-  const loadingProjects = useSelector(selectProjectsLoad);
+  const projectOptions = useSelector(selectProjectsList);
+  const usersLoad = useSelector(selectProjectsLoaded);
 
   useEffect(() => {
-  if (!loadingProjects && projectsOptions.length === 0) {
-    dispatch(fetchProjects());
-  }
-}, [dispatch, loadingProjects]); // ✅ don't depend on the array itself
+    if (!usersLoad && (!projectOptions || projectOptions.length === 0)) {
+      dispatch(fetchProjects(undefined));
+    }
+  }, [dispatch, usersLoad, projectOptions]);
 
 
   const { values, setField, reset } = useForm<TaskForm>({
@@ -58,7 +59,7 @@ export const useTaskCreate = () => {
     })();
 
     return () => { cancel = true; };
-  }, [values.project_id, setField, values.assigned_to]);
+  }, [values.project_id, values.assigned_to]);
 
   const recommendAssignee = async () => {
     if (!values.project_id) return;
@@ -70,7 +71,7 @@ export const useTaskCreate = () => {
       });
       const user = res?.data?.user; const why = res?.data?.why;
       if (user?.id) setField('assigned_to', +user.id);
-      if (why) { setRecReason(String(why)); setTimeout(() => setRecReason(''), 100000); }
+      if (why) { setRecReason(String(why)); }
     } finally { setRecLoading(false); }
   };
 
@@ -96,7 +97,7 @@ export const useTaskCreate = () => {
 
     } finally { setCreateLoading(false); }
   };
-
+  //console.log(values)
   return {
     values, setField, reset,
     projectsOptions, members,

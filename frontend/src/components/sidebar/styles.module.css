@@ -85,11 +85,15 @@
   position: relative;
   margin: 1px 0;
 }
-
+.link:hover(.isActive) {
+  background: var(--primary-color);
+  color: #ffffff;
+  transform: translateX(2px);
+}
 /* Hover (non-active) */
 .link:hover:not(.isActive) {
-  background: #f9fafb;
-  color: #111827;
+  background:var(--primary-color);
+  color: #ffffff;
   transform: translateX(2px);
 }
 

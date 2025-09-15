@@ -19,7 +19,7 @@ class StoreTaskRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|in:low,medium,high',
-            'status' => 'required|in:pending, in progress, completed, reopened',
+            'status' => 'sometimes|in:pending, in progress, completed, reopened',
             'deadline' => 'nullable|date',
             'project_id' => 'required|exists:projects,id',
             'assigned_to' => 'required|exists:users,id'

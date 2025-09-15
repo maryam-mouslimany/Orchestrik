@@ -19,10 +19,10 @@ export type TaskRow = {
 
 export const useTasksTable = () => {
   // filters
-  const [projectId, setProjectId] = useState<string | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
-  const [priority, setPriority] = useState<string | null>(null);
-  const [assigneeId, setAssigneeId] = useState<string | null>(null);
+  const [projectId, setProjectId] = useState<string | null>('');
+  const [status, setStatus] = useState<string | null>('');
+  const [priority, setPriority] = useState<string | null>('');
+  const [assigneeId, setAssigneeId] = useState<string | null>('');
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10); 
