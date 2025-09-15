@@ -1,5 +1,4 @@
-// src/layout/Sidebar/hook.ts
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { MENU_BY_ROLE } from '../../constants/constants';
@@ -17,7 +16,7 @@ export const useSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // --- your existing role + menu logic (unchanged) ---
+  // menu logic
   const roleName = (user?.role?.name as 'admin' | 'pm' | 'employee');
   const items = useMemo(() => MENU_BY_ROLE[roleName], [roleName]);
   const activePath = location.pathname;
@@ -27,77 +26,94 @@ export const useSidebar = () => {
     navigate('/login', { replace: true });
   };
 
-  // --- NEW: notifications state for badge + modal ---
+  // ----------------- notifications -----------------
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [openNotifs, setOpenNotifs] = useState<boolean>(false);
 
-  // Use your existing /notifications endpoint (unread only) to compute count.
-  // If later you add /notifications/count, you can switch here with 1 line.
+  // Fetch unread count once (and when modal closes)
   const fetchUnreadCount = useCallback(async () => {
     try {
-      const res = await apiCall('/notifications', { method: 'GET', requiresAuth: true });
-      const list = Array.isArray(res.data) ? res.data : (res.data?.data ?? []);
-      setUnreadCount(list.length);
-    } catch {
+      const res = await apiCall('/notifications/count', { method: 'GET', requiresAuth: true });
+      const raw = (res as any)?.data;
+      // support {count}, {data: number}, or a plain number
+      const count =
+        typeof raw?.count === 'number' ? raw.count :
+        typeof raw?.data  === 'number' ? raw.data  :
+        typeof raw       === 'number'  ? raw       :
+        0;
+      console.log('[count] initial =', count, 'raw =', raw);
+      setUnreadCount(count);
+    } catch (e) {
+      console.error('[count] fetch error', e);
       setUnreadCount(0);
     }
   }, []);
 
-  // Initial count on mount
-  useEffect(() => {
-    void fetchUnreadCount();
-  }, [fetchUnreadCount]);
+  // initial load (also re-run if user changes)
+  useEffect(() => { if (user?.id) void fetchUnreadCount(); }, [user?.id, fetchUnreadCount]);
 
-  // Refresh count when modal closes (in case items were marked read inside)
+  // refresh when modal closes (e.g., after mark-as-read inside modal)
   useEffect(() => {
-    if (!openNotifs) {
-      void fetchUnreadCount();
-    }
-  }, [openNotifs, fetchUnreadCount]);
+    if (!openNotifs && user?.id) void fetchUnreadCount();
+  }, [openNotifs, user?.id, fetchUnreadCount]);
 
-  // --- Laravel Echo / Pusher live updates ---
+  // Live updates via Echo -> UnreadCountUpdated
   useEffect(() => {
-    // If you expose Echo globally, this will work. Otherwise, import your instance here.
-    const EchoInstance = (window as any)?.Echo;
     const uid = user?.id;
-    if (!EchoInstance || !uid) return;
+    const EchoInstance = (window as any)?.Echo;
+    if (!uid || !EchoInstance) {
+      console.warn('[echo] no uid or Echo', { uid, Echo: !!EchoInstance });
+      return;
+    }
 
-    // Default private notification channel for Notifiable users:
-    // "private-App.Models.User.{id}"
-    const channelName = `App.Models.User.${uid}`;
-    const channel = EchoInstance.private(channelName);
+    // Guard against React 18 Strict-Mode double mounting in dev
+    const active = { current: true };
 
-    // Standard notification callback increments unread badge
-    const onNotification = (_notification: any) => {
-      setUnreadCount((c) => c + 1);
-      // If your modal is open and you want to inject the new item in the list,
-      // do it inside your NotificationsModal component.
+    const chanName = `notifications.${uid}`;
+    console.log('[echo] subscribe →', chanName);
+    const chan = EchoInstance.private(chanName);
+
+    // Subscribe success/error (useful debug)
+    const sub: any = (chan as any).subscription;
+    if (sub?.bind) {
+      sub.bind('pusher:subscription_succeeded', () => console.log('[echo] subscription_succeeded', chanName));
+      sub.bind('pusher:subscription_error', (status: any) => console.error('[echo] subscription_error', chanName, status));
+    }
+
+    const onCount = (e: { unread_count?: number }) => {
+      console.log('[echo] UnreadCountUpdated ←', e);
+      if (typeof e?.unread_count === 'number') {
+        setUnreadCount(e.unread_count);
+      } else {
+        console.warn('[echo] unread_count missing in event payload');
+      }
     };
 
-    channel.notification(onNotification);
+    chan.listen('UnreadCountUpdated', onCount);
 
     return () => {
+      if (!active.current) return;
+      active.current = false;
       try {
-        EchoInstance.leave(`private-${channelName}`);
-      } catch {
-        // no-op
+        chan.stopListening('UnreadCountUpdated');
+        EchoInstance.leave(chanName);
+        console.log('[echo] left', chanName);
+      } catch (e) {
+        console.warn('[echo] cleanup error', e);
       }
     };
   }, [user?.id]);
 
+  // -------------------------------------------------
+
   return {
-    // existing returns
     items,
     activePath,
     roleName,
     handleLogout,
-
-    // NEW for notifications
     unreadCount,
     openNotifs,
     setOpenNotifs,
-
-    // handy if you need to pull count manually from elsewhere
     refreshUnreadCount: fetchUnreadCount,
   };
 };

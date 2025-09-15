@@ -10,6 +10,7 @@ class NotificationService
     static function getNotifications()
     {
         $user = Auth::user();
+        //dd($user);
         return $user->notifications()
             ->whereNull('read_at')
             ->latest()

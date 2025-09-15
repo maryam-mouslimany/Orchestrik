@@ -1,6 +1,7 @@
 <?php
 
 namespace App\services;
+use App\Events\UnreadCountUpdated;
 
 use App\Models\Task;
 use App\Models\User;
@@ -15,13 +16,16 @@ class TaskService
     {
         $creator = Auth::user();
         $data['created_by'] = $creator->id;
-        
+
         $task = Task::create($data);
 
         $employee = User::findOrFail($data['assigned_to']);
         $employee->notify(new TaskCreatedNotification($task));
+        $count = $employee->unreadNotifications()->count();
+        event(new UnreadCountUpdated($employee->id, $count));
 
         return $task;
+
     }
 
     static function editStatus($data, $taskId)

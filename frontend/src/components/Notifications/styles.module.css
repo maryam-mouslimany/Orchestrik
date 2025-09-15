@@ -1,4 +1,4 @@
-/* src/features/Notifications/styles.module.css */
+/* src/features/NotificationsModal/styles.module.css */
 .container {
   display: grid;
   gap: 12px;
@@ -6,54 +6,69 @@
 
 .state {
   text-align: center;
-  padding: 16px;
-  color: #64748b;
+  padding: 12px;
+  color: #475569;
+  font-size: 14px;
+}
+
+.error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
 }
 
 .item {
-  padding: 12px;
-  border-bottom: 1px solid #e5e7eb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff;
 }
 
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.content { min-width: 0; }
+
 .title {
+  font-size: 14px;
   font-weight: 600;
-  margin-bottom: 4px;
   color: #0f172a;
 }
 
 .sub {
+  margin-top: 2px;
   font-size: 13px;
   color: #334155;
-  margin-bottom: 4px;
 }
 
 .time {
+  margin-top: 4px;
   font-size: 12px;
-  color: #94a3b8;
+  color: #64748b;
 }
 
-.bellBtn {
-  position: relative;
-  margin-left: auto;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  color: #0f172a;
-}
-
-.badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  min-width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #f59e0b;
-  color: #fff;
-  font-size: 11px;
+.actions {
   display: flex;
+  gap: 8px;
   align-items: center;
-  justify-content: center;
-  font-weight: 600;
+}
+
+.markBtn {
+  border: 1px solid #d1d5db;
+  background: #fafafa;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.markBtn:hover {
+  background: #f3f4f6;
 }

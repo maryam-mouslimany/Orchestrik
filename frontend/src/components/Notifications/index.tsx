@@ -1,18 +1,8 @@
-import React, { useEffect, useState } from 'react';
+// src/features/NotificationsModal/index.tsx
+import React from 'react';
 import Modal from '../../components/Modal';
-import apiCall from '../../services/apiCallService';
 import styles from './styles.module.css';
-
-type Notification = {
-  id: string;
-  kind: string;
-  title: string;
-  payload: {
-    task_title: string;
-    project_title: string;
-  };
-  created_at: string;
-};
+import { useNotificationsModal } from './hook';
 
 type Props = {
   open: boolean;
@@ -20,37 +10,47 @@ type Props = {
 };
 
 const NotificationsModal: React.FC<Props> = ({ open, onClose }) => {
-  const [items, setItems] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      (async () => {
-        setLoading(true);
-        try {
-          const res = await apiCall('/notifications', { method: 'GET', requiresAuth: true });
-          setItems(res.data ?? []);
-        } finally {
-          setLoading(false);
-        }
-      })();
-    }
-  }, [open]);
+  const { items, loading, error, markRead } = useNotificationsModal(open);
 
   return (
     <Modal open={open} onClose={onClose} title="Notifications" size="sm">
       <div className={styles.container}>
         {loading && <div className={styles.state}>Loading...</div>}
-        {!loading && !items.length && <div className={styles.state}>No unread notifications.</div>}
+        {!loading && error && <div className={styles.error}>{error}</div>}
+        {!loading && !error && !items.length && (
+          <div className={styles.state}>No unread notifications.</div>
+        )}
 
         {items.map((n) => (
           <div key={n.id} className={styles.item}>
-            <div className={styles.title}>{n.title}</div>
-            <div className={styles.sub}>
-              Task: <strong>{n.payload.task_title}</strong> · Project: <strong>{n.payload.project_title}</strong>
-            </div>
-            <div className={styles.time}>
-              {new Date(n.created_at).toLocaleString()}
+            <div className={styles.row}>
+              <div className={styles.content}>
+                <div className={styles.title}>{n.data?.title ?? 'Notification'}</div>
+                <div className={styles.sub}>
+                  Task: <strong>{n.data?.payload?.task_title ?? '—'}</strong> ·
+                  Project: <strong>{n.data?.payload?.project_title ?? '—'}</strong>
+                </div>
+                <div className={styles.time}>
+                  {new Date(n.created_at).toLocaleString()}
+                </div>
+              </div>
+
+              <div className={styles.actions}>
+                <button
+                  type="button"
+                  className={styles.markBtn}
+                  onClick={async () => {
+                    try {
+                      await markRead(n.id);
+                    } catch (e) {
+                      console.error('markRead failed', e);
+                      // Optional: show a toast if you have one
+                    }
+                  }}
+                >
+                  Mark as read
+                </button>
+              </div>
             </div>
           </div>
         ))}

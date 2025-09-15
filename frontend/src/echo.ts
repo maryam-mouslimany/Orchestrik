@@ -1,38 +1,69 @@
-// src/echo.ts
+/// <reference types="vite/client" />
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
-import axios from 'axios';
+
+const getToken = () => {
+  try { return localStorage.getItem('token') || ''; } catch { return ''; }
+};
 
 declare global {
-  interface Window {
-    Pusher: typeof Pusher;
-    Echo: Echo;
-  }
+  interface Window { Pusher: typeof Pusher; Echo: Echo; __SOCKET_ID__?: string; }
 }
 
-window.Pusher = Pusher;
+window.Pusher = Pusher as any;
 
-// grab your auth token if you use Bearer tokens for API auth
-const token = localStorage.getItem('token') || '';
+// small env log for sanity
+console.log('[echo] ENV', {
+  API_BASE: import.meta.env.VITE_API_BASE,
+  KEY: import.meta.env.VITE_PUSHER_KEY,
+  CLUSTER: import.meta.env.VITE_PUSHER_CLUSTER,
+});
 
-window.Echo = new Echo({
+const EchoInstance: Echo = new (Echo as any)({
   broadcaster: 'pusher',
-  key: import.meta.env.VITE_PUSHER_APP_KEY,
-  cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-  forceTLS: (import.meta.env.VITE_PUSHER_SCHEME || 'https') === 'https',
-  // If your backend uses cookie session / Sanctum, use withCredentials: true instead of authorizer.
-  // withCredentials: true,
+  key: import.meta.env.VITE_PUSHER_KEY,
+  cluster: import.meta.env.VITE_PUSHER_CLUSTER,
+  forceTLS: true,
 
-  // If your backend uses Bearer token for /broadcasting/auth:
+  // Private-channel authorizer with the *required* body fields
   authorizer: (channel: any) => ({
-    authorize: (socketId: string, callback: Function) => {
-      axios.post(
-        '/broadcasting/auth',
-        { socket_id: socketId, channel_name: channel.name },
-        { headers: token ? { Authorization: `Bearer ${token}` } : {} }
-      )
-      .then(res => callback(false, res.data))
-      .catch(err => callback(true, err));
+    authorize: async (socketId: string, callback: (err: boolean, data: any) => void) => {
+      try {
+        const url = `${import.meta.env.VITE_API_BASE}/broadcasting/auth`;
+        console.log('[echo] AUTH →', { url, channel: channel.name, socketId });
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getToken()}`,
+          },
+          body: JSON.stringify({
+            channel_name: channel.name,
+            socket_id: socketId, // ← IMPORTANT: must be in body
+          }),
+        });
+        console.log('[echo] AUTH ←', res.status);
+        if (!res.ok) throw new Error(`Auth failed: ${res.status}`);
+        const data = await res.json();
+        callback(false, data);
+      } catch (err) {
+        console.error('[echo] AUTH error', err);
+        callback(true, err);
+      }
     },
   }),
-});
+} as any);
+
+window.Echo = EchoInstance as any;
+
+// tiny connection logs (useful once, then you can remove)
+const p = (window as any).Echo?.connector?.pusher;
+if (p) {
+  p.connection.bind('connected', () => {
+    (window as any).__SOCKET_ID__ = p.connection.socket_id;
+    console.log('[pusher] connected socket_id =', (window as any).__SOCKET_ID__);
+  });
+  p.connection.bind('error', (e: any) => console.error('[pusher] error', e));
+}
+
+export default EchoInstance;

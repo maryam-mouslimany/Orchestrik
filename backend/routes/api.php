@@ -29,7 +29,7 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::post("/tasks/editStatus/{taskId}", [TaskController::class, "editStatus"]);
     Route::get("/users", [UserController::class, "getUsers"]);
     Route::get('/notifications', [NotificationController::class, 'getNotifications']);
-    Route::get('/notifications/read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/read', [NotificationController::class, 'markAsRead']);
     Route::get('/notifications/count', [NotificationController::class, 'count']);
 
     Route::prefix('admin')->middleware(RoleMiddleware::class . ':admin')->group(function () {
