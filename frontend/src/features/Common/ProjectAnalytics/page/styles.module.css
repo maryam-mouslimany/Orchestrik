@@ -1,0 +1,26 @@
+.page {
+  display: grid;
+  gap: 16px;
+}
+
+.heading {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
+.state {
+  color: #334155;
+  font-size: 14px;
+}
+
+.error {
+  color: #b91c1c;
+  font-size: 14px;
+}

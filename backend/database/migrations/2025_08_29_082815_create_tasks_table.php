@@ -16,13 +16,13 @@ return new class extends Migration
             $table->enum('status', ['pending', 'in progress', 'completed', 'reopened']);
             $table->integer('duration')->nullable();
             $table->enum('priority', ['low', 'medium', 'high']);
-            $table->timestamp('deadline')->nullable();
+            $table->date('deadline')->nullable();
+            $table->integer('estimated_duration')->nullable();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('parent_task_id')->nullable()->constrained('tasks')->onDelete('cascade');
             $table->timestamps();
-
         });
     }
 

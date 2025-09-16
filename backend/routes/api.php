@@ -13,6 +13,7 @@ use App\Http\Controllers\ClientController;
 use App\http\Controllers\AgentController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProjectAnalyticsController;
 
 Route::group(["prefix" => "guest"], function () {
     Route::post("/login", [AuthController::class, "login"]);
@@ -23,7 +24,8 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get("/skills", [SkillController::class, "getSkills"]);
     Route::get("/positions", [PositionController::class, "getPositions"]);
     Route::get("/roles", [RoleController::class, "getRoles"]);
-    Route::get("/clients", [ClientController::class, "getClients"]);
+  
+   Route::get("/clients", [ClientController::class, "getClients"]);
     Route::get('/auth/validate', [AuthController::class, 'validateToken']);
     Route::get("/projects", [ProjetController::class, "getProjects"]);
     Route::post("/tasks/editStatus/{taskId}", [TaskController::class, "editStatus"]);
@@ -31,6 +33,8 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'getNotifications']);
     Route::post('/notifications/read', [NotificationController::class, 'markAsRead']);
     Route::get('/notifications/count', [NotificationController::class, 'count']);
+    Route::get("/projects/analytics/status", [ProjectAnalyticsController::class, "getTaskStatusBreakdown"]);
+    Route::get("/projects/analytics/completed-vs-overdue", [ProjectAnalyticsController::class, "completedOnTimeVsOverdue"]);
 
     Route::prefix('admin')->middleware(RoleMiddleware::class . ':admin')->group(function () {
         Route::post("/projects/create", [ProjetController::class, "createProject"]);
