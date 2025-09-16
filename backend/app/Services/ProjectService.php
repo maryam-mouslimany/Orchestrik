@@ -61,9 +61,14 @@ class ProjectService
     static function projectMembers($request)
     {
         $request->validate(['projectId' => 'required|integer|min:1|exists:projects,id',]);
+
         $project = Project::find($request['projectId']);
+
         $users = $project->members()
-            ->with(['position:id,name'])
+            ->with([
+                'position:id,name',
+                'skills:id,name',
+            ])
             ->get(['users.id', 'users.name', 'users.email', 'users.position_id', 'users.role_id']);
 
         $pmUser    = $users->firstWhere('role_id', 2);
@@ -81,6 +86,9 @@ class ProjectService
             'name'     => $u->name,
             'email'    => $u->email,
             'position' => $u->position?->name,
+            'skills'   => $u->skills
+                ->map(fn($s) => ['id' => $s->id, 'name' => $s->name])
+                ->values(),
         ])->values();
 
         return [

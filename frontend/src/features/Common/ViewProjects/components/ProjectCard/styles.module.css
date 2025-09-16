@@ -103,36 +103,53 @@
 }
 
 .membersBtn {
-    margin-top: 4px;
-    width: 100%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 12px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--ink-mid);
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    cursor: not-allowed;
-    /* currently static/disabled */
-    user-select: none;
+  margin-top: 4px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-mid);
+  background: #f8fafc;
+
+  /* remove borders completely */
+  border: none;               /* CHANGED */
+  border-radius: 10px;
+
+  cursor: pointer;            /* ADDED */
+  outline: none;              /* ADDED */
+  user-select: none;
+  transition: box-shadow .15s ease, transform .04s ease, background .15s ease; /* ADDED */
 }
 
 .membersBtn:hover {
-    background: #f1f5f9;
+  background: #f1f5f9;        /* keep soft hover */
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06); /* ADDED subtle hover depth */
 }
 
-.membersIcon {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    fill: currentColor;
-    color: var(--primary-color);
-    opacity: .9;
+/* No ugly black focus ring; use soft colored ring instead */
+.membersBtn:focus,
+.membersBtn:focus-visible {
+  outline: none; 
+  box-shadow: 0 0 0 3px var(--ring); /* uses your existing --ring (soft, tinted) */
 }
+
+/* Click feedback without borders */
+.membersBtn:active {
+  transform: translateY(1px); /* tiny press effect */
+  box-shadow: 0 1px 6px rgba(15, 23, 42, 0.08);
+}
+
+/* Icon inherits color; keep it aligned with primary */
+.membersIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--primary-color); /* same as before, applied to react-icon */
+}
+
 
 /* Small screens: keep it tight */
 @media (max-width: 560px) {

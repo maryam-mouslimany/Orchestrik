@@ -1,0 +1,61 @@
+.body {
+  padding: 8px 2px;
+}
+
+.state {
+  padding: 8px 0;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.error {
+  padding: 8px 0;
+  font-size: 14px;
+  color: #b91c1c;
+}
+
+.list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  list-style: none;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  padding: 12px;
+}
+
+.headerRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.position {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.skillsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.skillPill {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(153, 171, 199, 0.18); 
+}

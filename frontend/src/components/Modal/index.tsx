@@ -12,7 +12,6 @@ export type ModalProps = {
   closeOnBackdrop?: boolean;
 };
 
-
 const Modal: React.FC<ModalProps> = ({
   open,
   onClose,
