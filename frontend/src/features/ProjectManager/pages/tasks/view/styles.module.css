@@ -4,13 +4,21 @@
   gap: 12px 16px;
   align-items: center;
   margin-bottom: 16px;
+}
 
-  justify-content: flex-end; /* <-- pushes items to the right */
-}
-.filterRow > * {
+/* apply the size rule only to the filters, not the button */
+.filterRow > :not(.buttonWrapper) {
   min-width: 180px;
-  flex: 0 1 auto;
+  flex: 0 1 180px;
 }
+
+.buttonWrapper {
+  margin-left: auto; /* pushes it to the far right */
+  flex: 0 0 auto;    /* use the button's intrinsic width */
+  min-width: auto;   /* ensure it doesn't inherit 180px from elsewhere */
+}
+
+
 .actionIconBtn {
   padding: 4px;
   background: transparent !important;

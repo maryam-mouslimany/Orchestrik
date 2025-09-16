@@ -1,14 +1,17 @@
-/* Card-ish form wrapper with subtle shadow */
 .form {
   display: grid;
-  gap: 8px;
+  gap: 16px;
   padding: 20px;
   border-radius: 14px;
   background: #fff;
-  /* *very* soft layered shadow */
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.04),
     0 8px 24px rgba(0, 0, 0, 0.06);
+
+  width: 700px;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 /* Title section */
@@ -22,11 +25,9 @@
 .formTitle {
   margin: 0;
   font-size: 1.25rem;
-  /* ~20px */
   font-weight: 700;
   letter-spacing: 0.2px;
   color: #0f172a;
-  /* slate-900 */
   position: relative;
   padding-bottom: 6px;
 }
@@ -42,9 +43,6 @@
   background: var(--primary-color);
 }
 
-/* Layout wrappers (unchanged behavior) */
-.fieldWrap {}
-
 .row {
   display: grid;
   gap: 12px;
@@ -59,53 +57,92 @@
 .inlineGroup {
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: end;
   gap: 8px;
 }
 
-/* Auto-assign: subtle pill using --primary-color */
+/* unique, soft, primary-tinted pill */
 .autoAssign {
+  /* keep your size/margins */
+  height: 50px;
+  padding: 8px 12px;
+  margin-top: 16px;
+
+  /* layout */
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--primary-color);
-  border: 1px solid color-mix(in srgb, var(--primary-color) 45%, transparent);
+  gap: 8px;
+
+  /* the “unique” shape you liked */
+  border-radius: 14px 18px 14px 18px;
+
+  /* colors */
+  --p: var(--primary-color);
+  background: color-mix(in srgb, var(--p) 14%, #ffffff);
+  /* light but not too light */
+  color: var(--p);
+  /* saturated primary for text/icon */
+
+  /* subtle edge + soft inner line, no visible border change */
+  border: 1px solid transparent;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px color-mix(in srgb, var(--p) 22%, transparent) inset;
+
   cursor: pointer;
-  transition: background .15s ease, transform .05s ease, opacity .15s;
+  font-weight: 600;
+
+  /* smooth, unobtrusive motion */
+  transition:
+    transform .06s ease,
+    background .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease;
+
+  /* kill blue focus border */
+  outline: none !important;
 }
 
 .autoAssign:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+  border: none;
+  background: color-mix(in srgb, var(--p) 20%, #ffffff);
+  box-shadow:
+    0 2px 8px color-mix(in srgb, var(--p) 24%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--p) 24%, transparent) inset;
 }
 
 .autoAssign:active:not(:disabled) {
   transform: translateY(1px);
+  box-shadow:
+    0 1px 4px color-mix(in srgb, var(--p) 22%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--p) 28%, transparent) inset;
+}
+
+.autoAssign:focus,
+.autoAssign:focus-visible {
+  /* custom soft primary glow instead of blue outline */
+  outline: none !important;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--p) 38%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--p) 28%, transparent) inset;
 }
 
 .autoAssign:disabled {
   opacity: .45;
   cursor: not-allowed;
+  background: color-mix(in srgb, var(--p) 10%, #ffffff);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--p) 16%, transparent) inset;
 }
 
 .autoAssignIcon {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .autoAssignText {
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
-/* Primary action area */
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 4px;
-}
 
-/* Banners */
 .errorBanner {
   padding: 10px 12px;
   border-radius: 10px;
@@ -113,19 +150,11 @@
   color: #991b1b;
   font-size: 13px;
 }
+
 .error {
-    font-size: 0.85rem;
-    color: #e63946;
-    margin: 0;
-}
-.infoToast {
-  margin-top: 8px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: #f0f9ff;
-  color: #075985;
-  font-size: 13px;
-  animation: fadeOut .4s ease-in-out 3.6s forwards;
+  font-size: 0.85rem;
+  color: #e63946;
+  margin: 0;
 }
 
 @keyframes fadeOut {
@@ -136,4 +165,68 @@
     padding-top: 0;
     padding-bottom: 0;
   }
+}
+/* Positioning context around form + clouds */
+.pageWrap {
+  position: relative;
+  width: fit-content;       /* shrink-wrap to form width */
+  max-width: 100%;
+  padding-top: 22px;        /* room for the reason cloud above */
+}
+
+.reasonCloud {
+  --p: var(--primary-color);
+  position: absolute;
+  top: 0;                   /* sits in the padded area */
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  max-width: min(720px, 90vw);
+  text-align: left;
+
+  /* cloud look */
+  background: color-mix(in srgb, var(--p) 16%, #ffffff);
+  color: var(--p);
+  font-weight: 600;
+  border-radius: 18px;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.06),
+    0 0 0 1px color-mix(in srgb, var(--p) 22%, transparent) inset;
+
+  /* appear smoothly */
+  animation: reasonIn .14s ease-out;
+}
+
+/* little tail pointing DOWN into the form header */
+.reasonCloud::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  background: color-mix(in srgb, var(--p) 16%, #ffffff);
+  box-shadow: -1px 1px 0 color-mix(in srgb, var(--p) 22%, transparent) inset;
+  border-bottom-right-radius: 2px;
+}
+
+@keyframes reasonIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* spinner for loading state */
+.aiSpinner {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--p) 25%, #ffffff);
+  border-top-color: var(--p);
+  animation: aiSpin .8s linear infinite;
+}
+
+@keyframes aiSpin { 
+  to { transform: rotate(360deg); } 
 }

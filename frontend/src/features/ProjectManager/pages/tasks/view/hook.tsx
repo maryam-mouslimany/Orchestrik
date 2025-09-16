@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchProjects, selectProjectsLoad, selectProjectsList } from '../../../../../redux/projectsSlice';
 import { fetchUsers, selectUsersLoading, selectUsersRaw } from '../../../../../redux/usersSlice';
 import Pill from '../../../../../components/Pill';
+import type { AppDispatch } from '../../../../../redux/store';
 
 export type TaskRow = {
   id: number;
@@ -19,17 +20,17 @@ export type TaskRow = {
 
 export const useTasksTable = () => {
   // filters
-  const [projectId, setProjectId] = useState<string | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
-  const [priority, setPriority] = useState<string | null>(null);
-  const [assigneeId, setAssigneeId] = useState<string | null>(null);
+  const [projectId, setProjectId] = useState<string | null>('');
+  const [status, setStatus] = useState<string | null>('');
+  const [priority, setPriority] = useState<string | null>('');
+  const [assigneeId, setAssigneeId] = useState<string | null>('');
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10); 
   const [total, setTotal] = useState(0);
   const [isPaginated, setIsPaginated] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const projectsList = useSelector(selectProjectsList);
   const loadingProjects = useSelector(selectProjectsLoad);
   const usersOptions = useSelector(selectUsersRaw);
