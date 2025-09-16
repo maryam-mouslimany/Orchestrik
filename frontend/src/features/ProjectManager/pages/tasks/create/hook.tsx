@@ -1,10 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '../../../../../hooks/useForm';
 import apiCall from '../../../../../services/apiCallService';
-import { fetchProjects, selectProjectsList, selectProjectsLoaded, } from '../../../../../redux/projectsSlice';
-import { useNavigate } from 'react-router-dom';
 import type { AppDispatch } from '../../../../../redux/store';
+import { fetchProjects, selectProjectsList, selectProjectsLoaded, } from '../../../../../redux/projectsSlice';
 
 type Member = { id: number; name: string };
 export type TaskForm = {
@@ -38,42 +38,77 @@ export const useTaskCreate = () => {
   const [createLoading, setCreateLoading] = useState(false);
   const [formError, setFormError] = useState('');
 
-  useEffect(() => {
-    const pid = Number(values.project_id);
-    if (!pid) { setMembers([]); setField('assigned_to', '' as any); return; }
+  const projectId = Number(values.project_id) || 0;
 
+  useEffect(() => {
+    if (!projectId) {
+      setMembers([]);
+      if (values.assigned_to) setField('assigned_to', '' as any);
+      return;
+    }
     let cancel = false;
     (async () => {
       try {
         const res = await apiCall('pm/projects/members', {
-          method: 'GET', requiresAuth: true, params: { projectId: pid }
+          method: 'GET', requiresAuth: true, params: { projectId }
         });
-        const arr: Member[] = (res?.data?.members ?? []).map((m: any) => ({ id: +m.id, name: String(m.name) }));
-        if (!cancel) {
-          setMembers(arr);
-          if (values.assigned_to && !arr.some(u => u.id === +values.assigned_to)) setField('assigned_to', '' as any);
-        }
+        const arr: Member[] = (res?.data?.members ?? [])
+          .map((m: any) => ({ id: +m.id, name: String(m.name) }));
+        if (cancel) return;
+        setMembers(arr);
+        const current = values.assigned_to ? +values.assigned_to : '';
+        if (current && !arr.some(u => u.id === current)) setField('assigned_to', '' as any);
       } catch {
-        if (!cancel) { setMembers([]); setField('assigned_to', '' as any); }
+        if (cancel) return;
+        setMembers([]);
+        if (values.assigned_to) setField('assigned_to', '' as any);
       }
     })();
-
     return () => { cancel = true; };
-  }, [values.project_id, values.assigned_to]);
+  }, [projectId, setField]);
 
+  // add this near your other state:
+  const reasonTimer = useRef<number | null>(null);
+
+  // updated recommendAssignee
   const recommendAssignee = async () => {
     if (!values.project_id) return;
+
+    if (reasonTimer.current) { clearTimeout(reasonTimer.current); reasonTimer.current = null; }
+    setRecReason('');
+
     try {
       setRecLoading(true);
       const res = await apiCall('pm/recommend-assignee', {
-        method: 'POST', requiresAuth: true,
-        data: { project_id: values.project_id, title: values.title, description: values.description }
+        method: 'POST',
+        requiresAuth: true,
+        data: {
+          project_id: Number(values.project_id),
+          title: String(values.title || ''),
+          description: String(values.description || ''),
+        },
       });
-      const user = res?.data?.user; const why = res?.data?.why;
+
+      const user = res?.data?.user;
+      const why = res?.data?.why;
+
       if (user?.id) setField('assigned_to', +user.id);
-      if (why) { setRecReason(String(why)); }
-    } finally { setRecLoading(false); }
+
+      if (why) {
+        setRecReason(String(why));
+        reasonTimer.current = window.setTimeout(() => {
+          setRecReason('');
+          reasonTimer.current = null;
+        }, 20000); // 20s
+      }
+    } finally {
+      setRecLoading(false);
+    }
   };
+
+  useEffect(() => () => {
+    if (reasonTimer.current) clearTimeout(reasonTimer.current);
+  }, []);
 
   const createTask = async () => {
     const valid = !!values.project_id && !!values.priority;
@@ -103,6 +138,6 @@ export const useTaskCreate = () => {
     projectsOptions, members,
     recommendAssignee, recLoading, recReason,
     createTask, createLoading,
-    formError,
+    formError
   };
 };

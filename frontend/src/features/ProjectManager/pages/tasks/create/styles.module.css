@@ -157,16 +157,6 @@
   margin: 0;
 }
 
-.infoToast {
-  margin-top: 8px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: #f0f9ff;
-  color: #075985;
-  font-size: 13px;
-  animation: fadeOut .4s ease-in-out 3.6s forwards;
-}
-
 @keyframes fadeOut {
   to {
     opacity: 0;
@@ -175,4 +165,68 @@
     padding-top: 0;
     padding-bottom: 0;
   }
+}
+/* Positioning context around form + clouds */
+.pageWrap {
+  position: relative;
+  width: fit-content;       /* shrink-wrap to form width */
+  max-width: 100%;
+  padding-top: 22px;        /* room for the reason cloud above */
+}
+
+.reasonCloud {
+  --p: var(--primary-color);
+  position: absolute;
+  top: 0;                   /* sits in the padded area */
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  max-width: min(720px, 90vw);
+  text-align: left;
+
+  /* cloud look */
+  background: color-mix(in srgb, var(--p) 16%, #ffffff);
+  color: var(--p);
+  font-weight: 600;
+  border-radius: 18px;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.06),
+    0 0 0 1px color-mix(in srgb, var(--p) 22%, transparent) inset;
+
+  /* appear smoothly */
+  animation: reasonIn .14s ease-out;
+}
+
+/* little tail pointing DOWN into the form header */
+.reasonCloud::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  background: color-mix(in srgb, var(--p) 16%, #ffffff);
+  box-shadow: -1px 1px 0 color-mix(in srgb, var(--p) 22%, transparent) inset;
+  border-bottom-right-radius: 2px;
+}
+
+@keyframes reasonIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* spinner for loading state */
+.aiSpinner {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--p) 25%, #ffffff);
+  border-top-color: var(--p);
+  animation: aiSpin .8s linear infinite;
+}
+
+@keyframes aiSpin { 
+  to { transform: rotate(360deg); } 
 }
