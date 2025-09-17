@@ -25,16 +25,20 @@ class ProjectService
         }
 
         if ($withTaskStats) {
-            $now = Carbon::now();
+            $today = Carbon::today();
             $query->withCount([
                 'tasks as total',
-                'tasks as pending' => fn($q) => $q->where('status', 'pending'),
                 'tasks as completed' => fn($q) => $q->where('status', 'completed'),
-                'tasks as overdue' => fn($q) => $q
-                    ->where('deadline', '<', $now)
-                    ->where('status', '!=', 'completed'),
+
+                'tasks as unfinished' => fn($q) => $q->whereIn('status', ['pending', 'in progress', 'reopened'])
+                    ->whereDate('deadline', '>=', $today),
+
+                'tasks as overdue' => fn($q) =>
+                $q->whereIn('status', ['pending', 'in progress', 'reopened'])
+                    ->whereDate('deadline', '<', $today),
             ]);
         }
+
         return $query->get();
     }
 

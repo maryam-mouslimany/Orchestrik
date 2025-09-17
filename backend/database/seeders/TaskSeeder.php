@@ -124,7 +124,7 @@ class TaskSeeder extends Seeder
             }
 
             // 3) From the COMPLETED subset, ~20% reopened (note required, no duration)
-            $completed = collect($createdTasks)->filter(fn ($t) => $t->status === 'completed');
+            $completed = collect($createdTasks)->filter(fn($t) => $t->status === 'completed');
             $reopenCount = (int) floor($completed->count() * 0.2);
             if ($reopenCount > 0) {
                 $toReopen = $completed->shuffle()->take($reopenCount);
@@ -152,6 +152,18 @@ class TaskSeeder extends Seeder
                     $task->status     = 'reopened';
                     $task->updated_at = $reopenAt;
                     $task->save();
+                }
+
+                $openTasks   = collect($createdTasks)->filter(fn($t) => in_array($t->status, ['pending', 'in progress', 'reopened']));
+                $targetCount = (int) floor($openTasks->count() * 0.2); 
+                if ($targetCount > 0) {
+                    $today      = Carbon::today();
+                    $toOverdue  = $openTasks->shuffle()->take($targetCount);
+
+                    foreach ($toOverdue as $task) {
+                        $task->deadline = $today->copy()->subDays(random_int(1, 4))->toDateString(); 
+                        $task->save(); 
+                    }
                 }
             }
         }

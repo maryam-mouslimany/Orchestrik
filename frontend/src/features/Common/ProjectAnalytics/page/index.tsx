@@ -32,7 +32,7 @@ const ProjectAnalytics: React.FC = () => {
       <h2 className={styles.heading}>Project Analytics</h2>
       <div className={styles.row}>
         <PieMini title="Task Status" data={statusSlices} total={statusTotal} />
-        <PieMini title="Completed vs Overdue" data={cvoSlices} total={completedTotal} />
+        <PieMini title="Completed On Time vs Overdue" data={cvoSlices} total={completedTotal} />
         <PieMini title="Reopened (of Completed)" data={reopenSlices} total={reopened.completed_tasks}/>
       </div>
     </div>

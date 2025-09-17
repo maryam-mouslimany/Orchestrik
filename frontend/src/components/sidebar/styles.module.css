@@ -1,11 +1,11 @@
 .sidebar {
-  position: fixed;     
+  position: fixed;
   top: 0;
   left: 0;
-  height: 100dvh;     
+  height: 100dvh;
   width: 240px;
   min-width: 260px;
-  z-index: 1000; 
+  z-index: 1000;
   background-color: white;
   border-right: 1px solid #e5e7eb;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
@@ -98,8 +98,8 @@
   color: white;
   font-size: 10px;
   font-weight: 600;
-  min-width: 16px;
-  height: 16px;
+  min-width: 14px;
+  height: 14px;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -117,13 +117,16 @@
 .nav::-webkit-scrollbar {
   width: 6px;
 }
+
 .nav::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 3px;
 }
+
 .nav::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
+
 .nav::-webkit-scrollbar-track {
   background: transparent;
 }
@@ -174,10 +177,11 @@
 
 /* Active state */
 .isActive {
+  border: none;
   background: var(--primary-color);
   color: #ffffff !important;
   font-weight: 600;
-  box-shadow: 
+  box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
@@ -212,6 +216,7 @@
     transform: translateX(-100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -220,8 +225,8 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .sidebar { 
-    width: 232px; 
-    min-width: 232px; 
+  .sidebar {
+    width: 232px;
+    min-width: 232px;
   }
 }

@@ -10,7 +10,7 @@ export const useProjectCard = (project: Project) => {
     ((project.overdue ?? 0) > 0 ? "Delayed" : "On Track");
 
   const total = project.total ?? 0;
-  const pending = project.pending ?? 0;
+  const unfinished = project.unfinished ?? 0;
   const completed = project.completed ?? 0;
   const overdue = project.overdue ?? 0;
 
@@ -19,7 +19,7 @@ export const useProjectCard = (project: Project) => {
     membersCount,
     badge,
     total,
-    pending,
+    unfinished,
     completed,
     overdue,
     status
