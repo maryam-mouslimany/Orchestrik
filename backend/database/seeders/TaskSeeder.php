@@ -55,33 +55,20 @@ class TaskSeeder extends Seeder
 
                 /** @var Task $task */
                 $task = Task::create([
-                    'title'          => $this->fakeTitle(),
-                    'description'    => $this->fakeDescription(),
-                    'created_by'     => $pmForProject,
-                    'assigned_to'    => $assigneeId,
-                    'priority'       => $priority,
-                    'deadline'       => $deadlineDate->toDateString(), // <-- DATE ONLY
-                    'status'         => $startStatus,
-                    'project_id'     => $project->id,
+                    'title'              => $this->fakeTitle(),
+                    'description'        => $this->fakeDescription(),
+                    'created_by'         => $pmForProject,
+                    'assigned_to'        => $assigneeId,
+                    'priority'           => $priority,
+                    'deadline'           => $deadlineDate->toDateString(), // <-- DATE ONLY
+                    'status'             => $startStatus,
+                    'project_id'         => $project->id,
                     'estimated_duration' => random_int(1, 10),
-                    'created_at'     => $createdAt,
-                    'updated_at'     => $createdAt,
+                    'created_at'         => $createdAt,
+                    'updated_at'         => $createdAt,
                 ]);
 
-                // Initial history: if starting in progress, log pending -> in progress
-                if ($startStatus === 'in progress') {
-                    $ts = $this->tick($createdAt);
-                    $task->statusLogs()->create([
-                        'from_status' => 'pending',
-                        'to_status'   => 'in progress',
-                        'changed_by'  => $assigneeId,
-                        'note'        => null,
-                        'duration'    => null,
-                        'created_at'  => $ts,
-                        'updated_at'  => $ts,
-                    ]);
-                }
-
+                // NOTE: Per your requirement, we DO NOT log 'pending -> in progress' at creation time.
                 $createdTasks[] = $task;
             }
 
@@ -91,18 +78,9 @@ class TaskSeeder extends Seeder
                 $assigneeId = $task->assigned_to;
                 $lastTs = $task->statusLogs()->latest('created_at')->value('created_at') ?? $task->created_at;
 
-                // Ensure in progress before completing
+                // Ensure the task is in progress before completing, but DO NOT log that transition.
                 if ($task->status === 'pending') {
                     $ts = $this->tick($lastTs);
-                    $task->statusLogs()->create([
-                        'from_status' => 'pending',
-                        'to_status'   => 'in progress',
-                        'changed_by'  => $assigneeId,
-                        'note'        => null,
-                        'duration'    => null,
-                        'created_at'  => $ts,
-                        'updated_at'  => $ts,
-                    ]);
                     $task->status     = 'in progress';
                     $task->updated_at = $ts;
                     $task->save();
@@ -110,8 +88,6 @@ class TaskSeeder extends Seeder
                 }
 
                 // Date-only deadline comparison
-                // If your Task model casts deadline to date (recommended), this is Carbon already.
-                // Otherwise, parse it here:
                 $deadlineDate = $task->deadline instanceof Carbon
                     ? $task->deadline
                     : Carbon::parse($task->deadline);
@@ -121,7 +97,6 @@ class TaskSeeder extends Seeder
                 $onTime = (random_int(1, 100) <= 75); // 75% on time
                 if ($onTime) {
                     $completionAt = $this->tick($lastTs);
-                    // if completion accidentally went past deadline, pull it back before deadline end
                     if ($completionAt->gt($deadlineEnd)) {
                         $completionAt = (clone $deadlineEnd)->subHours(random_int(1, 8));
                     }
@@ -132,7 +107,7 @@ class TaskSeeder extends Seeder
                         ->setTime(random_int(9, 18), random_int(0, 59));
                 }
 
-                // Complete with required note + quarter duration
+                // LOG ONLY: ... -> completed (required note + duration)
                 $task->statusLogs()->create([
                     'from_status' => 'in progress',
                     'to_status'   => 'completed',
@@ -148,46 +123,36 @@ class TaskSeeder extends Seeder
                 $task->save();
             }
 
-            // 3) ~20% reopened (note required, duration null)
-            $remaining = collect($createdTasks)->filter(fn ($t) => $t->status !== 'completed');
-            $source    = $remaining->isNotEmpty() ? $remaining : collect($createdTasks);
-            $toReopen  = $source->shuffle()->take((int) floor($count * 0.2));
+            // 3) From the COMPLETED subset, ~20% reopened (note required, no duration)
+            $completed = collect($createdTasks)->filter(fn ($t) => $t->status === 'completed');
+            $reopenCount = (int) floor($completed->count() * 0.2);
+            if ($reopenCount > 0) {
+                $toReopen = $completed->shuffle()->take($reopenCount);
 
-            foreach ($toReopen as $task) {
-                $lastTs = $task->statusLogs()->latest('created_at')->value('created_at') ?? $task->created_at;
+                foreach ($toReopen as $task) {
+                    // Find the completion timestamp to keep timeline consistent
+                    $completionAt = $task->statusLogs()
+                        ->where('to_status', 'completed')
+                        ->latest('created_at')
+                        ->value('created_at') ?? $task->updated_at;
 
-                // If still pending, move to in progress first
-                if ($task->status === 'pending') {
-                    $ts = $this->tick($lastTs);
+                    $reopenAt = $this->tick($completionAt);
+
+                    // LOG ONLY: completed -> reopened (required note)
                     $task->statusLogs()->create([
-                        'from_status' => 'pending',
-                        'to_status'   => 'in progress',
-                        'changed_by'  => $task->assigned_to,
-                        'note'        => null,
-                        'duration'    => null,
-                        'created_at'  => $ts,
-                        'updated_at'  => $ts,
+                        'from_status' => 'completed',            // IMPORTANT: from completed
+                        'to_status'   => 'reopened',
+                        'changed_by'  => $pmForProject,          // PM reopens
+                        'note'        => $this->reopenReason(),  // required
+                        'duration'    => null,                   // only required for completed
+                        'created_at'  => $reopenAt,
+                        'updated_at'  => $reopenAt,
                     ]);
-                    $task->status     = 'in progress';
-                    $task->updated_at = $ts;
+
+                    $task->status     = 'reopened';
+                    $task->updated_at = $reopenAt;
                     $task->save();
-                    $lastTs = $ts;
                 }
-
-                $reopenAt = $this->tick($lastTs);
-                $task->statusLogs()->create([
-                    'from_status' => 'in progress',
-                    'to_status'   => 'reopened',
-                    'changed_by'  => $pmForProject,         // PM reopens
-                    'note'        => $this->reopenReason(), // required
-                    'duration'    => null,                   // only required for completed
-                    'created_at'  => $reopenAt,
-                    'updated_at'  => $reopenAt,
-                ]);
-
-                $task->status     = 'reopened';
-                $task->updated_at = $reopenAt;
-                $task->save();
             }
         }
     }

@@ -33,8 +33,10 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'getNotifications']);
     Route::post('/notifications/read', [NotificationController::class, 'markAsRead']);
     Route::get('/notifications/count', [NotificationController::class, 'count']);
+
     Route::get("/projects/analytics/status", [ProjectAnalyticsController::class, "getTaskStatusBreakdown"]);
     Route::get("/projects/analytics/completed-vs-overdue", [ProjectAnalyticsController::class, "completedOnTimeVsOverdue"]);
+    Route::get("/projects/analytics/reopened", [ProjectAnalyticsController::class, "getProjectReopenRate"]);
 
     Route::prefix('admin')->middleware(RoleMiddleware::class . ':admin')->group(function () {
         Route::post("/projects/create", [ProjetController::class, "createProject"]);

@@ -36,7 +36,7 @@ class ProjectAnalyticsService
             'by_status'  => $byStatus,
         ];
     }
-    public static function completedOnTimeVsOverdue($request): array
+     static function completedOnTimeVsOverdue($request): array
     {
         $v = $request->validate([
             'project_id' => ['required', 'integer', 'exists:projects,id'],
@@ -55,13 +55,13 @@ class ProjectAnalyticsService
         $total = $completed->count();
 
         $overdue = $completed->filter(function ($t) {
-            $log = $t->statusLogs->first();               
-            if (!$log) return false;                     
+            $log = $t->statusLogs->first();
+            if (!$log) return false;
             $deadlineEnd = ($t->deadline instanceof \Carbon\Carbon
                 ? $t->deadline
                 : \Carbon\Carbon::parse($t->deadline))->endOfDay();
 
-            return $log->created_at->gt($deadlineEnd);  
+            return $log->created_at->gt($deadlineEnd);
         })->count();
 
         $onTime = $total - $overdue;
@@ -73,6 +73,25 @@ class ProjectAnalyticsService
             'overdue_count'    => $overdue,
             'on_time_percent'  => $total ? round(($onTime  / $total) * 100, 2) : 0.0,
             'overdue_percent'  => $total ? round(($overdue / $total) * 100, 2) : 0.0,
+        ];
+    }
+
+    static function getProjectReopenRate($request)
+    {
+         $v = $request->validate(['project_id' => ['required', 'integer', 'exists:projects,id'],]);
+         $project =  Project::find($v['project_id']);
+         $completedTaskCount = $project->tasks()->where('status', 'completed')->count();
+
+        $reopenedTaskCount = $project->tasks()
+        ->whereHas('statusLogs', fn($q) => $q->where('to_status', 'reopened'))->count();
+
+        $rate = round(($reopenedTaskCount / $completedTaskCount) * 100, 2);
+           
+        return [
+            'project_id'          => $project->id,
+            'completed_tasks'     => $completedTaskCount,
+            'reopened_tasks'      => $reopenedTaskCount,
+            'reopen_rate_percent' => $rate,
         ];
     }
 }

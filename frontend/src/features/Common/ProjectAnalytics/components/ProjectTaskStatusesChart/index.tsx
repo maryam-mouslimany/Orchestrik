@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 export type StatusSlice = {
   status: string;
   count: number;
-  percent: number; // 0–100
+  percent: number; 
 };
 
 type Props = {
@@ -84,18 +84,6 @@ const ProjectTaskStatusesChart: React.FC<Props> = ({ title = 'Task Status Breakd
         />
       </div>
 
-      <ul className={styles.legendList} role="list">
-        {chartData.map((s, i) => (
-          <li className={styles.legendItem} key={i}>
-            <span className={styles.swatch} style={{ background: s.color }} />
-            <span className={styles.legendLabel}>{s.label}</span>
-            <span className={styles.legendValue}>{s.value}</span>
-            <span className={styles.legendPercent}>
-              {(s.percent as number).toFixed(2)}%
-            </span>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };
