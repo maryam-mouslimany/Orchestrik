@@ -1,0 +1,44 @@
+/* src/components/charts/PieMini/styles.module.css */
+.card {
+  background: #fff;
+  border: 1px solid #eef2f7;
+  border-radius: 16px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+.title { font-size: 12px; color: #64748b; }
+.total { font-size: 12px; color: #0f172a; font-weight: 600; }
+
+.chartWrap {
+  width: 100%;       /* take full width of card */
+  aspect-ratio: 1/1; /* keep it a circle */
+  margin: 0 auto;    /* center inside card */
+}
+
+/* Optional: responsive downsizing */
+@media (max-width: 1100px) {
+  .chartWrap { width: 300px; }
+}
+@media (max-width: 900px) {
+  .chartWrap { width: 260px; }
+}
+
+.tooltip {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+.tipRow { display: grid; grid-auto-flow: column; justify-content: start; gap: 6px; }
+.tipKey { color: #64748b; }
+/* src/features/.../analytics/styles.module.css */
