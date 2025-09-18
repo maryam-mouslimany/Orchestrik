@@ -1,9 +1,13 @@
 :root {
-    --text-gray: #6b7280;     /* neutral gray (no black) */
-  --muted-gray: #9ca3af;    /* for separators/disabled */
-  --hover-gray: #f3f4f6;    /* light hover surface */
-  --surface: #ffffff;       /* container surface */
-  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --text-gray: #6b7280;
+  /* neutral gray (no black) */
+  --muted-gray: #9ca3af;
+  /* for separators/disabled */
+  --hover-gray: #f3f4f6;
+  /* light hover surface */
+  --surface: #ffffff;
+  /* container surface */
+  --shadow: 0 1px 3px rgba(0, 0, 0, .06), 0 1px 2px rgba(0, 0, 0, .04);
   --radius-pill: 9999px;
 }
 
@@ -16,7 +20,7 @@
   border-radius: 14px;
   box-shadow: var(--shadow);
   padding: 6px 10px;
-  margin:20px;
+  margin: 20px;
 }
 
 /* chevrons — no borders, gray text; primary on hover press (solid) */
@@ -31,16 +35,20 @@
   border-radius: var(--radius-pill);
   cursor: pointer;
   transition: transform 80ms ease, background-color 120ms ease, color 120ms ease;
-  outline: none; /* no focus border/outline */
+  outline: none;
+  /* no focus border/outline */
 }
 
 .nav:hover {
-  background: var(--hover-gray); /* soft gray hover */
-  color: var(--primary-color);   /* primary solid (not faded) */
+  background: var(--hover-gray);
+  /* soft gray hover */
+  color: var(--primary-color);
+  /* primary solid (not faded) */
 }
 
 .nav:active {
   transform: translateY(1px);
+  border: none;
 }
 
 /* disabled chevrons */
@@ -67,10 +75,13 @@
   height: 28px;
   padding: 0 10px;
   border-radius: var(--radius-pill);
-  background: var(--primary-color); /* exact primary color */
+  background: var(--primary-color);
+  /* exact primary color */
   color: #fff;
   font-weight: 600;
   font-size: 13px;
+  border: none;
+
 }
 
 /* separator and total — gray, no black */
@@ -82,4 +93,26 @@
 .total {
   color: var(--text-gray);
   font-size: 13px;
+}
+/* Kill focus ring on mouse/touch, across browsers */
+.nav:focus,
+.nav:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border: none;
+}
+
+/* Firefox removes the inner dotted border */
+.nav::-moz-focus-inner {
+  border: 0;
+}
+
+/* Older Firefox focus fallback */
+.nav:-moz-focusring {
+  outline: none;
+}
+
+/* Mobile WebKit tap highlight */
+.nav {
+  -webkit-tap-highlight-color: transparent;
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+
 use App\Events\UnreadCountUpdated;
 
 use App\Models\Task;
@@ -16,10 +17,10 @@ class TaskService
     {
         $creator = Auth::user();
         $data['created_by'] = $creator->id;
-        
+
         if (empty($data['status'])) {
-        $data['status'] = 'pending';
-    }
+            $data['status'] = 'pending';
+        }
         $task = Task::create($data);
 
         $employee = User::findOrFail($data['assigned_to']);
@@ -28,7 +29,6 @@ class TaskService
         event(new UnreadCountUpdated($employee->id, $count));
 
         return $task;
-
     }
 
     static function editStatus($data, $taskId)
@@ -97,7 +97,7 @@ class TaskService
             is_array($priority) ? $q->whereIn('priority', $priority) : $q->where('priority', $priority);
         }
 
-        $q->orderByDesc('updated_at');
+        $q->orderBy('deadline', 'asc');
 
         if ($perPage !== null) {
             return $page !== null

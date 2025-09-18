@@ -18,7 +18,7 @@ export const TasksTablePage: React.FC = () => {
   const {
     rows, columns: baseColumns, loading, error,
     projectId, setProjectId, status, setStatus, priority, setPriority, projectsOptions, isPaginated,
-    page, setPage,perPage, setPerPage,total,
+    page, setPage,perPage,total,
   } = useTasksTable();
 
   const columnsWithActions = useMemo(() => {
@@ -28,7 +28,7 @@ export const TasksTablePage: React.FC = () => {
       {
         key: 'actions',
         label: 'Actions',
-        width: 80,
+        width: 50,
         render: (_v: any, row: any) => (
           <button
             type="button"

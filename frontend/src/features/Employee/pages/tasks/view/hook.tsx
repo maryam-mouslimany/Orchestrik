@@ -115,12 +115,12 @@ export const useTasksTable = () => {
   useEffect(() => { void fetchTasks(); }, [fetchTasks]);
 
   const columns: Column<TaskRow>[] = useMemo(() => ([
-    { key: 'id', label: 'ID', width: 40 },
-    { key: 'title', label: 'Title', width: 200 },
+    { key: 'id', label: 'ID', width: 20 },
+    { key: 'title', label: 'Title', width: 100 },
     { key: 'status', label: 'Status', width: 50, render: (value) => <Pill label={value} /> },
     { key: 'description', label: 'Description', width: 260 },
     { key: 'priority', label: 'Priority', width: 50, render: (value) => <Pill label={value} /> },
-    { key: 'deadline', label: 'Deadline', width: 160 },
+    { key: 'deadline', label: 'Deadline', width: 80 },
   ]), []);
 
   return {

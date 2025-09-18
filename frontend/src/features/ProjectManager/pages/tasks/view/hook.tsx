@@ -113,11 +113,11 @@ export const useTasksTable = () => {
   console.log(filters)
   const columns: Column<TaskRow>[] = useMemo(() => ([
     { key: 'id', label: 'ID', width: 40 },
-    { key: 'title', label: 'Title', width: 200 },
-    { key: 'status', label: 'Status', width: 50, render: (value) => <Pill label={value} />, },
+    { key: 'title', label: 'Title', width: 230 },
+    { key: 'status', label: 'Status', width: 60, render: (value) => <Pill label={value} />, },
     { key: 'assignee', label: 'Assignee', width: 100 },
-    { key: 'priority', label: 'Priority', width: 50, render: (value) => <Pill label={value} />, },
-    { key: 'deadline', label: 'Deadline', width: 160 },
+    { key: 'priority', label: 'Priority', width: 60, render: (value) => <Pill label={value} />, },
+    { key: 'deadline', label: 'Deadline', width: 100 },
   ]), []);
   console.log(page, perPage)
   return {
