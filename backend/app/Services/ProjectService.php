@@ -10,37 +10,59 @@ use Illuminate\Support\Carbon;
 
 class ProjectService
 {
-    static function getProjects($request)
-    {
-        $user = Auth::user();
-        $withTaskStats = $request->boolean('withTaskStats');
-        $name = $request->query('name', $request->query('nameFilter'));
-        $query = ($user->role->name === 'admin')
-            ? Project::where('created_by', $user->id)
-            : $user->projects()->select('projects.*');
+static function getProjects($request)
+{
+    $user = Auth::user();
+    $withTaskStats = $request->boolean('withTaskStats');
+    $name = $request->query('name', $request->query('nameFilter'));
 
-        $query->with(['creator', 'client', 'members']);
-        if (is_string($name) && $name !== '') {
-            $query->where('projects.name', 'LIKE', '%' . $name . '%');
-        }
+    $query = ($user->role->name === 'admin')
+        ? Project::where('created_by', $user->id)
+        : $user->projects()->select('projects.*');
 
-        if ($withTaskStats) {
-            $today = Carbon::today();
-            $query->withCount([
-                'tasks as total',
-                'tasks as completed' => fn($q) => $q->where('status', 'completed'),
+    $query->with(['creator', 'client', 'members']);
 
-                'tasks as unfinished' => fn($q) => $q->whereIn('status', ['pending', 'in progress', 'reopened'])
-                    ->whereDate('deadline', '>=', $today),
-
-                'tasks as overdue' => fn($q) =>
-                $q->whereIn('status', ['pending', 'in progress', 'reopened'])
-                    ->whereDate('deadline', '<', $today),
-            ]);
-        }
-
-        return $query->get();
+    if (is_string($name) && $name !== '') {
+        $query->where('projects.name', 'LIKE', '%' . $name . '%');
     }
+
+    if ($withTaskStats) {
+        $today = Carbon::today();
+
+        $applyAssigneeScope = function ($q) use ($user) {
+            if ($user->role->name === 'employee') {
+                $q->where('assigned_to', $user->id);
+            }
+        };
+
+        $query->withCount([
+            'tasks as total' => function ($q) use ($applyAssigneeScope) {
+                $applyAssigneeScope($q);
+            },
+
+            
+            'tasks as completed' => function ($q) use ($applyAssigneeScope) {
+                $applyAssigneeScope($q);
+                $q->where('status', 'completed');
+            },
+
+            'tasks as unfinished' => function ($q) use ($applyAssigneeScope, $today) {
+                $applyAssigneeScope($q);
+                $q->whereIn('status', ['pending', 'in progress', 'reopened'])
+                  ->whereDate('deadline', '>=', $today);
+            },
+
+            'tasks as overdue' => function ($q) use ($applyAssigneeScope, $today) {
+                $applyAssigneeScope($q);
+                $q->whereIn('status', ['pending', 'in progress', 'reopened'])
+                  ->whereDate('deadline', '<', $today);
+            },
+        ]);
+    }
+
+    return $query->get();
+}
+
 
 
     static function createProject($data)
