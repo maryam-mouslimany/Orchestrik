@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('duration')->nullable();
             $table->enum('priority', ['low', 'medium', 'high']);
             $table->date('deadline')->nullable();
-            $table->integer('estimated_duration')->nullable();
+            $table->decimal('estimated_duration')->nullable();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('cascade');

@@ -4,6 +4,7 @@ import SelectFilter from '../../../../../components/SelectFilter';
 import { useProjectCreate } from './hook';
 import Button from '../../../../../components/Button';
 import styles from './styles.module.css';
+import MultipleSelectChip from '../../../../../components/MultipleSelectFilter';
 
 const ProjectCreatePage: React.FC = () => {
   const {
@@ -15,7 +16,7 @@ const ProjectCreatePage: React.FC = () => {
     creating,
     formError,
     descTooShort,
-    membersTooFew,
+    membersTooFew,employeeOptions
   } = useProjectCreate();
 
   return (
@@ -74,7 +75,13 @@ const ProjectCreatePage: React.FC = () => {
 
       {/* Members — full width + live hint */}
       <div className={styles.fieldWrap}>
-
+        <MultipleSelectChip
+          label="Members"
+          options={employeeOptions}
+          selected={values.members}
+          onChange={(next) => setField('members', (next as number[]) || [])}
+          placeholder="Select members"
+        />
         {membersTooFew && (
           <p className={styles.error}>At least 3 members including the PM</p>
         )}

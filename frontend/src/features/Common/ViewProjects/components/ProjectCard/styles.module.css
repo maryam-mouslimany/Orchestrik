@@ -10,11 +10,11 @@
     --shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
     --radius: 16px;
 
-    --pending: #f59e0b;
+    --unfinished: #99ABC7;
     /* amber-500 */
-    --completed: #16a34a;
+    --completed: #FFC65B;
     /* green-600 */
-    --overdue: #ef4444;
+    --overdue: #EB6D6F;
     /* red-500 (used subtly) */
 }
 
@@ -84,17 +84,21 @@
 
 .statNumber {
     font-weight: 800;
-    font-size: 22px;
+    font-size: 20px;
     color: var(--ink-strong);
     line-height: 1;
 }
 
-.pending {
-    color: var(--pending);
+.unfinished {
+    color: var(--unfinished);
 }
 
 .completed {
     color: var(--completed);
+}
+
+.overdue {
+    color: var(--overdue);
 }
 
 .statLabel {

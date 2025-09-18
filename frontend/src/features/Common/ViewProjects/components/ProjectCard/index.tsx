@@ -35,12 +35,12 @@ const ProjectCard: React.FC<Props> = ({ project, onViewMembers }) => {
         </div>
 
         <div className={styles.statCol}>
-          <div className={`${styles.statNumber} ${styles.pending}`}>{unfinished}</div>
+          <div className={`${styles.statNumber} ${styles.unfinished}`}>{unfinished}</div>
           <div className={styles.statLabel}>Unfinished</div>
         </div>
 
         <div className={styles.statCol}>
-          <div className={styles.statNumber}>{overdue}</div>
+          <div className={`${styles.statNumber} ${styles.overdue}`}>{overdue}</div>
           <div className={styles.statLabel}>Overdue</div>
         </div>
 

@@ -49,7 +49,7 @@ export const useTaskCreate = () => {
     let cancel = false;
     (async () => {
       try {
-        const res = await apiCall('pm/projects/members', {
+        const res = await apiCall('projects/members', {
           method: 'GET', requiresAuth: true, params: { projectId }
         });
         const arr: Member[] = (res?.data?.members ?? [])

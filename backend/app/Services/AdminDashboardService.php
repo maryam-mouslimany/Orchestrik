@@ -6,6 +6,7 @@ use App\Models\TaskStatusLog;
 use App\Models\User;
 use App\Models\Skill;
 use App\Models\Position;
+use App\Models\Task;
 
 class AdminDashboardService
 {
@@ -100,5 +101,30 @@ class AdminDashboardService
                 'percentage' => $pct,
             ];
         })->all();
+    }
+
+    static function ActualVsEstimated(): array
+    {
+        $tasks = Task::query()
+            ->whereHas('latestStatusLog', fn($q) => $q->where('to_status', 'completed'))
+            ->with([
+                'latestCompletedLog' => fn($q) => $q->select(
+                    'task_status_logs.id',        
+                    'task_status_logs.task_id',   
+                    'task_status_logs.duration',
+                    'task_status_logs.created_at'
+                ),
+                'assignee:id,name',
+            ])
+            ->select(['id', 'title', 'assigned_to', 'estimated_duration'])
+            ->get();
+        return $tasks->map(function ($t) {
+            return [
+                'title'     => (string) $t->title,
+                'estimated' => (float) ($t->estimated_duration ?? 0),
+                'actual'    => (float) optional($t->latestCompletedLog)->duration ?? 0,
+                'assignee'  => (string) optional($t->assignee)->name ?? '—',
+            ];
+        })->values()->toArray();
     }
 }

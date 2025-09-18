@@ -63,7 +63,7 @@ class TaskSeeder extends Seeder
                     'deadline'           => $deadlineDate->toDateString(), // <-- DATE ONLY
                     'status'             => $startStatus,
                     'project_id'         => $project->id,
-                    'estimated_duration' => random_int(1, 10),
+                    'estimated_duration' => $this->quarterDuration(),
                     'created_at'         => $createdAt,
                     'updated_at'         => $createdAt,
                 ]);
@@ -210,7 +210,6 @@ class TaskSeeder extends Seeder
 
     private function quarterDuration(): float
     {
-        // integer base + one of .25/.5/.75; max 2 decimals
         $base = random_int(1, 8);
         $fractions = [0.25, 0.5, 0.75];
         return round($base + $fractions[array_rand($fractions)], 2);

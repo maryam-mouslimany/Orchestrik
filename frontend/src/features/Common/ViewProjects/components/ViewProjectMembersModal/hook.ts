@@ -31,7 +31,7 @@ export const useProjectMembers = (projectId: number | null, open: boolean) => {
       setLoading(true);
       setError(null);
       try {
-        const res = await apiCall('pm/projects/members', {
+        const res = await apiCall('projects/members', {
           method: 'GET',
           requiresAuth: true,
           params: { projectId },

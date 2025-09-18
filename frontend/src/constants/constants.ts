@@ -32,7 +32,6 @@ export const MENU_BY_ROLE: Record<'admin' | 'pm' | 'employee', MenuItem[]> = {
   ],
   pm: [
     { key: 'projects', label: 'Projects', to: '/projects' },
-    { key: 'reports', label: 'Reports', to: '/reports' },
     { key: 'tasks', label: 'Tasks', to: '/tasks' },
   ],
   employee: [

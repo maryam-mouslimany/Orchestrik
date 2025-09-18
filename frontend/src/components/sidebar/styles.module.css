@@ -173,6 +173,8 @@
   background: var(--primary-color);
   color: #ffffff;
   transform: translateX(2px);
+  border: none;
+
 }
 
 /* Active state */
@@ -188,6 +190,7 @@
 }
 
 .isActive:hover {
+  border: none;
   color: #ffffff !important;
 }
 
@@ -201,6 +204,7 @@
   height: 20px;
   border-radius: 0 2px 2px 0;
   background: rgba(255, 255, 255, 0.8);
+  
 }
 
 .label {

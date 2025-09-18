@@ -1,15 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import apiCall from "../../../../services/apiCallService";
 
 export type ProjectOption = { id: number; name: string };
 
 export const useViewProjects = () => {
+
+  const [nameInput, setNameInput] = useState("");
   const [nameFilter, setNameFilter] = useState("");
+
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // NEW: modal state moved here
+  // modal state
   const [membersOpen, setMembersOpen] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
 
@@ -17,7 +20,6 @@ export const useViewProjects = () => {
     setSelectedProjectId(id);
     setMembersOpen(true);
   };
-
   const closeMembers = () => {
     setMembersOpen(false);
     setSelectedProjectId(null);
@@ -25,13 +27,12 @@ export const useViewProjects = () => {
 
   useEffect(() => {
     let cancelled = false;
-
     (async () => {
       setLoading(true);
       setError(null);
       try {
         const params: any = { withTaskStats: true };
-        if (nameFilter !== "") params.name = nameFilter;
+        if (nameFilter.trim() !== "") params.name = nameFilter.trim();
 
         const res = await apiCall("/projects", {
           method: "GET",
@@ -54,11 +55,12 @@ export const useViewProjects = () => {
         if (!cancelled) setLoading(false);
       }
     })();
+    return () => { cancelled = true; };
+  }, [nameFilter]); 
 
-    return () => {
-      cancelled = true;
-    };
-  }, [nameFilter]);
+  const applyNameFilter = useCallback(() => {
+    setNameFilter(nameInput.trim());
+  }, [nameInput]);
 
   const projectOptions: ProjectOption[] = useMemo(
     () =>
@@ -68,19 +70,18 @@ export const useViewProjects = () => {
     [projects]
   );
 
-  const refresh = () => setNameFilter((v) => v); // re-trigger with same filter
+  const refresh = () => setNameFilter((v) => v); 
 
   return {
-    // list/search
-    nameFilter,
-    setNameFilter,
+    nameInput,          
+    setNameInput,       
+    applyNameFilter,      
+    nameFilter,           
     projects,
     projectOptions,
     loading,
     error,
     refresh,
-
-    // modal controls from the hook
     membersOpen,
     selectedProjectId,
     openMembers,

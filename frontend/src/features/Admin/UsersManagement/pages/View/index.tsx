@@ -61,7 +61,6 @@ export const UsersTablePage: React.FC = () => {
     <Box>
       {error && <Alert severity="error" className={styles.errorAlert}>{error}</Alert>}
 
-      {/* Filters row */}
       <div className={styles.filterRow}>
         <div className={styles.filterSearch}>
           <SearchBar

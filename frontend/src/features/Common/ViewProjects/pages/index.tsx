@@ -3,12 +3,13 @@ import ProjectCard from "../components/ProjectCard";
 import SearchBar from "../../../../components/SearchBar";
 import LoadingIndicator from "../../../../components/Loading";
 import styles from "./styles.module.css";
-import ViewProjectMembersModal from "../components/ViewProjectMembersModal"; // keep this path
+import ViewProjectMembersModal from "../components/ViewProjectMembersModal";
+import CreateButton from "../../../../components/CreateButton/Button";
 
 const ViewProjects = () => {
   const {
-    nameFilter, setNameFilter, projects, loading, error,
-    membersOpen, selectedProjectId, openMembers, closeMembers,
+    projects, loading, error,
+    membersOpen, selectedProjectId, openMembers, closeMembers,nameInput, setNameInput, applyNameFilter
   } = useViewProjects();
 
   if (loading) return <LoadingIndicator fullscreen />;
@@ -20,9 +21,12 @@ const ViewProjects = () => {
       <div style={{ marginBottom: 12 }}>
         <SearchBar
           placeholder="Search by name…"
-          value={nameFilter}
-          onChange={(e) => setNameFilter(e.target.value)}
+          value={nameInput}
+          onChange={(e) => setNameInput(e.target.value)}
+          applyOnEnter
+          onApply={applyNameFilter}
         />
+        <CreateButton to="/projects/create" />
       </div>
 
       <div className={styles.grid}>
