@@ -4,10 +4,15 @@ import { useProjectCard } from "./hook";
 import type { Project } from "../../../../../routes/loaders/projectsViewLoader";
 import Pill from "../../../../../components/Pill";
 import { FiUsers } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
-type Props = { project: Project; onViewMembers: (id: number) => void };
+type Props = {
+  project: Project;
+  onViewMembers: (id: number) => void;
+  canOpenAnalytics?: boolean; 
+};
 
-const ProjectCard: React.FC<Props> = ({ project, onViewMembers }) => {
+const ProjectCard: React.FC<Props> = ({ project, onViewMembers, canOpenAnalytics = false }) => {
   const {
     clientName,
     membersCount,
@@ -18,8 +23,28 @@ const ProjectCard: React.FC<Props> = ({ project, onViewMembers }) => {
     status,
   } = useProjectCard(project);
 
+  const navigate = useNavigate();
+  const openAnalytics = () => navigate(`/projects/${project.id}/analytics`);
+
+  const wrapperProps = canOpenAnalytics
+    ? {
+        role: "button" as const,
+        tabIndex: 0,
+        onClick: openAnalytics,
+        onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openAnalytics();
+          }
+        },
+      }
+    : { tabIndex: 0 };
+
   return (
-    <div className={styles.card} tabIndex={0}>
+    <div
+      className= {`${styles.card} ${canOpenAnalytics ? styles.clickable : ""}`}
+      {...wrapperProps}
+    >
       <div className={styles.header}>
         <div>
           <div className={styles.title}>{project.name}</div>
@@ -50,9 +75,15 @@ const ProjectCard: React.FC<Props> = ({ project, onViewMembers }) => {
         </div>
       </div>
 
-      <button className={styles.membersBtn} onClick={() => onViewMembers(project.id)} type="button">
+      <button
+        className={styles.membersBtn}
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation(); // keep members button separate from card navigation
+          onViewMembers(project.id);
+        }}
+      >
         <FiUsers className={styles.membersIcon} aria-hidden />
-
         View Members ({membersCount})
       </button>
     </div>
