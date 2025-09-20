@@ -2,7 +2,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr)); /* ← exactly 3 cards per row */
-  gap: 16px; /* adjust spacing as you like */
+  gap: 24px; /* adjust spacing as you like */
 }
 
 /* Optional: responsive breakpoints */
@@ -12,3 +12,49 @@
 @media (max-width: 640px) {
   .grid { grid-template-columns: 1fr; }
 }
+.cardActions {
+  margin-top: 8px;
+  display: flex;
+  pointer-events: auto; /* ensure clicks are allowed even if a parent disabled it */
+}
+
+.viewBtn {
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: #ffc65b;
+  color: #1f2937;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  cursor: pointer; /* force pointer */
+}
+
+.viewBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.viewBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 198, 91, 0.45);
+}
+
+.viewBtn:hover {
+  filter: brightness(0.98);
+}
+.filterRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* search left, button right */
+  gap: 12px;                 /* space between search and button */
+  margin-bottom: 12px;
+}
+
+/* search should NOT take full width */
+.filterSearch {
+  width: 280px;              /* adjust as you like (e.g., 320px) */
+  max-width: 100%;
+}
+
+/* existing grid (keep yours if already defined) */

@@ -1,17 +1,23 @@
 .flexShell {
   display: flex;
-  flex-direction: row;   /* left | right */
-  gap: 16px;             /* gap between left and right */
-  align-items: stretch;  /* make right match left column height */
-  margin-bottom:16px;
+  flex-direction: row;
+  /* left | right */
+  gap: 16px;
+  /* gap between left and right */
+  align-items: stretch;
+  /* make right match left column height */
+  margin-bottom: 16px;
 }
+
 
 /* LEFT column: stack Completed + Skills vertically */
 .leftCol {
   display: flex;
   flex-direction: column;
-  gap: 16px;             /* vertical gap between the two cards */
-  flex: 1 1 0;           /* take available width */
+  gap: 16px;
+  /* vertical gap between the two cards */
+  flex: 1 1 0;
+  /* take available width */
   min-width: 0;
 }
 
@@ -19,15 +25,48 @@
 .rightCol {
   display: flex;
   flex-direction: column;
-  flex: 1 1 0;           /* same width weight as left; adjust as you like */
+  flex: 1 1 0;
+  /* same width weight as left; adjust as you like */
   min-width: 0;
 }
-.rightCol > * {
-  flex: 1 1 auto;        /* make the card fill the column height */
+
+.rightCol>* {
+  flex: 1 1 auto;
+  /* make the card fill the column height */
 }
 
 /* Responsive: stack columns */
 @media (max-width: 900px) {
-  .flexShell { flex-direction: column; }
-  .rightCol > * { flex: 0 0 auto; } /* natural height on mobile */
+  .flexShell {
+    flex-direction: column;
+  }
+
+  .rightCol>* {
+    flex: 0 0 auto;
+  }
+
+  /* natural height on mobile */
+}
+
+/* 3-up row with gaps */
+.tripleRow {
+  display: flex;
+  flex-direction: column;
+  /* left | right */
+  gap: 16px;
+
+}
+
+
+/* responsive fallbacks */
+@media (max-width: 1200px) {
+  .tripleRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 780px) {
+  .tripleRow {
+    grid-template-columns: 1fr;
+  }
 }

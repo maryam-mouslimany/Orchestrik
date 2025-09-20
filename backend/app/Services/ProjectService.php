@@ -10,33 +10,59 @@ use Illuminate\Support\Carbon;
 
 class ProjectService
 {
-    static function getProjects($request)
-    {
-        $user = Auth::user();
-        $withTaskStats = $request->boolean('withTaskStats');
-        $name = $request->query('name', $request->query('nameFilter'));
-        $query = ($user->role->name === 'admin')
-            ? Project::where('created_by', $user->id)
-            : $user->projects()->select('projects.*');
+static function getProjects($request)
+{
+    $user = Auth::user();
+    $withTaskStats = $request->boolean('withTaskStats');
+    $name = $request->query('name', $request->query('nameFilter'));
 
-        $query->with(['creator', 'client', 'members']);
-        if (is_string($name) && $name !== '') {
-            $query->where('projects.name', 'LIKE', '%' . $name . '%');
-        }
+    $query = ($user->role->name === 'admin')
+        ? Project::where('created_by', $user->id)
+        : $user->projects()->select('projects.*');
 
-        if ($withTaskStats) {
-            $now = Carbon::now();
-            $query->withCount([
-                'tasks as total',
-                'tasks as pending' => fn($q) => $q->where('status', 'pending'),
-                'tasks as completed' => fn($q) => $q->where('status', 'completed'),
-                'tasks as overdue' => fn($q) => $q
-                    ->where('deadline', '<', $now)
-                    ->where('status', '!=', 'completed'),
-            ]);
-        }
-        return $query->get();
+    $query->with(['creator', 'client', 'members']);
+
+    if (is_string($name) && $name !== '') {
+        $query->where('projects.name', 'LIKE', '%' . $name . '%');
     }
+
+    if ($withTaskStats) {
+        $today = Carbon::today();
+
+        $applyAssigneeScope = function ($q) use ($user) {
+            if ($user->role->name === 'employee') {
+                $q->where('assigned_to', $user->id);
+            }
+        };
+
+        $query->withCount([
+            'tasks as total' => function ($q) use ($applyAssigneeScope) {
+                $applyAssigneeScope($q);
+            },
+
+            
+            'tasks as completed' => function ($q) use ($applyAssigneeScope) {
+                $applyAssigneeScope($q);
+                $q->where('status', 'completed');
+            },
+
+            'tasks as unfinished' => function ($q) use ($applyAssigneeScope, $today) {
+                $applyAssigneeScope($q);
+                $q->whereIn('status', ['pending', 'in progress', 'reopened'])
+                  ->whereDate('deadline', '>=', $today);
+            },
+
+            'tasks as overdue' => function ($q) use ($applyAssigneeScope, $today) {
+                $applyAssigneeScope($q);
+                $q->whereIn('status', ['pending', 'in progress', 'reopened'])
+                  ->whereDate('deadline', '<', $today);
+            },
+        ]);
+    }
+
+    return $query->get();
+}
+
 
 
     static function createProject($data)
@@ -61,9 +87,14 @@ class ProjectService
     static function projectMembers($request)
     {
         $request->validate(['projectId' => 'required|integer|min:1|exists:projects,id',]);
+
         $project = Project::find($request['projectId']);
+
         $users = $project->members()
-            ->with(['position:id,name'])
+            ->with([
+                'position:id,name',
+                'skills:id,name',
+            ])
             ->get(['users.id', 'users.name', 'users.email', 'users.position_id', 'users.role_id']);
 
         $pmUser    = $users->firstWhere('role_id', 2);
@@ -81,6 +112,9 @@ class ProjectService
             'name'     => $u->name,
             'email'    => $u->email,
             'position' => $u->position?->name,
+            'skills'   => $u->skills
+                ->map(fn($s) => ['id' => $s->id, 'name' => $s->name])
+                ->values(),
         ])->values();
 
         return [

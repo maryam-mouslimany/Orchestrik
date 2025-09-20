@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { MENU_BY_ROLE } from '../../constants/constants';
@@ -16,7 +16,6 @@ export const useSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // menu logic
   const roleName = (user?.role?.name as 'admin' | 'pm' | 'employee');
   const items = useMemo(() => MENU_BY_ROLE[roleName], [roleName]);
   const activePath = location.pathname;
@@ -26,7 +25,6 @@ export const useSidebar = () => {
     navigate('/login', { replace: true });
   };
 
-  // ----------------- notifications -----------------
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [openNotifs, setOpenNotifs] = useState<boolean>(false);
 
@@ -49,15 +47,12 @@ export const useSidebar = () => {
     }
   }, []);
 
-  // initial load (also re-run if user changes)
   useEffect(() => { if (user?.id) void fetchUnreadCount(); }, [user?.id, fetchUnreadCount]);
 
-  // refresh when modal closes (e.g., after mark-as-read inside modal)
   useEffect(() => {
     if (!openNotifs && user?.id) void fetchUnreadCount();
   }, [openNotifs, user?.id, fetchUnreadCount]);
 
-  // Live updates via Echo -> UnreadCountUpdated
   useEffect(() => {
     const uid = user?.id;
     const EchoInstance = (window as any)?.Echo;
@@ -66,14 +61,12 @@ export const useSidebar = () => {
       return;
     }
 
-    // Guard against React 18 Strict-Mode double mounting in dev
     const active = { current: true };
 
     const chanName = `notifications.${uid}`;
     console.log('[echo] subscribe →', chanName);
     const chan = EchoInstance.private(chanName);
 
-    // Subscribe success/error (useful debug)
     const sub: any = (chan as any).subscription;
     if (sub?.bind) {
       sub.bind('pusher:subscription_succeeded', () => console.log('[echo] subscription_succeeded', chanName));
@@ -89,13 +82,13 @@ export const useSidebar = () => {
       }
     };
 
-    chan.listen('UnreadCountUpdated', onCount);
+    chan.listen('.UnreadCountUpdated', onCount);
 
     return () => {
       if (!active.current) return;
       active.current = false;
       try {
-        chan.stopListening('UnreadCountUpdated');
+        chan.stopListening('.UnreadCountUpdated');
         EchoInstance.leave(chanName);
         console.log('[echo] left', chanName);
       } catch (e) {
@@ -104,7 +97,6 @@ export const useSidebar = () => {
     };
   }, [user?.id]);
 
-  // -------------------------------------------------
 
   return {
     items,

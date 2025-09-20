@@ -20,6 +20,8 @@ import { usersCreateLoader } from './loaders/usersCreateLoader';
 import ForbiddenPage from '../components/ForbiddenPage';
 import { usersEditLoader } from './loaders/usersEditLoader';
 import PmTasksTablePage from '../features/ProjectManager/pages/tasks/view';
+import ProjectAnalytics from '../features/Common/ProjectAnalytics/page';
+import { projectAnalyticsLoader } from './loaders/projectsAnalyticsLoader';
 
 export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
@@ -34,6 +36,8 @@ export const router = createBrowserRouter([
           { path: 'test', element: <TasksPage /> },
           { path: 'forbidden', element: <ForbiddenPage /> },
           { path: "/projects", element: <ViewProjects /> },
+          { path: '/projects/:projectId/analytics', element: <ProjectAnalytics />, loader: projectAnalyticsLoader},
+
           {
             element: <AdminLayout />,
             children: [

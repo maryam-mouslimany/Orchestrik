@@ -3,24 +3,14 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Models\Project;
-use App\Models\User;
+use App\Models\Task;
 use Carbon\Carbon;
 
 class TaskSeeder extends Seeder
 {
-    // Tweak these to control volume
     private int $MIN_TASKS_PER_PROJECT = 15;
     private int $MAX_TASKS_PER_PROJECT = 30;
-
-    // Final status distribution
-    private array $FINAL_STATUS_WEIGHTS = [
-        'pending'      => 15,
-        'in progress'  => 40,
-        'completed'    => 40,
-        'reopened'     => 5,
-    ];
 
     // Priority distribution
     private array $PRIORITY_WEIGHTS = [
@@ -29,105 +19,169 @@ class TaskSeeder extends Seeder
         'high'   => 25,
     ];
 
-    // PM candidates (the PM for a project must be one of these and be a member of that project)
+    // PM candidates (must be members)
     private array $PM_IDS = [2, 3, 4];
 
     public function run(): void
     {
-        // Uncomment if you want a clean reset on fresh runs
-        // DB::table('task_status_logs')->truncate();
-        // DB::table('tasks')->truncate();
+        // Optional resets:
+        // \App\Models\TaskStatusLog::truncate();
+        // Task::truncate();
 
-        $membersByProject = $this->loadProjectMembers();           // project_id => [user_id...]
-        $projects = Project::select('id', 'created_at')->get();
+        // Eager-load members (Eloquent only)
+        $projects = Project::with('members:id')
+            ->select('id', 'created_at')
+            ->get();
 
         foreach ($projects as $project) {
-            $members = $membersByProject[$project->id] ?? [];
-            if (!$members) {
-                continue; // skip projects with no members
-            }
+            $memberIds = $project->members->pluck('id')->all();
+            if (empty($memberIds)) continue;
 
-            // Find the PM for this project: intersection of members with [2,3,4]
-            $pmForThisProject = current(array_intersect($this->PM_IDS, $members));
-            if (!$pmForThisProject) {
-                // Safety: if somehow no PM is present, inject one (pick 2/3/4) and add it to members
-                $pmForThisProject = $this->pick($this->PM_IDS);
-                $members[] = $pmForThisProject;
-                $membersByProject[$project->id] = array_values(array_unique($members));
-                DB::table('project_members')->insert([
-                    'project_id' => $project->id,
-                    'user_id'    => $pmForThisProject,
-                ]);
-            }
+            // Choose a PM that is a member (or fallback to any member)
+            $pmForProject = $this->pickPmForProject($memberIds);
 
             $count = random_int($this->MIN_TASKS_PER_PROJECT, $this->MAX_TASKS_PER_PROJECT);
-            $logBuffer = [];
+            $createdTasks = [];
 
+            // 1) Create tasks only in pending / in progress
             for ($i = 0; $i < $count; $i++) {
-                $createdBy = $pmForThisProject;                     // RULE: created_by must be the project's PM
-                $assigneePool = array_values(array_diff($members, [$createdBy])); // prefer non-PM assignees
-                if (empty($assigneePool)) $assigneePool = $members; // fallback: allow PM if team empty
-                $assignedTo = $this->pick($assigneePool);
+                $createdAt    = $this->randomCreatedAt($project->created_at);
+                $deadlineDate = (clone $createdAt)->addDays(random_int(2, 45))->startOfDay(); // DATE-only
+                $priority     = $this->pickWeighted($this->PRIORITY_WEIGHTS);
+                $assigneeId   = $this->pickAssignee($memberIds, $pmForProject);
 
-                $priority   = $this->pickWeighted($this->PRIORITY_WEIGHTS);
-                $createdAt  = $this->randomCreatedAt($project->created_at);
-                $deadline   = (clone $createdAt)->addDays(random_int(2, 45));
-                $final      = $this->pickWeighted($this->FINAL_STATUS_WEIGHTS);
+                // Start status: pending OR in progress
+                $startStatus = (random_int(1, 100) <= 50) ? 'pending' : 'in progress';
 
-                $title = $this->fakeTitle();
-                $desc  = $this->fakeDescription();
-
-                $taskId = DB::table('tasks')->insertGetId([
-                    'title'       => $title,
-                    'description' => $desc,
-                    'created_by'  => $createdBy,
-                    'priority'    => $priority,
-                    'deadline'    => $deadline,
-                    'status'      => $final,
-                    'project_id'  => $project->id,
-                    'assigned_to' => $assignedTo,
-                    'created_at'  => $createdAt,
-                    'updated_at'  => $createdAt,
+                /** @var Task $task */
+                $task = Task::create([
+                    'title'              => $this->fakeTitle(),
+                    'description'        => $this->fakeDescription(),
+                    'created_by'         => $pmForProject,
+                    'assigned_to'        => $assigneeId,
+                    'priority'           => $priority,
+                    'deadline'           => $deadlineDate->toDateString(), // <-- DATE ONLY
+                    'status'             => $startStatus,
+                    'project_id'         => $project->id,
+                    'estimated_duration' => $this->quarterDuration(),
+                    'created_at'         => $createdAt,
+                    'updated_at'         => $createdAt,
                 ]);
 
-                // Build a long-ish, coherent status history per your rules
-                [$logs, $lastTs] = $this->buildStatusLogs(
-                    taskId: $taskId,
-                    finalStatus: $final,
-                    createdAt: $createdAt,
-                    deadline: $deadline,
-                    pmUserId: $pmForThisProject,
-                    members: $members,
-                    assigneeId: $assignedTo
-                );
-
-                $logBuffer = array_merge($logBuffer, $logs);
-
-                DB::table('tasks')->where('id', $taskId)->update(['updated_at' => $lastTs]);
+                // NOTE: Per your requirement, we DO NOT log 'pending -> in progress' at creation time.
+                $createdTasks[] = $task;
             }
 
-            foreach (array_chunk($logBuffer, 1000) as $chunk) {
-                DB::table('task_status_logs')->insert($chunk);
+            // 2) ~60% complete (75% on time, 25% overdue by up to 4 days)
+            $toComplete = collect($createdTasks)->shuffle()->take((int) floor($count * 0.6));
+            foreach ($toComplete as $task) {
+                $assigneeId = $task->assigned_to;
+                $lastTs = $task->statusLogs()->latest('created_at')->value('created_at') ?? $task->created_at;
+
+                // Ensure the task is in progress before completing, but DO NOT log that transition.
+                if ($task->status === 'pending') {
+                    $ts = $this->tick($lastTs);
+                    $task->status     = 'in progress';
+                    $task->updated_at = $ts;
+                    $task->save();
+                    $lastTs = $ts;
+                }
+
+                // Date-only deadline comparison
+                $deadlineDate = $task->deadline instanceof Carbon
+                    ? $task->deadline
+                    : Carbon::parse($task->deadline);
+
+                $deadlineEnd = (clone $deadlineDate)->endOfDay();
+
+                $onTime = (random_int(1, 100) <= 75); // 75% on time
+                if ($onTime) {
+                    $completionAt = $this->tick($lastTs);
+                    if ($completionAt->gt($deadlineEnd)) {
+                        $completionAt = (clone $deadlineEnd)->subHours(random_int(1, 8));
+                    }
+                } else {
+                    // overdue by 1–4 days, daytime
+                    $completionAt = (clone $deadlineEnd)
+                        ->addDays(random_int(1, 4))
+                        ->setTime(random_int(9, 18), random_int(0, 59));
+                }
+
+                // LOG ONLY: ... -> completed (required note + duration)
+                $task->statusLogs()->create([
+                    'from_status' => 'in progress',
+                    'to_status'   => 'completed',
+                    'changed_by'  => $assigneeId,
+                    'note'        => $this->completionNote(),  // required
+                    'duration'    => $this->quarterDuration(), // required (.25/.5/.75)
+                    'created_at'  => $completionAt,
+                    'updated_at'  => $completionAt,
+                ]);
+
+                $task->status     = 'completed';
+                $task->updated_at = $completionAt;
+                $task->save();
+            }
+
+            // 3) From the COMPLETED subset, ~20% reopened (note required, no duration)
+            $completed = collect($createdTasks)->filter(fn($t) => $t->status === 'completed');
+            $reopenCount = (int) floor($completed->count() * 0.2);
+            if ($reopenCount > 0) {
+                $toReopen = $completed->shuffle()->take($reopenCount);
+
+                foreach ($toReopen as $task) {
+                    // Find the completion timestamp to keep timeline consistent
+                    $completionAt = $task->statusLogs()
+                        ->where('to_status', 'completed')
+                        ->latest('created_at')
+                        ->value('created_at') ?? $task->updated_at;
+
+                    $reopenAt = $this->tick($completionAt);
+
+                    // LOG ONLY: completed -> reopened (required note)
+                    $task->statusLogs()->create([
+                        'from_status' => 'completed',            // IMPORTANT: from completed
+                        'to_status'   => 'reopened',
+                        'changed_by'  => $pmForProject,          // PM reopens
+                        'note'        => $this->reopenReason(),  // required
+                        'duration'    => null,                   // only required for completed
+                        'created_at'  => $reopenAt,
+                        'updated_at'  => $reopenAt,
+                    ]);
+
+                    $task->status     = 'reopened';
+                    $task->updated_at = $reopenAt;
+                    $task->save();
+                }
+
+                $openTasks   = collect($createdTasks)->filter(fn($t) => in_array($t->status, ['pending', 'in progress', 'reopened']));
+                $targetCount = (int) floor($openTasks->count() * 0.2); 
+                if ($targetCount > 0) {
+                    $today      = Carbon::today();
+                    $toOverdue  = $openTasks->shuffle()->take($targetCount);
+
+                    foreach ($toOverdue as $task) {
+                        $task->deadline = $today->copy()->subDays(random_int(1, 4))->toDateString(); 
+                        $task->save(); 
+                    }
+                }
             }
         }
     }
 
-    // ---------------- helpers ---------------
+    // ---------------- helpers (all Eloquent-friendly) ----------------
 
-    private function loadProjectMembers(): array
+    private function pickPmForProject(array $memberIds): int
     {
-        $rows = DB::table('project_members')->select('project_id', 'user_id')->get();
-        $map = [];
-        foreach ($rows as $r) {
-            $map[$r->project_id] ??= [];
-            $map[$r->project_id][] = $r->user_id;
-        }
-        return $map;
+        $eligible = array_values(array_intersect($this->PM_IDS, $memberIds));
+        return $eligible ? $eligible[array_rand($eligible)] : $memberIds[array_rand($memberIds)];
     }
 
-    private function pick(array $arr)
+    private function pickAssignee(array $memberIds, int $pmId): int
     {
-        return $arr[array_rand($arr)];
+        $pool = array_values(array_diff($memberIds, [$pmId]));
+        if (empty($pool)) $pool = $memberIds;
+        return $pool[array_rand($pool)];
     }
 
     private function pickWeighted(array $weights)
@@ -148,130 +202,18 @@ class TaskSeeder extends Seeder
         return $base->copy()->addDays(random_int(0, 120))->setTime(random_int(9, 18), random_int(0, 59));
     }
 
-    private function fakeTitle(): string
-    {
-        $verbs = ['Draft', 'Design', 'Shoot', 'Edit', 'Review', 'Optimize', 'Publish', 'QA', 'Brief', 'Storyboard'];
-        $items = ['Reel', 'Static Post', 'Carousel', 'Landing Page', 'Ad Set', 'Campaign', 'Storyboard', 'Logo Variations', 'Billboard Mock'];
-        $topic = ['Autumn', 'Holiday', 'New Product', 'Awareness', 'Engagement', 'Retargeting', 'UGC', 'Event Teaser'];
-        return "{$this->pick($verbs)} {$this->pick($items)} – {$this->pick($topic)}";
-    }
-
-    private function fakeDescription(): string
-    {
-        $bits = [
-            'Include brand-safe copy and CTA.',
-            'Follow the style guide and export in required sizes.',
-            'Coordinate with PM for stakeholder review.',
-            'Use latest assets from the shared drive.',
-            'A/B test two versions where applicable.',
-            'Tag assets correctly for handoff.',
-        ];
-        shuffle($bits);
-        return implode(' ', array_slice($bits, 0, random_int(2, 4)));
-    }
-
-    /**
-     * NOTE rules enforced here:
-     * - note REQUIRED if to_status = 'completed' or 'reopened'
-     * - 'reopened' transition is ALWAYS performed by the project PM
-     * - changed_by for other transitions is a project member (often the assignee)
-     * - Generates multiple logs to make histories long where possible
-     */
-    private function buildStatusLogs(
-        int $taskId,
-        string $finalStatus,
-        Carbon $createdAt,
-        Carbon $deadline,
-        int $pmUserId,
-        array $members,
-        int $assigneeId
-    ): array {
-        $t = (clone $createdAt);
-        $logs = [];
-
-        // Build a path consistent with the final status, with extra hops for realism
-        switch ($finalStatus) {
-            case 'completed':
-                // pending -> in progress -> (optional extra in-progress hops) -> completed
-                $logs[] = $this->log($taskId, 'pending', 'in progress', $this->pick([$assigneeId, $pmUserId]), $t = $this->tick($t));
-
-                // 0–3 extra “still in progress” hops (no notes)
-                $extra = random_int(0, 3);
-                for ($i = 0; $i < $extra; $i++) {
-                    $by = (random_int(1, 100) <= 70) ? $assigneeId : $this->pick($members);
-                    $logs[] = $this->log($taskId, 'in progress', 'in progress', $by, $t = $this->tick($t));
-                }
-
-                // Complete (with note)
-                // 30% chance completion happens AFTER deadline to create overdue completions
-                if (random_int(1, 100) <= 30) {
-                    $t = (clone $deadline)->addDays(random_int(1, 7))->setTime(random_int(9, 18), random_int(0, 59));
-                } else {
-                    $t = $this->tick($t);
-                }
-                $logs[] = $this->log($taskId, 'in progress', 'completed', $assigneeId, $t, $this->completionNote());
-                break;
-
-            case 'in progress':
-                // pending -> in progress (+ extras), stays in progress (no note at the end)
-                $logs[] = $this->log($taskId, 'pending', 'in progress', $assigneeId, $t = $this->tick($t));
-                $extra = random_int(1, 4);
-                for ($i = 0; $i < $extra; $i++) {
-                    $by = (random_int(1, 100) <= 70) ? $assigneeId : $this->pick($members);
-                    $logs[] = $this->log($taskId, 'in progress', 'in progress', $by, $t = $this->tick($t));
-                }
-                break;
-
-            case 'pending':
-                // stays pending (no transitions or just a PM acknowledgment hop)
-                if (random_int(1, 100) <= 30) {
-                    $logs[] = $this->log($taskId, 'pending', 'pending', $pmUserId, $t = $this->tick($t));
-                }
-                break;
-
-            case 'reopened':
-                // pending -> in progress -> reopened (by PM with note)
-                $logs[] = $this->log($taskId, 'pending', 'in progress', $assigneeId, $t = $this->tick($t));
-                $logs[] = $this->log($taskId, 'in progress', 'reopened', $pmUserId, $t = $this->tick($t), $this->reopenReason());
-
-                // Optional more work after reopen
-                if (random_int(1, 100) <= 60) {
-                    $logs[] = $this->log($taskId, 'reopened', 'in progress', $assigneeId, $t = $this->tick($t));
-                    // maybe another reopen cycle
-                    if (random_int(1, 100) <= 25) {
-                        $logs[] = $this->log($taskId, 'in progress', 'reopened', $pmUserId, $t = $this->tick($t), $this->reopenReason());
-                    }
-                }
-                break;
-        }
-
-        $lastTs = empty($logs) ? $createdAt : end($logs)['created_at'];
-        return [$logs, $lastTs];
-    }
-
     private function tick(Carbon $t): Carbon
     {
-        // Advance 1–7 days, set to working-hours time
-        return $t->copy()->addDays(random_int(1, 7))->setTime(random_int(9, 18), random_int(0, 59));
-    }
-private function log(int $taskId, string $from, string $to, int $by, Carbon $ts, ?string $note = null): array
-{
-    // Enforce: notes only when to_status is completed or reopened
-    if (!in_array($to, ['completed','reopened'], true)) {
-        $note = null;
+        // advance 1–3 days within working hours
+        return $t->copy()->addDays(random_int(1, 3))->setTime(random_int(9, 18), random_int(0, 59));
     }
 
-    return [
-        'task_id'        => $taskId,
-        'from_status'    => $from,
-        'to_status'      => $to,
-        'changed_by'     => $by,
-        'note'           => $note,
-        'duration' => $to === 'completed' ? $this->randDurationHours() : null,
-        'created_at'     => $ts,
-        'updated_at'     => $ts,
-    ];
-}
+    private function quarterDuration(): float
+    {
+        $base = random_int(1, 8);
+        $fractions = [0.25, 0.5, 0.75];
+        return round($base + $fractions[array_rand($fractions)], 2);
+    }
 
     private function completionNote(): string
     {
@@ -291,12 +233,30 @@ private function log(int $taskId, string $from, string $to, int $by, Carbon $ts,
             'Branding inconsistency found; needs rework.',
             'Performance below target; adjust and retry.',
             'Missing legal disclaimer; update required.',
-            'Specs mismatch for OOH; revise dimensions.',
+            'Specs mismatch; revise dimensions.',
         ];
         return 'PM Reopen: ' . $reasons[array_rand($reasons)];
     }
-    private function randDurationHours(): float
+
+    private function fakeTitle(): string
     {
-        return round(mt_rand(10, 100) / 10, 1);
+        $verbs = ['Draft', 'Design', 'Shoot', 'Edit', 'Review', 'Optimize', 'Publish', 'QA', 'Brief', 'Storyboard'];
+        $items = ['Reel', 'Static Post', 'Carousel', 'Landing Page', 'Ad Set', 'Campaign', 'Storyboard', 'Logo Variations', 'Billboard Mock'];
+        $topic = ['Autumn', 'Holiday', 'New Product', 'Awareness', 'Engagement', 'Retargeting', 'UGC', 'Event Teaser'];
+        return "{$verbs[array_rand($verbs)]} {$items[array_rand($items)]} – {$topic[array_rand($topic)]}";
+    }
+
+    private function fakeDescription(): string
+    {
+        $bits = [
+            'Include brand-safe copy and CTA.',
+            'Follow the style guide and export in required sizes.',
+            'Coordinate with PM for stakeholder review.',
+            'Use latest assets from the shared drive.',
+            'A/B test two versions where applicable.',
+            'Tag assets correctly for handoff.',
+        ];
+        shuffle($bits);
+        return implode(' ', array_slice($bits, 0, random_int(2, 4)));
     }
 }

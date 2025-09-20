@@ -1,7 +1,10 @@
 import axios from 'axios';
 import type { AxiosRequestConfig } from 'axios';
 
-const baseURL = 'http://127.0.0.1:8000/api';
+
+const docker = false;
+const baseURL = docker? 'http://localhost:8080/api' : 'http://127.0.0.1:8000/api'
+
 type ApiCallParams = {
   method: 'GET' | 'POST' | 'DELETE',
   data?: {},

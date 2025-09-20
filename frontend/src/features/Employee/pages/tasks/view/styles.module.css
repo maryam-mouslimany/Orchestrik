@@ -4,13 +4,15 @@
   gap: 12px 16px;
   align-items: center;
   margin-bottom: 16px;
-
-  justify-content: flex-end; /* <-- pushes items to the right */
+  /* no justify-content here */
 }
+
+/* fixed 180px basis like PM so the row doesn’t stretch full width */
 .filterRow > * {
   min-width: 180px;
-  flex: 0 1 auto;
+  flex: 0 1 180px;           /* <-- key fix */
 }
+
 .actionIconBtn {
   padding: 4px;
   background: transparent !important;

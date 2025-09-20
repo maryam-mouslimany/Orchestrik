@@ -54,4 +54,16 @@ class AdminDashboardController extends Controller
             return $this->error($e->getMessage(), 500);
         }
     }
+
+    function ActualVsEstimated()
+    {
+        try {
+            $res = AdminDashboardService::ActualVsEstimated();
+            if (!$res)
+                return $this->error('Not Found');
+            return $this->success($res);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+    }
 }

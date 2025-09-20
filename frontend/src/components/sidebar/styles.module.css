@@ -1,17 +1,28 @@
 .sidebar {
-  position: fixed;     
+  position: fixed;
   top: 0;
   left: 0;
-  height: 100dvh;     
+  height: 100dvh;
   width: 240px;
   min-width: 260px;
-  z-index: 1000; 
+  z-index: 1000;
   background-color: white;
   border-right: 1px solid #e5e7eb;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  animation: slideInLeft 0.3s ease-out;
 }
 
-/* Fix header layout to push bell to the right */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent 0%, #e5e7eb 20%, #e5e7eb 80%, transparent 100%);
+}
+
+/* Header */
 .header {
   display: flex;
   align-items: center;
@@ -19,8 +30,15 @@
   padding: 20px 16px 16px;
   border-bottom: 1px solid #f3f4f6;
   background: white;
-  justify-content: space-between; /* Add this */
+  justify-content: space-between;
 }
+
+.logoGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .logo {
   width: 36px;
   height: 36px;
@@ -50,11 +68,67 @@
   letter-spacing: 0.05em;
 }
 
-/* Nav list */
+/* Bell button */
+.bellBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  padding: 8px;
+  border-radius: 6px;
+  color: #374151;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.bellBtn:hover {
+  color: var(--primary-color);
+}
+
+.bellBtn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Navigation */
 .nav {
   padding: 16px 12px;
   overflow: auto;
   height: calc(100% - 84px);
+}
+
+.nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.nav::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.nav::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.nav::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .list {
@@ -71,172 +145,8 @@
   padding: 0;
 }
 
-.link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-  text-decoration: none;
-  outline: none;
-  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  margin: 1px 0;
-}
-.link:hover(.isActive) {
-  background: var(--primary-color);
-  color: #ffffff;
-  transform: translateX(2px);
-}
-/* Hover (non-active) */
-.link:hover:not(.isActive) {
-  background:var(--primary-color);
-  color: #ffffff;
-  transform: translateX(2px);
-}
-
-/* Active state uses your theme variable */
-.isActive {
-  background: var(--primary-color);
-  color: #ffffff;
-  font-weight: 600;
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-}
-
-/* Optional left accent for active */
-.isActive::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 20px;
-  border-radius: 0 2px 2px 0;
-  background: rgba(255, 255, 255, 0.8);
-}
-
-
-.isActive .icon {
-  opacity: 1;
-}
-
-.label {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Keyboard focus */
-.link:focus-visible {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-  outline: none;
-}
-
-/* Scrollbar (subtle) */
-.nav::-webkit-scrollbar {
-  width: 6px;
-}
-.nav::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 3px;
-}
-.nav::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-.nav::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* Small screens: let it shrink a bit */
-@media (max-width: 1024px) {
-  .sidebar { 
-    width: 232px; 
-    min-width: 232px; 
-  }
-}
-
-/* Additional professional touches */
-.sidebar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(180deg, transparent 0%, #e5e7eb 20%, #e5e7eb 80%, transparent 100%);
-}
-
-/* Subtle animation for the entire sidebar */
-.sidebar {
-  animation: slideInLeft 0.3s ease-out;
-}
-
-@keyframes slideInLeft {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-.bellBtn{
-  background: white;
-
-}
-
-
-/* Group logo and brand together */
-.logoGroup {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Style the bell button */
-.bellBtn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  padding: 8px;
-  border-radius: 6px;
-  color: #374151;
-  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.bellBtn:hover {
-  background: #ffffff;
-  color: var(--primary-color);
-}
-
-.badge {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  background: #ef4444;
-  color: white;
-  font-size: 10px;
-  font-weight: 600;
-  min-width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
-/* Style logout button like links */
+/* Links and buttons base styles */
+.link,
 .logoutBtn {
   display: flex;
   align-items: center;
@@ -258,8 +168,69 @@
   text-align: left;
 }
 
+.link:hover,
 .logoutBtn:hover {
   background: var(--primary-color);
   color: #ffffff;
   transform: translateX(2px);
+  border: none;
+
+}
+
+/* Active state */
+.isActive {
+  border: none;
+  background: var(--primary-color);
+  color: #ffffff !important;
+  font-weight: 600;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.isActive:hover {
+  border: none;
+  color: #ffffff !important;
+}
+
+.isActive::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  border-radius: 0 2px 2px 0;
+  background: rgba(255, 255, 255, 0.8);
+  
+}
+
+.label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Animations */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 232px;
+    min-width: 232px;
+  }
 }

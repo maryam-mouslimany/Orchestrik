@@ -7,9 +7,8 @@ return [
         'sanctum/csrf-cookie',
     ],
     'allowed_methods' => ['*'],
-    'allowed_origins' => [
-        'http://localhost:5173', // your Vite origin
-    ],
+    'allowed_origins' => ['http://localhost:3000', 'http://localhost:5173'],
+
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'], // or explicit: Authorization, X-Socket-Id, Content-Type, Accept
     'exposed_headers' => [],

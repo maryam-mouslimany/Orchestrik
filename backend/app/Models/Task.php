@@ -48,4 +48,17 @@ class Task extends Model
     {
         return $this->hasMany(TaskStatusLog::class);
     }
+    public function latestStatusLog()
+    {
+        return $this->hasOne(\App\Models\TaskStatusLog::class)->latestOfMany('created_at');
+    }
+
+    public function latestCompletedLog()
+    {
+        return $this->hasOne(\App\Models\TaskStatusLog::class)
+            ->where('to_status', 'completed')
+            ->latestOfMany('created_at');
+    }
+
+
 }

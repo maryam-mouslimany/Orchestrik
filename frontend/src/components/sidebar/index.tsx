@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
                         className={styles.bellBtn}
                         onClick={() => setOpenNotifs(true)}
                     >
-                        <FiBell size={18} />
+                        <FiBell size={24} />
                         {unreadCount > 0 && <span className={styles.badge}>{unreadCount}</span>}
                     </button>
                 </div>
@@ -54,7 +54,6 @@ const Sidebar: React.FC = () => {
                 </nav>
             </aside>
 
-            {/* mount notifications modal */}
             <NotificationsModal open={openNotifs} onClose={() => setOpenNotifs(false)} />
         </>
     );

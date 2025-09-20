@@ -1,23 +1,38 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import apiCall from "../../../../services/apiCallService";
+
 export type ProjectOption = { id: number; name: string };
 
-export const useProjectsSearch = () => {
+export const useViewProjects = () => {
+
+  const [nameInput, setNameInput] = useState("");
   const [nameFilter, setNameFilter] = useState("");
+
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // fetch on first render and whenever the name filter changes
+  // modal state
+  const [membersOpen, setMembersOpen] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
+
+  const openMembers = (id: number) => {
+    setSelectedProjectId(id);
+    setMembersOpen(true);
+  };
+  const closeMembers = () => {
+    setMembersOpen(false);
+    setSelectedProjectId(null);
+  };
+
   useEffect(() => {
     let cancelled = false;
-
     (async () => {
       setLoading(true);
       setError(null);
       try {
         const params: any = { withTaskStats: true };
-        if (nameFilter !== "") params.name = nameFilter;
+        if (nameFilter.trim() !== "") params.name = nameFilter.trim();
 
         const res = await apiCall("/projects", {
           method: "GET",
@@ -32,7 +47,6 @@ export const useProjectsSearch = () => {
           : [];
 
         if (!cancelled) {
-          // normalize id only; keep everything else as-is
           setProjects(raw.map((p: any) => ({ ...p, id: Number(p.id) })));
         }
       } catch (e: any) {
@@ -41,11 +55,12 @@ export const useProjectsSearch = () => {
         if (!cancelled) setLoading(false);
       }
     })();
+    return () => { cancelled = true; };
+  }, [nameFilter]); 
 
-    return () => {
-      cancelled = true;
-    };
-  }, [nameFilter]);
+  const applyNameFilter = useCallback(() => {
+    setNameFilter(nameInput.trim());
+  }, [nameInput]);
 
   const projectOptions: ProjectOption[] = useMemo(
     () =>
@@ -55,15 +70,21 @@ export const useProjectsSearch = () => {
     [projects]
   );
 
-  const refresh = () => setNameFilter((v) => v); // re-trigger with same filter
+  const refresh = () => setNameFilter((v) => v); 
 
   return {
-    nameFilter,
-    setNameFilter,
+    nameInput,          
+    setNameInput,       
+    applyNameFilter,      
+    nameFilter,           
     projects,
     projectOptions,
     loading,
     error,
     refresh,
+    membersOpen,
+    selectedProjectId,
+    openMembers,
+    closeMembers,
   };
 };

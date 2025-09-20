@@ -19,7 +19,7 @@ export type Project = {
   created_at: string;
   updated_at: string;
   total?: number;
-  pending?: number;
+  unfinished?: number;
   completed?: number;
   overdue?: number;
   creator: ProjectUser;

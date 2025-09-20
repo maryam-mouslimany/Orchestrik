@@ -63,7 +63,6 @@ class ProjectSeeder extends Seeder
                 $extraMembers = collect($nonPmUserIds)->shuffle()->take($extraCount)->all();
 
                 $memberIds = array_values(array_unique(array_merge([$pmUserId], $extraMembers)));
-
          
                 $memberIds = array_values(array_filter($memberIds, function ($uid) use ($pmUserIds, $pmUserId) {
                     if ($uid === $pmUserId) return true;
