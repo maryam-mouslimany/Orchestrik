@@ -38,7 +38,7 @@
 }
 
 .input:focus {
-  border-color: #9ca3af;
+  border-color: #f7f7f7;
 }
 
 .input:hover:not(:focus) {

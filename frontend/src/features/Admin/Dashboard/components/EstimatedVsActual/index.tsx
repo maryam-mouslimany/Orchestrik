@@ -44,10 +44,10 @@ export default function EstimateVsActualScatter({ tasks }: { tasks: TaskRow[] })
           layers={["grid", "axes", refLine, "nodes", "markers", "mesh", "legends"]} 
           tooltip={({ node }) => (
             <div className={styles.tooltip}>
-              <div><span>Task</span><b>{node?.data?.title}</b></div>
-              <div><span>Est.</span><b>{node?.data?.x} h</b></div>
-              <div><span>Actual</span><b>{node?.data?.y} h</b></div>
-              <div><span>Assignee</span><b>{node?.serieId}</b></div>
+              <div><span>Task: </span><b>{node?.data?.title}</b></div>
+              <div><span>Est.: </span><b>{node?.data?.x} h</b></div>
+              <div><span>Actual: </span><b>{node?.data?.y} h</b></div>
+              <div><span>Assignee: </span><b>{node?.serieId}</b></div>
             </div>
           )}
         />
