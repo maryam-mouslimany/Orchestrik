@@ -21,7 +21,6 @@ export default function WorkloadHeatmap({ rows }: { rows: Workload[] }) {
           <span>High</span>
         </div>
       </div>
-      <div className={styles.subtleNote}>tile = one employee • Color = total taskEach s</div>
 
       <div className={styles.grid} role="list">
         {rows.map((r, i) => (

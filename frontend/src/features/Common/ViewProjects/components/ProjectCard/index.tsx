@@ -79,7 +79,7 @@ const ProjectCard: React.FC<Props> = ({ project, onViewMembers, canOpenAnalytics
         className={styles.membersBtn}
         type="button"
         onClick={(e) => {
-          e.stopPropagation(); // keep members button separate from card navigation
+          e.stopPropagation(); 
           onViewMembers(project.id);
         }}
       >

@@ -14,10 +14,9 @@
 .card {
   background: var(--card-bg);
   color: var(--card-fg);
-  border: 1px solid var(--border-color);
   border-radius: 14px;
   padding: 8px;
-  box-shadow: 0 8px 24px rgba(2, 6, 23, .06);
+  border: 1px solid #e5e7eb;
   height:240px;
   /* chart width = this container's width */
   max-width: 450px;

@@ -35,10 +35,12 @@ export default function AdminDashboard() {
           <PositionDistribution data={positions} />
         </div>
       </div>
-      <EstimateVsActualScatter tasks={actualEstimated}/>
+      <div className={styles.tripleRow}>
+        <EstimateVsActualScatter tasks={actualEstimated} />
+        <WorkloadHeatmap rows={workload} />
+        <TopLeastDurations most={durations.most} least={durations.least} />
+      </div>
 
-      <WorkloadHeatmap rows={workload} />
-      <TopLeastDurations most={durations.most} least={durations.least} />
     </>
 
   );

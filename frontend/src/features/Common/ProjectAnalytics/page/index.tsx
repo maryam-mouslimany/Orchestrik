@@ -28,11 +28,80 @@ const ProjectAnalytics: React.FC = () => {
   ];
 
   return (
-    <div className={styles.page}>
-      <h2 className={styles.heading}>Project Analytics</h2>
+      <div className={styles.page}>
+  <div className={styles.headerRow}>
+    <h1 className={styles.h1}>Project Analytics</h1>
+    <div className={styles.subtle}>Range: Last 30 days · Demo data</div>
+  </div>
+
+  <div className={styles.kpis}>
+    <div className={styles.kpi}>
+      <div className={styles.kpiLabel}>Total Tasks</div>
+      <div className={styles.kpiValue}>23</div>
+      <div className={`${styles.kpiDelta} ${styles.kpiUp}`}>▲ +12% vs prev 30d</div>
+    </div>
+    <div className={styles.kpi}>
+      <div className={styles.kpiLabel}>Completed</div>
+      <div className={styles.kpiValue}>11</div>
+      <div className={`${styles.kpiDelta} ${styles.kpiUp}`}>▲ +3</div>
+    </div>
+    <div className={styles.kpi}>
+      <div className={styles.kpiLabel}>Overdue</div>
+      <div className={styles.kpiValue}>2</div>
+      <div className={`${styles.kpiDelta} ${styles.kpiDown}`}>▼ −2</div>
+    </div>
+    <div className={styles.kpi}>
+      <div className={styles.kpiLabel}>On-time %</div>
+      <div className={styles.kpiValue}>76.9%</div>
+      <div className={styles.dd}>p75 cycle: 3.1d</div>
+    </div>
+  </div>
+
+  {/* keep your three pie cards here */}
+  {/* ... your 3 <PieMini /> or current pie blocks ... */}
+
+  {/* QUICK LISTS */}
+  <div className={styles.twoCol}>
+    <div className={styles.card}>
+      <div className={styles.cardTitle}>At-Risk (next 7 days)</div>
+      <div className={styles.list}>
+        <div className={styles.item}>
+          <span>Landing page copy v2</span>
+          <span className={styles.badge}>Due Fri</span>
+        </div>
+        <div className={styles.item}>
+          <span>UTM setup — Meta</span>
+          <span className={styles.badge}>Due Sat</span>
+        </div>
+        <div className={styles.item}>
+          <span>Creative variants Q4</span>
+          <span className={styles.badge}>Due Mon</span>
+        </div>
+      </div>
+    </div>
+
+    <div className={styles.card}>
+      <div className={styles.cardTitle}>Recent Activity</div>
+      <div className={styles.list}>
+        <div className={styles.item}>
+          <span>Rana completed “Audience segments v2”</span>
+          <span className={styles.dd}>2h ago</span>
+        </div>
+        <div className={styles.item}>
+          <span>Omar reopened “Pixel events QA”</span>
+          <span className={styles.dd}>5h ago</span>
+        </div>
+        <div className={styles.item}>
+          <span>Layla assigned “Blog v3 hero”</span>
+          <span className={styles.dd}>Yesterday</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
       <div className={styles.row}>
         <PieMini title="Task Status" data={statusSlices} total={statusTotal} />
-        <PieMini title="Completed On Time vs Overdue" data={cvoSlices} total={completedTotal} />
+        <PieMini title="Completed On Time Vs Overdue" data={cvoSlices} total={completedTotal} />
         <PieMini title="Reopened (of Completed)" data={reopenSlices} total={reopened.completed_tasks}/>
       </div>
     </div>

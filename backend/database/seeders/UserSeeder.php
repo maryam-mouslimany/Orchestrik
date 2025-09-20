@@ -103,24 +103,23 @@ class UserSeeder extends Seeder
                 'role_id' => 3,
             ],
             [
-                'name' => 'Fadi Choueiri',
-                'email' => 'fadi@company.com',
+                'name' => 'Maroun Ghaya',
+                'email' => 'marounghaya15@gmail.com',
                 'position_id' => 12, // Marketing Analyst
                 'role_id' => 3,
             ],
             [
-                'name' => 'Youssef Karam',
-                'email' => 'youssef@company.com',
+                'name' => 'Mayssan AL Ashkar',
+                'email' => 'mayssanalashkar@gmail.com',
                 'position_id' => 14, // Art Director
                 'role_id' => 3,
             ],
             [
-                'name' => 'Rana Srour',
-                'email' => 'rana@company.com',
+                'name' => 'Mounir Merhebi',
+                'email' => 'mounirmerhebi21@gmail.com',
                 'position_id' => 15, // Production Assistant
                 'role_id' => 3,
             ],
-
 
         ];
 
@@ -134,7 +133,8 @@ class UserSeeder extends Seeder
             ]);
 
             $skillMap = [
-                'mouslimanymaryam@gmail.com'   => ['Graphic Design', 'Branding', 'Content Planning'],
+                'jawad@company.com' => ['Graphic Design', 'Branding', 'Content Planning'],
+                'mouslimanymaryam@gmail.com'   => ['Community Management', 'Campaign Management'],
 
                 '92210054@students.liu.edu.lb'    => ['Campaign Management', 'Content Planning', 'Marketing Analytics (GA4)'],
                 'rania@company.com'   => ['Campaign Management', 'Content Planning', 'SEO'],
@@ -150,9 +150,9 @@ class UserSeeder extends Seeder
                 'ahmad@company.com'   => ['SEO', 'On-page SEO', 'Keyword Research'],
                 'tarek@company.com'   => ['SEM / PPC (Google Ads, Meta)', 'Campaign Management', 'Marketing Analytics (GA4)'],
                 'joumana@company.com' => ['Media Buying', 'Campaign Management', 'Social Media Management'],
-                'fadi@company.com'    => ['Marketing Analytics (GA4)', 'A/B Testing', 'SEO'],
-                'youssef@company.com' => ['Branding', 'Graphic Design', 'Content Planning'],
-                'rana@company.com'    => ['Video Production', 'Photo Editing'], 
+                'marounghaya15@gmail.com'    => ['Marketing Analytics (GA4)', 'A/B Testing', 'SEO'],
+                'mayssanalashkar@gmail.com' => ['Branding', 'Graphic Design', 'Content Planning'],
+                'mounirmerhebi21@gmail.com'    => ['Video Production', 'Photo Editing'], 
             ];
 
             foreach ($skillMap as $email => $skillNames) {

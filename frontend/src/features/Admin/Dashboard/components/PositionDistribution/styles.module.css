@@ -5,13 +5,15 @@
   padding: 16px;
   display: grid;
   gap: 0px;
+  border: 1px solid #e5e7eb;
+
 }
 
 .header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom:0px;
+  margin-bottom: 0px;
 }
 
 .title {
@@ -27,46 +29,122 @@
 }
 
 .body {
-  margin-top:0px;
+  margin-top: 0px;
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 16px;
   align-items: center;
 }
 
-.chart { display: block; }
-.bg { stroke: #f1f5f9; }
+.chart {
+  display: block;
+}
+
+.bg {
+  stroke: #f1f5f9;
+}
 
 .slice {
   stroke-linecap: butt;
   transition: opacity .2s ease;
 }
-.slice:hover { opacity: .9; }
+
+.slice:hover {
+  opacity: .9;
+}
 
 /* Distinct muted colors for 15 categories */
 
 /* Primary brand colors */
-.s0  { stroke: #99ABC7; } /* muted blue */
-.s1  { stroke: #EB6D6F; } /* coral red */
-.s2  { stroke: #FFC65B; } /* warm yellow */
+.s0 {
+  stroke: #99ABC7;
+}
+
+/* muted blue */
+.s1 {
+  stroke: #EB6D6F;
+}
+
+/* coral red */
+.s2 {
+  stroke: #FFC65B;
+}
+
+/* warm yellow */
 
 /* Extra distinct tones */
-.s3  { stroke: #7FB77E; }  /* sage green */
-.s4  { stroke: #E5989B; }  /* dusty rose */
-.s5  { stroke: #A5A6F6; }  /* soft indigo */
-.s6  { stroke: #FFB4A2; }  /* muted salmon */
-.s7  { stroke: #6EC5E9; }  /* sky blue */
-.s8  { stroke: #B5838D; }  /* mauve */
-.s9  { stroke: #FF9770; }  /* soft tangerine */
-.s10 { stroke: #C3A995; }  /* warm taupe */
-.s11 { stroke: #84A59D; }  /* desaturated teal */
-.s12 { stroke: #FFD670; }  /* pastel gold */
-.s13 { stroke: #90BE6D; }  /* olive green */
-.s14 { stroke: #7F7EFF; }  /* periwinkle blue */
+.s3 {
+  stroke: #7FB77E;
+}
+
+/* sage green */
+.s4 {
+  stroke: #E5989B;
+}
+
+/* dusty rose */
+.s5 {
+  stroke: #A5A6F6;
+}
+
+/* soft indigo */
+.s6 {
+  stroke: #FFB4A2;
+}
+
+/* muted salmon */
+.s7 {
+  stroke: #6EC5E9;
+}
+
+/* sky blue */
+.s8 {
+  stroke: #B5838D;
+}
+
+/* mauve */
+.s9 {
+  stroke: #FF9770;
+}
+
+/* soft tangerine */
+.s10 {
+  stroke: #C3A995;
+}
+
+/* warm taupe */
+.s11 {
+  stroke: #84A59D;
+}
+
+/* desaturated teal */
+.s12 {
+  stroke: #FFD670;
+}
+
+/* pastel gold */
+.s13 {
+  stroke: #90BE6D;
+}
+
+/* olive green */
+.s14 {
+  stroke: #7F7EFF;
+}
+
+/* periwinkle blue */
 
 
-.centerBig { font-size: 20px; font-weight: 700; fill: #0f172a; }
-.centerSmall { font-size: 12px; fill: #475569; }
+.centerBig {
+  font-size: 20px;
+  font-weight: 700;
+  fill: #0f172a;
+}
+
+.centerSmall {
+  font-size: 12px;
+  fill: #475569;
+}
 
 .legend {
   list-style: none;
@@ -75,33 +153,116 @@
   display: grid;
   gap: 8px;
 }
-.legendItem { display: flex; align-items: center; gap: 8px; }
 
-.swatch {
-  width: 12px; height: 12px; border-radius: 50%;
-  display: inline-block; background: currentColor;
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.s0 .swatch, .s0.swatch { color: #99ABC7; }
-.s1 .swatch, .s1.swatch { color: #EB6D6F; }
-.s2 .swatch, .s2.swatch { color: #FFC65B; }
-.s3 .swatch, .s3.swatch { color: #7FB77E; }
-.s4 .swatch, .s4.swatch { color: #E5989B; }
-.s5 .swatch, .s5.swatch { color: #A5A6F6; }
-.s6 .swatch, .s6.swatch { color: #FFB4A2; }
-.s7 .swatch, .s7.swatch { color: #6EC5E9; }
-.s8 .swatch, .s8.swatch { color: #B5838D; }
-.s9 .swatch, .s9.swatch { color: #FF9770; }
-.s10 .swatch, .s10.swatch { color: #C3A995; }
-.s11 .swatch, .s11.swatch { color: #84A59D; }
-.s12 .swatch, .s12.swatch { color: #FFD670; }
-.s13 .swatch, .s13.swatch { color: #90BE6D; }
-.s14 .swatch, .s14.swatch { color: #7F7EFF; }
+.swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  background: currentColor;
+}
 
-.legendText { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
-.legendName { color: #0f172a; font-size: 13px; }
-.legendNums { color: #475569; font-size: 12px; }
+.s0 .swatch,
+.s0.swatch {
+  color: #99ABC7;
+}
+
+.s1 .swatch,
+.s1.swatch {
+  color: #EB6D6F;
+}
+
+.s2 .swatch,
+.s2.swatch {
+  color: #FFC65B;
+}
+
+.s3 .swatch,
+.s3.swatch {
+  color: #7FB77E;
+}
+
+.s4 .swatch,
+.s4.swatch {
+  color: #E5989B;
+}
+
+.s5 .swatch,
+.s5.swatch {
+  color: #A5A6F6;
+}
+
+.s6 .swatch,
+.s6.swatch {
+  color: #FFB4A2;
+}
+
+.s7 .swatch,
+.s7.swatch {
+  color: #6EC5E9;
+}
+
+.s8 .swatch,
+.s8.swatch {
+  color: #B5838D;
+}
+
+.s9 .swatch,
+.s9.swatch {
+  color: #FF9770;
+}
+
+.s10 .swatch,
+.s10.swatch {
+  color: #C3A995;
+}
+
+.s11 .swatch,
+.s11.swatch {
+  color: #84A59D;
+}
+
+.s12 .swatch,
+.s12.swatch {
+  color: #FFD670;
+}
+
+.s13 .swatch,
+.s13.swatch {
+  color: #90BE6D;
+}
+
+.s14 .swatch,
+.s14.swatch {
+  color: #7F7EFF;
+}
+
+.legendText {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.legendName {
+  color: #0f172a;
+  font-size: 13px;
+}
+
+.legendNums {
+  color: #475569;
+  font-size: 12px;
+}
 
 @media (max-width: 520px) {
-  .body { grid-template-columns: 1fr; justify-items: center; }
+  .body {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
 }

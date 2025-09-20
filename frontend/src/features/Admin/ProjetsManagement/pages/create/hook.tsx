@@ -19,19 +19,19 @@ export type ProjectForm = {
   members: number[];
 };
 
-const MIN_DESC = 20; // description length threshold
+const MIN_DESC = 20; 
 
 export const useProjectCreate = () => {
   const navigate = useNavigate();
   const { clients } = useLoaderData() as ProjectsCreateLoader;
 
   const dispatch = useDispatch();
-  const usersOptions = useSelector(selectUsersRaw);       // any[]
-  const usersLoad = useSelector(selectUsersLoading);   // boolean
+  const usersOptions = useSelector(selectUsersRaw);       
+  const usersLoad = useSelector(selectUsersLoading);  
 
   useEffect(() => {
     if (!usersLoad && (!usersOptions || usersOptions.length === 0)) {
-      dispatch(fetchUsers(undefined)); // no filters
+      dispatch(fetchUsers(undefined)); 
     }
   }, [dispatch, usersLoad, usersOptions]);
 

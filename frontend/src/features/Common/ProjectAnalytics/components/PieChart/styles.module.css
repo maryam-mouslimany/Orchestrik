@@ -1,4 +1,3 @@
-/* src/components/charts/PieMini/styles.module.css */
 .card {
   background: #fff;
   border: 1px solid #eef2f7;
@@ -41,4 +40,3 @@
 }
 .tipRow { display: grid; grid-auto-flow: column; justify-content: start; gap: 6px; }
 .tipKey { color: #64748b; }
-/* src/features/.../analytics/styles.module.css */
