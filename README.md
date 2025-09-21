@@ -34,18 +34,11 @@
 <!-- Demo -->
 <img src="./readme/title5.svg"/>
 
-### Admin Screens 
+### Admin Screens
 
-<table>
-  <tr>
-    <th>Dashboard</th>
-    <th>Dashboard</th>
-  </tr>
-  <tr>
-    <td><img src="./readme/demo/dashboard1.png" width="900" height="506"></td>
-    <td><img src="./readme/demo/dashboard.gif"  width="900" height="506"></td>
-  </tr>
-</table>
+| Dashboard                            | Dashboard                       |                         |
+| --------------------------------------- | ------------------------------------- | ------------------------------------- |
+| ![Landing](./readme/demo/dashboard1.png) | ![fsdaf](./readme/demo/dashboard_1920x1080.gif)| 
 
 | Create Project                            |   Users Management                   |                         |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
@@ -64,8 +57,8 @@
     <th>Create Task</th>
   </tr>
   <tr>
-    <td><img src="./readme/demo/pm_tasks.png" width="900" height="506"></td>
-    <td><img src="./readme/demo/create_task.gif" width="900" height="506"></td>
+    <td><img src="./readme/demo/pm_tasks.png" width="900"></td>
+    <td><img src="./readme/demo/create_task.gif" width="900"></td>
   </tr>
 </table>
 
