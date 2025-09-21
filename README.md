@@ -42,7 +42,7 @@
 
 | Create Project                            |   Users Management                   |                         |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/create_project.png) | ![fsdaf](./readme/demo/users.png) |
+| ![Landing](./readme/demo/create_project.gif) | ![fsdaf](./readme/demo/users.png) |
 
 
 ### Project Manager Screens 
@@ -51,16 +51,9 @@
 | --------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/pm_projects.png) | ![fsdaf](./readme/demo/pm_analytics.png) |
 
-<table>
-  <tr>
-    <th>Tasks assigned by this PM</th>
-    <th>Create Task</th>
-  </tr>
-  <tr>
-    <td><img src="./readme/demo/pm_tasks.png" width="900"></td>
-    <td><img src="./readme/demo/create_task.gif" width="900"></td>
-  </tr>
-</table>
+| Dashboard                            | Dashboard                       |                         |
+| --------------------------------------- | ------------------------------------- | ------------------------------------- |
+| ![Landing](./readme/demo/pm_tasks.png) | ![fsdaf](./readme/demo/create_task.gif)| 
 
 
 ### Employee Screens 
@@ -69,9 +62,7 @@
 | --------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/employee_tasks.png) | ![fsdaf](./readme/demo/employee_edit_task.png) |
 
-| Projects Managed by this PM                           | Project Analytics                       |
-| --------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/dashboard.gif) | ![fsdaf](./readme/demo/create_task.gif) |
+
 <br><br>
 
 <!-- Development & Testing -->
