@@ -18,13 +18,19 @@
 ### Component Diagram
 <img src="./readme/system_design/system_architecture.png"/>
 
-<br>
-
 <!-- Project Highlights -->
 <img src="./readme/title4.svg"/>
 
-### Add Title Here
-- List the sexy features.
+### Project Highlights
+
+- **AI Agent Auto-Assign:** Takes the task title and description, extracts the required skills, matches them to members’ skill profiles, and if multiple qualify compares current workload (e.g., open tasks) to assign the least-loaded qualified member.
+
+- **n8n Automation (Slack Channel Creation):** On project creation, an n8n workflow creates a Slack channel, invites the team members, and posts a kickoff message so collaboration starts instantly.
+
+- **Clear Charts & Data Visualization:** Dashboards show status breakdowns, per-assignee and per-project views, and trends over time (throughput, cycle time, reopens, overdues), with filters and tooltips for quick drill-downs.
+
+- **Live Notifications:** Real-time notifications let users know when they’re assigned, mentioned, or when task status changes, updating badges and lists instantly without refresh.
+
 
 <br>
 
@@ -84,19 +90,19 @@ n8n Automation: Slack Channel Creation
 | ![Landing](./readme/testing/ci1.png)     | ![fsdaf](./readme/testing/ci2.png) |
 
 ### Linear
-
-**We use Linear to plan sprints, track issues, and connect work with code.** Epics and issues in Linear mirror Orchestrik’s project/task states, so status changes in one place reflect across the board, analytics stay accurate, and ownership is always visible.
+I chose Linear to manage tasks and sprints because it keeps development work connected to issues. Each feature or bug fix starts with a Linear ticket, which links directly to branches, commits, and pull requests, making the workflow easier to follow.
 
 |                                          |                                    |
 | ---------------------------------------- | ---------------------------------- |
 | ![Landing](./readme/testing/linear1.png) | ![fsdaf](./readme/testing/linear2.png) |
 
 #### Linear Workflow (high level)
-1. **Create issue/epic** → define scope and acceptance criteria.  
-2. **Prioritize & assign** → owner + due date mapped to Orchestrik.  
-3. **Link PRs/commits** → dev progress auto-updates status.  
-4. **Review & QA** → moves through review → done with audit trail.  
-5. **Report** → velocity, cycle time, and status feed dashboards.
+Create a ticket in Linear →  
+Create a Git branch (following Linear’s naming conventions) →  
+Commit changes (include the corresponding task ID in the commit message) →  
+Push the branch to the remote repository →  
+Open a pull request and request a review →  
+Merge the pull request once it has been reviewed and approved.
 
 <br>
 
