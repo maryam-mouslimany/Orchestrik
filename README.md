@@ -80,11 +80,15 @@ n8n Automation: Slack Channel Creation
 
 ### Services, Validation and Testing 
 
-
 | Services                            | Validation                       | Testing                        |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/testing/service.png) | ![fsdaf](./readme/testing/validation.png) | ![fsdaf](./readme/testing/tests.png) |
 
+### Ci Workflow 
+
+| Ai Agent Auto Assign                    | Data Visualization                    |
+| --------------------------------------- | ------------------------------------- |
+| ![Landing](./readme/testing/ci1.png)    | ![fsdaf](./readme/testing/ci1.png)    |
 
 <br><br>
 
