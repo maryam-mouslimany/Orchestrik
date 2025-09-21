@@ -38,7 +38,7 @@
 
 | Dashboard                            | Dashboard                       |                         |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/dashboard1.png) | ![fsdaf](./readme/demo/dashboard_1920x1080.gif)| 
+| ![Landing](./readme/demo/dashboard1.png) | ![fsdaf](./readme/demo/dashboard.gif)| 
 
 | Create Project                            |   Users Management                   |                         |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
