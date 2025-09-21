@@ -129,11 +129,16 @@ Merge the pull request once it has been reviewed and approved.
 <!-- Deployment -->
 <img src="./readme/title7.svg"/>
 
-### Add Title Here
-- Description here.
+### Deployment (Workflow)
 
-| Postman API 1                            | Postman API 2                       | Postman API 3                        |
-| ---------------------------------------- | ----------------------------------- | ------------------------------------ |
-| ![Landing](./readme/demo/1440x1024.png)  | ![fsdaf](./readme/demo/postman2.png) | ![fsdaf](./readme/demo/posstman3.png) |
+1. Create a feature branch locally (API: Laravel, Web: React, Agent: FastAPI).
+2. Push the branch to origin and open a PR.
+3. Merge the PR into `dev`.
+4. **CI (GitHub Actions)** on `dev`: boot test DB → run migrations & tests → build **Docker images** for `api`, `web` → push to registry.
+5. **CD to Staging (AWS EC2)**: pull images → `docker compose -f docker-compose.prod.yml up -d` → `php artisan migrate --force` on the `api` container.
+6. QA on staging (dashboards, auto-assign agent, n8n Slack workflow).
+7. Merge `dev` → `main`.
+8. **CI/CD for Production**: repeat step 4 (build & push) → deploy to prod server with the same Compose file → run migrations.
+9. Rollback: redeploy a previous image tag; restore DB backup if needed.
 
 <br>
