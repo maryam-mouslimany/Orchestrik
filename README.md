@@ -34,14 +34,16 @@
 <!-- Demo -->
 <img src="./readme/title5.svg"/>
 
+### Admin Screens 
+
 <table>
   <tr>
-    <th>Tasks assigned by this PM</th>
-    <th>Create Task</th>
+    <th>Dashboard</th>
+    <th>Dashboard</th>
   </tr>
   <tr>
-    <td><img src="./readme/demo/dashboard1.png" width="900"></td>
-    <td><img src="./readme/demo/dashboard.gif" width="900"></td>
+    <td><img src="./readme/demo/dashboard1.png" width="900" height="506"></td>
+    <td><img src="./readme/demo/dashboard.gif"  width="900" height="506"></td>
   </tr>
 </table>
 
@@ -62,8 +64,8 @@
     <th>Create Task</th>
   </tr>
   <tr>
-    <td><img src="./readme/demo/pm_tasks.png" width="900"></td>
-    <td><img src="./readme/demo/create_task.gif" width="900"></td>
+    <td><img src="./readme/demo/pm_tasks.png" width="900" height="506"></td>
+    <td><img src="./readme/demo/create_task.gif" width="900" height="506"></td>
   </tr>
 </table>
 
