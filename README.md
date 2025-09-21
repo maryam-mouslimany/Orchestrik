@@ -131,14 +131,15 @@ Merge the pull request once it has been reviewed and approved.
 
 ### Deployment (Workflow)
 
-1. Create a feature branch locally (API: Laravel, Web: React, Agent: FastAPI).
-2. Push the branch to origin and open a PR.
-3. Merge the PR into `dev`.
-4. **CI (GitHub Actions)** on `dev`: boot test DB → run migrations & tests → build **Docker images** for `api`, `web` → push to registry.
-5. **CD to Staging (AWS EC2)**: pull images → `docker compose -f docker-compose.prod.yml up -d` → `php artisan migrate --force` on the `api` container.
-6. QA on staging (dashboards, auto-assign agent, n8n Slack workflow).
-7. Merge `dev` → `main`.
-8. **CI/CD for Production**: repeat step 4 (build & push) → deploy to prod server with the same Compose file → run migrations.
-9. Rollback: redeploy a previous image tag; restore DB backup if needed.
+- Create a feature branch locally.
+- Push the branch to origin and open a pull request.
+- Merge the pull request into dev.
+- CI on dev runs tests, builds Docker images for the services, and pushes them to the registry.
+- Deploy to staging: pull images, start the stack with docker compose, then run database migrations.
+- QA on staging.
+- Merge dev into main.
+- CI/CD for production: rebuild and push images, deploy with the same compose file, and run migrations.
+- Roll back by redeploying a previous image tag and restoring a recent database backup if needed.
+
 
 <br>
