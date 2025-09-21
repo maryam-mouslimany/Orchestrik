@@ -38,11 +38,11 @@
 
 | Dashboard                            | Dashboard                       |                         |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/dashboard1.png) | ![fsdaf](./readme/demo/dashboard.gif)| 
+| ![Landing](./readme/demo/dashboard1.png) | ![fsdaf](./readme/demo/dashboard2.png)| 
 
 | Create Project                            |   Users Management                   |                         |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/create_project.gif) | ![fsdaf](./readme/demo/users.png) |
+| ![Landing](./readme/demo/create_project.png) | ![fsdaf](./readme/demo/users.png) |
 
 
 ### Project Manager Screens 
@@ -51,9 +51,9 @@
 | --------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/pm_projects.png) | ![fsdaf](./readme/demo/pm_analytics.png) |
 
-| Dashboard                            | Dashboard                       |                         |
+| View Tasks                             | Create Task                       |                         |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/pm_tasks.png) | ![fsdaf](./readme/demo/create_task.gif)| 
+| ![Landing](./readme/demo/pm_tasks.png) | ![fsdaf](./readme/demo/pm_create_task.png)| 
 
 
 ### Employee Screens 
@@ -61,6 +61,16 @@
 | Assigned Tasks                            | Mark Task progress                        |
 | --------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/employee_tasks.png) | ![fsdaf](./readme/demo/employee_edit_task.png) |
+
+### Sexy Features 
+
+| Ai Agent Auto Assign                           | Data Visualization                        |
+| --------------------------------------- | ------------------------------------- |
+| ![Landing](./readme/demo/create_task.gif) | ![fsdaf](./readme/demo/dashboard.gif) |
+
+
+Slack Channel Creation                                               
+![fsdaf](./readme/demo/create_project.gif) 
 
 
 <br><br>
