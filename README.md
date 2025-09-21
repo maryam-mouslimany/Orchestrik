@@ -69,7 +69,9 @@
 | --------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/employee_tasks.png) | ![fsdaf](./readme/demo/employee_edit_task.png) |
 
-
+| Projects Managed by this PM                           | Project Analytics                       |
+| --------------------------------------- | ------------------------------------- |
+| ![Landing](./readme/demo/dashboard.gif) | ![fsdaf](./readme/demo/create_task.gif) |
 <br><br>
 
 <!-- Development & Testing -->
