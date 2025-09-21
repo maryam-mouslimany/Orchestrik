@@ -9,16 +9,13 @@ use Illuminate\Support\Facades\DB;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    // Run your DatabaseSeeder before each test
     $this->seed();
 });
 
 it('logs in with valid credentials and returns token + relations', function () {
-    // Get seeded role and position IDs
     $roleId = DB::table('roles')->first()->id;
     $positionId = DB::table('positions')->first()->id;
 
-    // Create a user linked to seeded data
     User::factory()->create([
         'name'              => 'Test User',
         'email'             => 'test@example.com',

@@ -16,11 +16,9 @@ beforeEach(function () {
 
 function usersStoreUrl(): string
 {
-    // Your exact endpoint
     return '/api/admin/users/create';
 }
 
-/** Build Authorization header for JWT. */
 function authHeaders(User $user): array
 {
     $token = JWTAuth::fromUser($user);
@@ -42,14 +40,12 @@ function makeAdmin(): User
     ]);
 }
 
-/** 1) Happy path: creates user, hashes password, attaches skills, returns relations. */
 it('creates a user and attaches skills (201 or 200)', function () {
     $admin = makeAdmin();
 
     $roleId     = DB::table('roles')->where('name', 'Employee')->value('id') ?? DB::table('roles')->first()->id;
     $positionId = DB::table('positions')->first()->id;
 
-    // Ensure we have at least 2 valid skills
     $skills = Skill::query()->take(2)->pluck('id')->all();
     if (count($skills) < 2) {
         $skills = Skill::factory()->count(2)->create()->pluck('id')->all();
@@ -67,7 +63,6 @@ it('creates a user and attaches skills (201 or 200)', function () {
     $res = $this->withHeaders(authHeaders($admin))
                 ->postJson(usersStoreUrl(), $payload);
 
-    // Accept either 200 or 201
     expect([200, 201])->toContain($res->getStatusCode());
 
     $res->assertJson(fn (AssertableJson $json) =>
@@ -89,7 +84,6 @@ it('creates a user and attaches skills (201 or 200)', function () {
         ->toEqualCanonicalizing($skills);
 });
 
-/** 2) Validation: matches your FormRequest rules (422). */
 it('validates payload (422)', function () {
     $admin = makeAdmin();
 
@@ -97,10 +91,10 @@ it('validates payload (422)', function () {
                 ->postJson(usersStoreUrl(), [
                     'name'        => '',
                     'email'       => 'not-an-email',
-                    'password'    => '123',   // too short (<6)
-                    'role_id'     => 999999,  // not exists
-                    'position_id' => 999999,  // not exists
-                    'skills'      => ['x'],   // not integer → triggers skills.0
+                    'password'    => '123',   
+                    'role_id'     => 999999,  
+                    'position_id' => 999999,  
+                    'skills'      => ['x'],   
                 ]);
 
     $res->assertStatus(422)
@@ -110,11 +104,10 @@ it('validates payload (422)', function () {
             'password',
             'role_id',
             'position_id',
-            'skills.0',   // do not expect top-level 'skills' here
+            'skills.0',  
         ]);
 });
 
-/** 3) Duplicate email (422). */
 it('rejects duplicate email (422)', function () {
     $admin = makeAdmin();
 
@@ -129,7 +122,7 @@ it('rejects duplicate email (422)', function () {
 
     $payload = [
         'name'        => 'Dup Name',
-        'email'       => 'dup@example.com', // duplicate
+        'email'       => 'dup@example.com', 
         'password'    => 'Passw0rd!',
         'role_id'     => $roleId,
         'position_id' => $positionId,
@@ -142,7 +135,6 @@ it('rejects duplicate email (422)', function () {
     $res->assertStatus(422)->assertJsonValidationErrors(['email']);
 });
 
-/** 4) Invalid skill id inside array (422). */
 it('rejects invalid skill ids (422)', function () {
     $admin = makeAdmin();
 
@@ -155,7 +147,7 @@ it('rejects invalid skill ids (422)', function () {
         'password'    => 'Passw0rd!',
         'role_id'     => $roleId,
         'position_id' => $positionId,
-        'skills'      => [999999], // not exists
+        'skills'      => [999999], 
     ];
 
     $res = $this->withHeaders(authHeaders($admin))

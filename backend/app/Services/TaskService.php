@@ -31,32 +31,35 @@ class TaskService
         return $task;
     }
 
-    static function editStatus($data, $taskId)
-    {
-        try {
-            $task = Task::findOrFail($taskId);
-            $oldStatus = $task->status;
-
-            $updateData = ['status' => $data['status']];
-            if (isset($data['duration'])) {
-                $updateData['duration'] = $data['duration'];
-            }
-
-            $task->update($updateData);
-
-            TaskStatusLog::create([
-                'task_id'    => $task->id,
-                'from_status' => $oldStatus,
-                'to_status'  => $data['status'],
-                'changed_by' =>  auth()->user()->id,
-                'note'       => $data['note'] ?? null,
-            ]);
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-        }
-        return $task;
+    
+static function editStatus(array $data, $taskId)
+{
+    try {
+        $task = Task::findOrFail($taskId); // if not found, handled below
+    } catch (ModelNotFoundException $e) {
+        // Return null so the controller hits: if (!$task) return error('Status not updated successfully');
+        return null;
     }
 
+    $oldStatus = $task->status;
+
+    $updateData = ['status' => $data['status']];
+    if (isset($data['duration'])) {
+        $updateData['duration'] = $data['duration'];
+    }
+
+    $task->update($updateData);
+
+    TaskStatusLog::create([
+        'task_id'     => $task->id,
+        'from_status' => $oldStatus,
+        'to_status'   => $data['status'],
+        'changed_by'  => auth()->id(),
+        'note'        => $data['note'] ?? null,
+    ]);
+
+    return $task;
+}
     static function employeeTasks($request)
     {
         $filters      = $request['filters'] ?? $request;

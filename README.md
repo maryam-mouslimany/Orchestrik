@@ -20,7 +20,7 @@
 
 <img src="./readme/system_design/system_architecture.png"/>
 
-<br><br>
+<br>
 
 <!-- Project Highlights -->
 <img src="./readme/title4.svg"/>
@@ -69,7 +69,7 @@
 | ![Landing](./readme/demo/create_task.gif) | ![fsdaf](./readme/demo/dashboard.gif) |
 
 
-Slack Channel Creation                                               
+n8n Automation: Slack Channel Creation                                               
 ![fsdaf](./readme/demo/create_project.gif) 
 
 
@@ -83,7 +83,7 @@ Slack Channel Creation
 
 | Services                            | Validation                       | Testing                        |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| ![Landing](./readme/testing/service.png) | ![fsdaf](./readme/testing/validation.png) | ![fsdaf](./readme/testing/tests.png) |
 
 
 <br><br>

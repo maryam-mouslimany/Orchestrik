@@ -18,12 +18,12 @@ class StoreTaskRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'priority' => 'required|in:low,medium,high',
+            'priority' => 'required|in:low, medium, high',
             'status' => 'sometimes|in:pending, in progress, completed, reopened',
             'deadline' => 'nullable|date',
             'project_id' => 'required|exists:projects,id',
             'assigned_to' => 'required|exists:users,id'
-        
+
         ];
     }
 }
