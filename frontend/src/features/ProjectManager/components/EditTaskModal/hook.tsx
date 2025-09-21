@@ -46,7 +46,7 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
     setTitle(t.title ?? '');
     setDescription(t.description ?? '');
     setStatus(t.status ?? '');
-    setOriginalStatus(t.status ?? ''); // NEW
+    setOriginalStatus(t.status ?? ''); 
     setNote('');
     setDuration('');
     setError(null);
@@ -94,16 +94,13 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
 
   useEffect(() => { void fetchDetails(); }, [fetchDetails]);
 
-  // NEW: clear error as user edits fields
   useEffect(() => {
     if (error) setError(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, note, duration]);
 
   const submit = useCallback(async () => {
     if (!taskId) return;
 
-    // CHANGED: run validator so user sees messages (even if button enabled)
     const msg = validate();
     if (msg) {
       setError(msg);
@@ -135,7 +132,7 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
     } finally {
       setSaving(false);
     }
-  }, [taskId, status, note, duration, onClose, originalStatus]); // CHANGED deps (removed canSubmit)
+  }, [taskId, status, note, duration, onClose, originalStatus]); 
 
   return {
     loading, saving, error,

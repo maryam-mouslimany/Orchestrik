@@ -37,7 +37,6 @@ const ProjectCreatePage: React.FC = () => {
         />
       </div>
 
-      {/* Description — full width + live hint */}
       <div className={styles.fieldWrap}>
         <Input
           label="Description"
@@ -50,7 +49,6 @@ const ProjectCreatePage: React.FC = () => {
         )}
       </div>
 
-      {/* Client + PM — two columns */}
       <div className={styles.rowTwo}>
         <div className={styles.fieldWrap}>
           <SelectFilter
@@ -73,7 +71,6 @@ const ProjectCreatePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Members — full width + live hint */}
       <div className={styles.fieldWrap}>
         <MultipleSelectChip
           label="Members"

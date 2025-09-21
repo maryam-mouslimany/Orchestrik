@@ -19,7 +19,6 @@ export default function EstimateVsActualScatter({ tasks }: { tasks: TaskRow[] })
   const maxVal = Math.max(1, ...tasks.flatMap(t => [t.estimated, t.actual]));
   const padMax = Math.ceil(maxVal * 1.1);
 
-  // --- ONLY NEW PART: Y = X reference line ---
   const refLine = ({ xScale, yScale }: any) => (
     <line
       className={styles.refLine}

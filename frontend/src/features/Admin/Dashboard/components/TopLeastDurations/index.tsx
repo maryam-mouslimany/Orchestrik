@@ -9,7 +9,6 @@ export default function TopLeastDurationsCompact({
   const [tab, setTab] = useState<"most" | "least">("most");
   const items = tab === "most" ? most : least;
 
-  // both arrays are already ordered by API; pick a max for meter scale
   const max = items.length
     ? (tab === "most" ? items[0].duration : items[items.length - 1].duration)
     : 0;

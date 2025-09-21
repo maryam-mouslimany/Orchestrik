@@ -9,14 +9,12 @@ interface CustomInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 
-  // NEW (for native autofill/suggestions and accessibility)
   id?: string;
   name?: string;
-  autoComplete?: string;     // e.g. "username", "email", "current-password"
-  autoCapitalize?: string;   // e.g. "none"
-  autoCorrect?: string;      // e.g. "off"
+  autoComplete?: string;     
+  autoCapitalize?: string;  
+  autoCorrect?: string;      
 
-  // NEW (proper clear handler so we don’t fake events)
   onClear?: () => void;
 }
 

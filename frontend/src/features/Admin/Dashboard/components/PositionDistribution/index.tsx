@@ -2,9 +2,9 @@ import styles from "./styles.module.css";
 import  { type PositionDistribution } from "../../../../../routes/loaders/dashboardLoader";
 
 type Props = {
-  data: PositionDistribution[];       // ← pass your loader's positions here
-  size?: number;             // optional (default 240)
-  title?: string;            // optional (default "Positions Distribution")
+  data: PositionDistribution[];      
+  size?: number;             
+  title?: string;           
 };
 
 export default function PositionDistribution({
@@ -21,7 +21,6 @@ export default function PositionDistribution({
     return <div className={styles.card}>No position data.</div>;
   }
 
-  // Donut geometry
   const r = size * 0.36;
   const cx = size / 2;
   const cy = size / 2;
@@ -73,7 +72,6 @@ export default function PositionDistribution({
             );
           })}
 
-          {/* center label: largest slice */}
           <g aria-hidden="true">
             <text x={cx} y={cy - 6} textAnchor="middle" className={styles.centerBig}>
               {topPct}%
@@ -84,7 +82,6 @@ export default function PositionDistribution({
           </g>
         </svg>
 
-        {/* legend */}
         <ul className={styles.legend} aria-label="Legend">
           {series.map((s, i) => {
             const pct = Math.round((s.count / total) * 100);

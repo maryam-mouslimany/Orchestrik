@@ -1,4 +1,3 @@
-// src/features/NotificationsModal/index.tsx
 import React from 'react';
 import Modal from '../../components/Modal';
 import styles from './styles.module.css';
@@ -44,7 +43,6 @@ const NotificationsModal: React.FC<Props> = ({ open, onClose }) => {
                       await markRead(n.id);
                     } catch (e) {
                       console.error('markRead failed', e);
-                      // Optional: show a toast if you have one
                     }
                   }}
                 >

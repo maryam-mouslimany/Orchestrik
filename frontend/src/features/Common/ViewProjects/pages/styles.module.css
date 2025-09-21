@@ -47,15 +47,14 @@
   width:100%;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* search left, button right */
-  gap: 12px;                 /* space between search and button */
+  justify-content: space-between; 
+  gap: 12px;                 
   margin-bottom: 12px;
 }
 
-/* search should NOT take full width */
+
 .filterSearch {
-  width: 280px;              /* adjust as you like (e.g., 320px) */
+  width: 280px;              
   max-width: 100%;
 }
 
-/* existing grid (keep yours if already defined) */

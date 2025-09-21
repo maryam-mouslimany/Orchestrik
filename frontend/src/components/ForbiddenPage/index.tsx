@@ -10,7 +10,7 @@ const ForbiddenPage: React.FC = () => {
 
   const role = String(user?.role?.name || '').toLowerCase();
   const mapped = roleHome[role] || '/';
-  const homePath = mapped.startsWith('/') ? mapped : `/${mapped}`; // normalize
+  const homePath = mapped.startsWith('/') ? mapped : `/${mapped}`; 
 
   return (
     <main className={styles.wrapper} aria-labelledby="forbidden-title">

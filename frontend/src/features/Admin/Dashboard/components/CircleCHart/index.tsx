@@ -4,23 +4,19 @@ import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
 } from "recharts";
 
-/** Unified shape for both skills & positions */
 export type DistItem = {
-  name: string;     // skill or position
-  count: number;    // number of employees
-  percentage?: number; // optional (will be recomputed if missing)
+  name: string;     
+  count: number;    
+  percentage?: number; 
 };
 
 type Props = {
   title?: string;
   data: DistItem[];
-  /** Optional custom colors (falls back to brand-friendly palette) */
   colors?: string[];
-  /** Height of the chart area (px) */
   height?: number;
 };
 
-/** Brand-friendly muted palette (distinct colors; #99ABC7, #EB6D6F, #FFC65B included) */
 const DEFAULT_COLORS = [
   "#99ABC7","#EB6D6F","#FFC65B","#7FB77E","#6EC5E9",
   "#A5A6F6","#FFB4A2","#84A59D","#B5838D","#90BE6D",
@@ -34,12 +30,10 @@ function calcTotal(items: DistItem[]) {
 function renderPercentLabel(props: any) {
   const { cx, cy, midAngle, outerRadius, percent } = props;
   const RAD = Math.PI / 180;
-  // place label slightly inside the slice
   const r = outerRadius * 0.62;
   const x = cx + r * Math.cos(-midAngle * RAD);
   const y = cy + r * Math.sin(-midAngle * RAD);
   const pct = Math.round((percent || 0) * 100);
-  // only draw if slice is big enough
   if (pct < 4) return null;
   return (
     <text x={x} y={y} textAnchor="middle" dominantBaseline="middle"
@@ -55,7 +49,7 @@ export default function UnifiedCircleChart({
   colors = DEFAULT_COLORS,
   height = 280,
 }: Props) {
-  // clean + sort by count desc so big ones start at top-right & look stable
+
   const cleaned = useMemo(() => {
     const arr = (Array.isArray(data) ? data : [])
       .filter(d => d && typeof d.name === "string" && Number.isFinite(Number(d.count)) && d.count > 0);
@@ -84,8 +78,8 @@ export default function UnifiedCircleChart({
               cx="50%"
               cy="50%"
               outerRadius="95%"
-              innerRadius={0}           // <- filled circle (not donut)
-              isAnimationActive={false} // clean, stable render
+              innerRadius={0}          
+              isAnimationActive={false} 
               label={renderPercentLabel}
               labelLine={false}
             >
@@ -102,12 +96,12 @@ export default function UnifiedCircleChart({
                 boxShadow: "0 8px 24px rgba(2,6,23,.08)",
               }}
               formatter={(value: any, _name: any, ctx: any) => {
-                // show "count users" on hover
+
                 const v = Number(value) || 0;
                 const suffix = v === 1 ? "user" : "users";
                 return [`${v} ${suffix}`, ctx?.payload?.name];
               }}
-              labelFormatter={() => ""} // we handle label in formatter above
+              labelFormatter={() => ""} 
             />
           </PieChart>
         </ResponsiveContainer>

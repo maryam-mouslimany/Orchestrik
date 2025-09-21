@@ -1,4 +1,3 @@
-// components/DateField/index.tsx
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -9,7 +8,7 @@ import styles from './styles.module.css';
 type Props = {
   label?: string;
   placeholder?: string;
-  value: string; // 'YYYY-MM-DD' or ''
+  value: string; 
   onChange: (e: { target: { value: string } }) => void;
   disabled?: boolean;
 };

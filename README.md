@@ -18,6 +18,7 @@
 ### Component Diagram
 <img src="./readme/system_design/system_architecture.png"/>
 
+<br>
 <!-- Project Highlights -->
 <img src="./readme/title4.svg"/>
 
@@ -30,7 +31,6 @@
 - **Clear Charts & Data Visualization:** Dashboards show status breakdowns, per-assignee and per-project views, and trends over time (throughput, cycle time, reopens, overdues), with filters and tooltips for quick drill-downs.
 
 - **Live Notifications:** Real-time notifications let users know when they’re assigned, mentioned, or when task status changes, updating badges and lists instantly without refresh.
-
 
 <br>
 
@@ -104,6 +104,26 @@ Push the branch to the remote repository →
 Open a pull request and request a review →  
 Merge the pull request once it has been reviewed and approved.
 
+### API Docs & Testing (Swagger & Postman)
+
+**Swagger:** Live API documentation with schemas and a “Try it out” panel to execute requests against your local server.  
+**Postman:** Versioned collections and environments for manual testing and quick regression checks.
+
+#### Swagger
+
+|  |  |
+| --- | --- |
+| ![](./readme/testing/swagger1.png) | ![](./readme/testing/swagger2.png) |
+
+#### Postman
+
+### Postman
+
+| Environement | Postman Request & Response | Postman Request & Response |
+| --- | --- | --- |
+| ![](./readme/testing/environment.png) | ![](./readme/testing/postman2.png) | ![](./readme/testing/postman3.png) |
+
+
 <br>
 
 <!-- Deployment -->
@@ -114,6 +134,6 @@ Merge the pull request once it has been reviewed and approved.
 
 | Postman API 1                            | Postman API 2                       | Postman API 3                        |
 | ---------------------------------------- | ----------------------------------- | ------------------------------------ |
-| ![Landing](./readme/demo/1440x1024.png)  | ![fsdaf](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| ![Landing](./readme/demo/1440x1024.png)  | ![fsdaf](./readme/demo/postman2.png) | ![fsdaf](./readme/demo/posstman3.png) |
 
 <br>

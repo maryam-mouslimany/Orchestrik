@@ -16,7 +16,6 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   const [user, setUserState] = useState<AppUser | null>(() => authService.getUser());
   const [loading, setLoading] = useState(false);
 
-  // Persist to storage whenever user changes
   useEffect(() => {
     if (user) authService.setUser(user);
     else authService.clear();
@@ -33,7 +32,6 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     setUserState(prev => (prev ? { ...prev, ...patch } : prev));
   };
 
-  // CHANGED: clear storage and in-memory user
   const logout = () => {
     authService.clear();
     setUserState(null);

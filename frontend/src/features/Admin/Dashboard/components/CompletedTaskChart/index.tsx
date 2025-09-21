@@ -41,8 +41,8 @@ const Completed7dChartCard: React.FC<Props> = ({ title = "Completed (Last 7 Days
         <ResponsiveContainer>
           <BarChart
             data={data}
-            barCategoryGap="35%"      /* ← gap between categories (dates) */
-            barGap={8}                /* ← gap between multiple <Bar>s (if you add more) */
+            barCategoryGap="35%"      
+            barGap={8}                
           >
             <defs>
               <linearGradient id="barFill" x1="0" y1="0" x2="0" y2="1">

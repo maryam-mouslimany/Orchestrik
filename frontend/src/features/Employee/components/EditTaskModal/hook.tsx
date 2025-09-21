@@ -19,7 +19,6 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
   const [saving, setSaving]   = useState(false);
   const [error, setError]     = useState<string | null>(null);
 
-  // displayed
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
@@ -27,12 +26,11 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
   const [status, setStatus] = useState<string>('');
   const [note, setNote] = useState('');
   const [duration, setDuration] = useState('');
-  const [originalStatus, setOriginalStatus] = useState<string>(''); // NEW
+  const [originalStatus, setOriginalStatus] = useState<string>(''); 
 
   const isCompleted = status === 'completed';
 
-  // CHANGED: canSubmit = only “fields present” check (do NOT include "unchanged" here
-  // so the user can still click and SEE the error message).
+
   const canSubmit = useMemo(() => {
     if (!status) return false;
     if (isCompleted) {
@@ -46,13 +44,12 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
     setTitle(t.title ?? '');
     setDescription(t.description ?? '');
     setStatus(t.status ?? '');
-    setOriginalStatus(t.status ?? ''); // NEW
+    setOriginalStatus(t.status ?? ''); 
     setNote('');
     setDuration('');
-    setError(null); // NEW: clear any previous error when loading a new task
+    setError(null); 
   }, []);
 
-  // NEW: minimal validator for visible messages
   const validate = (): string | null => {
     if (!status) return 'Please select a status.';
     if (status === 'completed') {
@@ -87,16 +84,13 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
 
   useEffect(() => { void fetchDetails(); }, [fetchDetails]);
 
-  // NEW: clear error as user edits fields
   useEffect(() => {
     if (error) setError(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, note, duration]);
 
   const submit = useCallback(async () => {
     if (!taskId) return;
 
-    // CHANGED: run validator so user sees messages (even if button enabled)
     const msg = validate();
     if (msg) {
       setError(msg);
@@ -125,7 +119,7 @@ export const useEditTaskModal = ({ open, onClose, taskId }: EditTaskModalHookArg
     } finally {
       setSaving(false);
     }
-  }, [taskId, status, note, duration, onClose, originalStatus]); // CHANGED deps (removed canSubmit)
+  }, [taskId, status, note, duration, onClose, originalStatus]); 
   
   return {
     loading, saving, error,

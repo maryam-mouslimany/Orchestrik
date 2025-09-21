@@ -9,7 +9,7 @@ export type SkillRow = { name: string; count: number; percentage?: number };
 type Props = {
   title?: string;
   data: SkillRow[];
-  topN?: number;          // default 15
+  topN?: number;          
   className?: string;
 };
 
@@ -45,7 +45,6 @@ export default function SkillsBarChartCard({
       .slice(0, topN);
   }, [data, topN]);
 
-  // pick a height bucket via class (no inline)
   const rows = cleaned.length;
   const heightClass =
     rows <= 6  ? styles.h220 :

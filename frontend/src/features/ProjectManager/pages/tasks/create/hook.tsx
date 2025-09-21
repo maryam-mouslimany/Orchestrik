@@ -16,7 +16,6 @@ export const useTaskCreate = () => {
 
   const navigate = useNavigate();
   const { projectsList: projectsOptions } = useSelector((s: any) => s.projects);
-  //console.log(projectsOptions)
   const dispatch = useDispatch<AppDispatch>();
   const projectOptions = useSelector(selectProjectsList);
   const usersLoad = useSelector(selectProjectsLoaded);
@@ -67,10 +66,8 @@ export const useTaskCreate = () => {
     return () => { cancel = true; };
   }, [projectId, setField]);
 
-  // add this near your other state:
   const reasonTimer = useRef<number | null>(null);
 
-  // updated recommendAssignee
   const recommendAssignee = async () => {
     if (!values.project_id) return;
 
@@ -99,7 +96,7 @@ export const useTaskCreate = () => {
         reasonTimer.current = window.setTimeout(() => {
           setRecReason('');
           reasonTimer.current = null;
-        }, 20000); // 20s
+        }, 20000); 
       }
     } finally {
       setRecLoading(false);
@@ -132,7 +129,6 @@ export const useTaskCreate = () => {
 
     } finally { setCreateLoading(false); }
   };
-  //console.log(values)
   return {
     values, setField, reset,
     projectsOptions, members,

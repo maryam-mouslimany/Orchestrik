@@ -28,15 +28,12 @@ export type SimpleMuiTableProps<T> = {
   columns: Column<T>[];
   getRowId?: (row: T, index: number) => string | number;
 
-  /** Optional expansion; omit or set enabled:false for a flat table */
   expandable?: ExpansionConfig & {
     renderExpanded: (row: T) => React.ReactNode;
     isRowExpandable?: (row: T) => boolean;
   };
 
-  /** Pass MUI sx straight to TableContainer if needed */
   sx?: any;
-  /** Optional className for outer container */
   className?: string;
 };
 

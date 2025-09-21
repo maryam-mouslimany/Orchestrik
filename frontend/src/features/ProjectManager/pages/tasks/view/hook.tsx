@@ -1,4 +1,3 @@
-// src/pages/.../useTasksTable.ts
 import apiCall from '../../../../../services/apiCallService';
 import { type Column } from '../../../../../components/Table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -41,11 +40,10 @@ export const useTasksTable = () => {
       dispatch(fetchProjects());
     }
     if (!loadingUsers && (!usersOptions || usersOptions.length === 0)) {
-      (dispatch as any)(fetchUsers(undefined)); // or fetchUsers({ roleId: 3 }) if only employees
+      (dispatch as any)(fetchUsers(undefined)); 
     }
   }, [dispatch, loadingProjects, loadingUsers, projectsList, usersOptions,]);
 
-  // normalized options -> [{id:number, name:string}]
   const projectsOptions = useMemo(
     () => (Array.isArray(projectsList) ? projectsList : [])
       .map((p: any) => ({ id: Number(p?.id), name: String(p?.name ?? p?.title ?? '') }))
@@ -53,7 +51,6 @@ export const useTasksTable = () => {
     [projectsList]
   );
 
-  // build filters object and drop undefineds
   const filters = useMemo(() => {
     const f: any = {};
     if (projectId) f.projectId = Number(projectId);

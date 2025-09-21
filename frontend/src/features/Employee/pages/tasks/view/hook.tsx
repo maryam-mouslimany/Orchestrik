@@ -1,4 +1,3 @@
-// src/pages/.../useTasksTable.ts
 import apiCall from '../../../../../services/apiCallService';
 import { type Column } from '../../../../../components/Table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -22,7 +21,6 @@ export const useTasksTable = () => {
   const [status, setStatus] = useState<string | null>(null);
   const [priority, setPriority] = useState<string | null>(null);
 
-  // pagination (same as PM page)
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [total, setTotal] = useState(0);
@@ -47,7 +45,6 @@ export const useTasksTable = () => {
     [projectsList]
   );
 
-  // filters (ONLY filters here; pagination is top-level)
   const filters = useMemo(() => {
     const f: any = {};
     if (projectId) f.projectId = Number(projectId);
@@ -68,12 +65,11 @@ export const useTasksTable = () => {
       const res = await apiCall('/employee/tasks', {
         method: 'GET',
         requiresAuth: true,
-        params: { page, per_page: perPage, filters }, // SAME way as PM page
+        params: { page, per_page: perPage, filters }, 
       });
 
       const payload = res.data;
 
-      // list extraction (supports plain array OR Laravel paginator top-level OR wrapped under data)
       const list: any[] =
         Array.isArray(payload) ? payload :
         Array.isArray(payload?.data) ? payload.data :
@@ -91,7 +87,6 @@ export const useTasksTable = () => {
       }));
       setRows(mapped);
 
-      // meta detection (top-level or nested)
       const meta =
         (payload && typeof payload === 'object' && 'total' in payload) ? payload :
         (payload?.data && typeof payload.data === 'object' && 'total' in payload.data) ? payload.data :

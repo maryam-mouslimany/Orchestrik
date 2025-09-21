@@ -1,5 +1,4 @@
 :root{
-  /* falls back if your app hasn't set it yet */
   --bg: #0b1020;
   --text: #e7e9ee;
   --muted: #a7b0c2;
@@ -14,7 +13,7 @@
 }
 
 .wrapper {
-  position: relative;    /* <-- add */
+  position: relative;   
   width: 100%;
   height: 100%;
   display: grid;
@@ -43,7 +42,6 @@
   gap: 16px;
   text-align: center;
   color: var(--text);
-  /* no card, no border, no shadow */
 }
 
 .title{
@@ -66,7 +64,6 @@
   flex-wrap: wrap;
 }
 
-/* buttons without borders/shadows; flat modern look */
 .primary,
 .ghost{
   height: 40px;

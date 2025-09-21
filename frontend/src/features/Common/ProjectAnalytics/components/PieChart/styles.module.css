@@ -16,12 +16,11 @@
 .total { font-size: 12px; color: #0f172a; font-weight: 600; }
 
 .chartWrap {
-  width: 100%;       /* take full width of card */
-  aspect-ratio: 1/1; /* keep it a circle */
-  margin: 0 auto;    /* center inside card */
+  width: 100%;       
+  aspect-ratio: 1/1; 
+  margin: 0 auto;   
 }
 
-/* Optional: responsive downsizing */
 @media (max-width: 1100px) {
   .chartWrap { width: 300px; }
 }

@@ -28,12 +28,10 @@ export const useSidebar = () => {
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [openNotifs, setOpenNotifs] = useState<boolean>(false);
 
-  // Fetch unread count once (and when modal closes)
   const fetchUnreadCount = useCallback(async () => {
     try {
       const res = await apiCall('/notifications/count', { method: 'GET', requiresAuth: true });
       const raw = (res as any)?.data;
-      // support {count}, {data: number}, or a plain number
       const count =
         typeof raw?.count === 'number' ? raw.count :
         typeof raw?.data  === 'number' ? raw.data  :

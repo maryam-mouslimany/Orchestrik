@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './styles.module.css';
 import { useModalBehavior } from './hook';
-import { MdClose } from 'react-icons/md'; // <— add this at top
+import { MdClose } from 'react-icons/md'; 
 
 export type ModalProps = {
   open: boolean;
@@ -36,7 +36,7 @@ const Modal: React.FC<ModalProps> = ({
             aria-label="Close"
              onClick={onClose}
           >
-            <MdClose size={20} />   {/* uses currentColor from .iconBtn */}
+            <MdClose size={20} />  
           </button>
         </div>
         <div className={styles.content}>{children}</div>

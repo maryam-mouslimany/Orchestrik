@@ -4,10 +4,9 @@ import type { Workload } from "../../../../../routes/loaders/dashboardLoader";
 export default function WorkloadHeatmap({ rows }: { rows: Workload[] }) {
   if (!rows?.length) return <div className={styles.empty}>No workload data.</div>;
 
-  // 1) scale by TOTAL so color reflects overall load
   const maxTotal = rows.reduce((m, r) => Math.max(m, r.total), 0) || 1;
   const bucketByTotal = (total: number) => {
-    const idx = Math.min(7, Math.floor((total / maxTotal) * 7)); // 0..7
+    const idx = Math.min(7, Math.floor((total / maxTotal) * 7)); 
     return styles[`b${idx}` as keyof typeof styles] as string;
   };
 

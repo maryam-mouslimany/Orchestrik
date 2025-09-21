@@ -6,7 +6,6 @@ import WorkloadHeatmap from "../components/WorkloadHeatmap";
 import PositionDistribution from "../components/PositionDistribution";
 import SkillsBarChartCard from "../components/SkillDistribution";
 import styles from "./styles.module.css";
-import type { TaskRow } from "../../../Employee/pages/tasks/view/hook";
 import EstimateVsActualScatter from "../components/EstimatedVsActual";
 const mock = {
   data: [
