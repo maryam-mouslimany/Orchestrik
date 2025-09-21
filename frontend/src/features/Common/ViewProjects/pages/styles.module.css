@@ -44,6 +44,7 @@
   filter: brightness(0.98);
 }
 .filterRow {
+  width:100%;
   display: flex;
   align-items: center;
   justify-content: space-between; /* search left, button right */

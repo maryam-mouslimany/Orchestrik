@@ -3,19 +3,24 @@
 }
 
 /* full-height app shell */
+/* full-height app shell */
 .shell {
   min-height: 100dvh;
+  display: flex;          /* ADDED: align-items needs flex */
+  align-items: stretch;   /* keeps sidebar/right full height */
 }
 
-/* right side (to the right of the fixed sidebar) */
+/* right side */
 .right {
-  margin-left: var(--sidebar-w);   /* match the fixed sidebar width */
-  height: 100dvh;                  /* fill viewport exactly */
-  display: grid;                   /* center the main both axes */
-  place-items: center;
+  margin-left: var(--sidebar-w);
+  height: 100dvh;
+  display: grid;
+  /* no centering here; we'll center inside .main */
+  justify-items: stretch;
   padding: 0;
   background-color: #ffffff;
 }
+
 
 /* header above page content */
 .header {
@@ -32,10 +37,10 @@
   width: 100%;
   height: 100%;
   display: grid;
+  place-items: center;     /* ADDED: centers content in both axes */
   padding: 0;
   background: #ffffff;
 }
-
 /* keep margin in sync on smaller screens if you shrink the sidebar */
 @media (max-width: 1024px) {
   :root {

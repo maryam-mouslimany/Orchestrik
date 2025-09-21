@@ -5,9 +5,9 @@
 <!-- project overview -->
 <img src="./readme/title2.svg"/>
 
-> Orchestrik is a company-ready task management platform for teams that don’t have room for mess. It blends AI assignment, automation, and clear data visualizations to keep work moving, lock in ownership, and hit deadlines.
+> Orchestrik is a company-ready task management platform for teams that don’t have room for mess. It blends AI assignment, automation, and clear data visualizations to keep work moving, lock in ownership, and hit deadlines. From kickoff to delivery, tasks route to the right people, updates are automatic, and progress is visible.
 
-<br><br>
+<br>
 
 <!-- System Design -->
 <img src="./readme/title3.svg"/>
@@ -34,11 +34,16 @@
 <!-- Demo -->
 <img src="./readme/title5.svg"/>
 
-### Admin Screens
-
-| Dashboard                            | Dashboard                       |                         |
-| --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/dashboard.png) | ![fsdaf](./readme/demo/dashbboard2.png) | 
+<table>
+  <tr>
+    <th>Tasks assigned by this PM</th>
+    <th>Create Task</th>
+  </tr>
+  <tr>
+    <td><img src="./readme/demo/dashboard1.png" width="900"></td>
+    <td><img src="./readme/demo/dashboard.gif" width="900"></td>
+  </tr>
+</table>
 
 | Create Project                            |   Users Management                   |                         |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
@@ -47,27 +52,27 @@
 
 ### Project Manager Screens 
 
-| Projects                             | Project Analytics                       |
+| Projects Managed by this PM                           | Project Analytics                       |
 | --------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/pm_projects.png) | ![fsdaf](./readme/demo/pm_project_analytics.png) |
+| ![Landing](./readme/demo/pm_projects.png) | ![fsdaf](./readme/demo/pm_analytics.png) |
 
-### Project Manager Screens 
+<table>
+  <tr>
+    <th>Tasks assigned by this PM</th>
+    <th>Create Task</th>
+  </tr>
+  <tr>
+    <td><img src="./readme/demo/pm_tasks.png" width="900"></td>
+    <td><img src="./readme/demo/create_task.gif" width="900"></td>
+  </tr>
+</table>
 
-| Tasks assigned by this PM               | Create Task                     |
-| --------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/pm_tasks.png) | ![fsdaf](./readme/demo/pm_create_task.png) |
 
 ### Employee Screens 
 
-| Assigned Tasks                            | Notifications                        |
+| Assigned Tasks                            | Mark Task progress                        |
 | --------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/employee_tasks.png) | ![fsdaf](./readme/demo/employee_notifications.png) |
-
-### Employee Screens 
-
-| Mark Task Progress                           | Mark Task Progress                       |
-| --------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/employee_edit_task.png) | ![fsdaf](./readme/demo/employee_edit_task.png) |
+| ![Landing](./readme/demo/employee_tasks.png) | ![fsdaf](./readme/demo/employee_edit_task.png) |
 
 
 <br><br>
@@ -75,7 +80,7 @@
 <!-- Development & Testing -->
 <img src="./readme/title6.svg"/>
 
-### Add Title Here
+### Services, Validation and Testing 
 
 
 | Services                            | Validation                       | Testing                        |

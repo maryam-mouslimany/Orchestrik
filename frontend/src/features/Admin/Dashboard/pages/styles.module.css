@@ -50,6 +50,7 @@
 
 /* 3-up row with gaps */
 .tripleRow {
+  width:100%;
   display: flex;
   flex-direction: column;
   /* left | right */
