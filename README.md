@@ -141,7 +141,7 @@ I used Postman to run and verify API endpoints during development, with a shared
 
 Swagger provides live API documentation with endpoint schemas and a Try it out panel to execute calls against the local server. I used it to confirm request shapes, auth headers, and sample responses.
 
-| Authorize or Response | Try it out | Try it out |
+| Authorize | Try it out | Try it out |
 | --- | --- | --- |
 | ![](./readme/testing/swagger3.png) | ![](./readme/testing/swagger1.png) | ![](./readme/testing/swagger2.png) |
 
