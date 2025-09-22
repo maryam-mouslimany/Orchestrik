@@ -33,6 +33,11 @@ A component diagram is a simple architecture view that shows the main parts of a
 
 - **AI Agent Auto-Assign:** Takes the task title and description, extracts the required skills, matches them to members’ skill profiles, and if multiple qualify compares current workload (e.g., open tasks) to assign the least-loaded qualified member.
 
+<p align="center">
+  <img src="./readme/testing/agent2.png" alt="AI Agent BPMN (auto-assign flow)" >
+</p>
+
+
 - **n8n Automation (Slack Channel Creation):** On project creation, an n8n workflow creates a Slack channel, invites the team members, and posts a kickoff message so collaboration starts instantly.
 
 - **Clear Charts & Data Visualization:** Dashboards show status breakdowns, per-assignee and per-project views, and trends over time (throughput, cycle time, reopens, overdues), with filters and tooltips for quick drill-downs.

@@ -10,10 +10,7 @@ use App\Services\Agent\LLM\LLMClient;
 
 class AssigneeRecommenderService
 {
-    /**
-     * @param array{project_id:int,title:string,description?:string} $data
-     * @return array{user: array{id:int,name:string,email:string}, why:string}
-     */
+
     public static function recommend(array $data): array
     {
         $projectId   = (int) $data['project_id'];

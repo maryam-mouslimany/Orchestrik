@@ -15,12 +15,11 @@ class GeminiClient implements LLMClient
 
     public function chat(array $messages, array $options = []): string
     {
-        // Map OpenAI-style messages → Gemini "contents"
         $contents = [];
         foreach ($messages as $m) {
             $role = match ($m['role'] ?? 'user') {
                 'assistant' => 'model',
-                default     => 'user', // fold 'system' into 'user'
+                default     => 'user', 
             };
             $contents[] = [
                 'role'  => $role,
@@ -29,7 +28,6 @@ class GeminiClient implements LLMClient
         }
 
         $generationConfig = array_merge([
-            // 'responseMimeType' => 'application/json', // enable if you want strict JSON
         ], Arr::get($options, 'generationConfig', []));
 
         $url = rtrim($this->base, '/')."/v1beta/models/{$this->model}:generateContent?key={$this->apiKey}";
