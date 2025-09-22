@@ -41,9 +41,10 @@ A component diagram is a simple architecture view that shows the main parts of a
 
 - **Clear Charts & Data Visualization:** Dashboards show status breakdowns, per-assignee and per-project views, and trends over time (throughput, cycle time, reopens, overdues), with filters and tooltips for quick drill-downs.
 
-- **Live Notifications:** Real-time notifications let users know when they’re assigned, mentioned, or when task status changes, updating badges and lists instantly without refresh.
+- **Role Based Theme:** Each user type has a unique theme color for a clean, intuitive UI and a focused set of actions tailored to their responsibilities.
 
-<br>
+<img src="./readme/user_types.png" alt="Role-based themes: Admin, Project Manager, Employee"  />
+<br><br>
 
 <!-- Demo -->
 <img src="./readme/title5.svg"/>
