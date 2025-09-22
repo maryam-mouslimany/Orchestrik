@@ -37,7 +37,6 @@ A component diagram is a simple architecture view that shows the main parts of a
   <img src="./readme/testing/agent.png" alt="AI Agent BPMN (auto-assign flow)" >
 </p>
 
-
 - **n8n Automation (Slack Channel Creation):** On project creation, an n8n workflow creates a Slack channel, invites the team members, and posts a kickoff message so collaboration starts instantly.
 
 - **Clear Charts & Data Visualization:** Dashboards show status breakdowns, per-assignee and per-project views, and trends over time (throughput, cycle time, reopens, overdues), with filters and tooltips for quick drill-downs.
@@ -51,34 +50,34 @@ A component diagram is a simple architecture view that shows the main parts of a
 
 ### Admin Screens
 
-| Dashboard                              | Dashboard                        |                         |
-| -------------------------------------- | -------------------------------- | ----------------------- |
+| Dashboard | Dashboard |
+| --- | --- |
 | ![Landing](./readme/demo/dashboard1.png) | ![fsdaf](./readme/demo/dashboard2.png) |
 
-| Create Project                           | Users Management                   |                         |
-| ---------------------------------------- | ---------------------------------- | ----------------------- |
+| Create Project | Users Management |
+| --- | --- |
 | ![Landing](./readme/demo/create_project.png) | ![fsdaf](./readme/demo/users.png)  |
 
 ### Project Manager Screens
 
-| Projects Managed by this PM             | Project Analytics                  |
-| -------------------------------------- | ---------------------------------- |
+| Projects Managed by this PM | Project Analytics |
+| --- | --- |
 | ![Landing](./readme/demo/pm_projects.png) | ![fsdaf](./readme/demo/pm_analytics.png) |
 
-| View Tasks                              | Create Task                        |                         |
-| --------------------------------------- | ---------------------------------- | ----------------------- |
-| ![Landing](./readme/demo/pm_tasks.png)  | ![fsdaf](./readme/demo/pm_create_task.png) |
+| View Tasks | Create Task |
+| --- | --- |
+| ![Landing](./readme/demo/pm_tasks.png) | ![fsdaf](./readme/demo/pm_create_task.png) |
 
 ### Employee Screens
 
-| Assigned Tasks                           | Mark Task progress                 |
-| ---------------------------------------- | ---------------------------------- |
+| Assigned Tasks | Mark Task progress |
+| --- | --- |
 | ![Landing](./readme/demo/employee_tasks.png) | ![fsdaf](./readme/demo/employee_edit_task.png) |
 
 ### Sexy Features
 
-| Ai Agent Auto Assign                     | Data Visualization                 |
-| ---------------------------------------- | ---------------------------------- |
+| Ai Agent Auto Assign | Data Visualization |
+| --- | --- |
 | ![Landing](./readme/demo/create_task.gif) | ![fsdaf](./readme/demo/dashboard.gif) |
 
 n8n Automation: Slack Channel Creation  
@@ -91,21 +90,21 @@ n8n Automation: Slack Channel Creation
 
 ### Services, Validation and Testing
 
-| Services                                 | Validation                         | Testing                           |
-| ---------------------------------------- | ---------------------------------- | --------------------------------- |
+| Services | Validation | Testing |
+| --- | --- | --- |
 | ![Landing](./readme/testing/service.png) | ![fsdaf](./readme/testing/validation.png) | ![fsdaf](./readme/testing/tests.png) |
 
 ### Ci Workflow
 
-|                                          |                                    |
-| ---------------------------------------- | ---------------------------------- |
-| ![Landing](./readme/testing/ci1.png)     | ![fsdaf](./readme/testing/ci2.png) |
+|  |  |
+| --- | --- |
+| ![Landing](./readme/testing/ci1.png) | ![fsdaf](./readme/testing/ci2.png) |
 
 ### Linear
 I chose Linear to manage tasks and sprints because it keeps development work connected to issues. Each feature or bug fix starts with a Linear ticket, which links directly to branches, commits, and pull requests, making the workflow easier to follow.
 
-|                                          |                                    |
-| ---------------------------------------- | ---------------------------------- |
+|  |  |
+| --- | --- |
 | ![Landing](./readme/testing/linear1.png) | ![fsdaf](./readme/testing/linear2.png) |
 
 #### Linear Workflow (high level)
