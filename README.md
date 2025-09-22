@@ -13,9 +13,16 @@
 <img src="./readme/title3.svg"/>
 
 ### ER Diagram
+
+This ER diagram maps the core entities and relationships of Orchestrik to clarify how data connects before implementation.  
+I created it in **Eraser**  view it here: [ER diagram (Eraser workspace)](https://app.eraser.io/workspace/yziAKEP3YQ1KyqR15BEp?origin=)
+
 <img src="./readme/system_design/er_diagram.png"/>
 
 ### Component Diagram
+
+A component diagram is a simple architecture view that shows the main parts of a system, the interfaces they expose, and how those parts depend on or talk to each other.
+
 <img src="./readme/system_design/system_architecture.png"/>
 
 <br>
@@ -104,22 +111,11 @@ Push the branch to the remote repository →
 Open a pull request and request a review →  
 Merge the pull request once it has been reviewed and approved.
 
-### API Docs & Testing (Swagger & Postman)
+### Postman (API Testing)
 
-**Swagger:** Live API documentation with schemas and a “Try it out” panel to execute requests against your local server.  
-**Postman:** Versioned collections and environments for manual testing and quick regression checks.
+I used Postman to run and verify API endpoints during development, with a shared collection and an environment for base URL and tokens. Requests show headers, payloads, and the JSON responses, which helped me debug quickly.
 
-#### Swagger
-
-|  |  |
-| --- | --- |
-| ![](./readme/testing/swagger1.png) | ![](./readme/testing/swagger2.png) |
-
-#### Postman
-
-### Postman
-
-| Environement | Postman Request & Response | Postman Request & Response |
+| Postman Environment | Postman Request & Response | Postman Request & Response |
 | --- | --- | --- |
 | ![](./readme/testing/environment.png) | ![](./readme/testing/postman2.png) | ![](./readme/testing/postman3.png) |
 
@@ -141,5 +137,12 @@ Merge the pull request once it has been reviewed and approved.
 - CI/CD for production: rebuild and push images, deploy with the same compose file, and run migrations.
 - Roll back by redeploying a previous image tag and restoring a recent database backup if needed.
 
+### Swagger (API Documentation)
+
+Swagger provides live API documentation with endpoint schemas and a Try it out panel to execute calls against the local server. I used it to confirm request shapes, auth headers, and sample responses.
+
+| Authorize or Response | Try it out | Try it out |
+| --- | --- | --- |
+| ![](./readme/testing/swagger3.png) | ![](./readme/testing/swagger1.png) | ![](./readme/testing/swagger2.png) |
 
 <br>
