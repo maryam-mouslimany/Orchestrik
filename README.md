@@ -44,7 +44,6 @@ A component diagram is a simple architecture view that shows the main parts of a
 - **Role Based Theme:** Each user type has a unique theme color for a clean, intuitive UI and a focused set of actions tailored to their responsibilities.
 
 <img src="./readme/user_types.png" alt="Role-based themes: Admin, Project Manager, Employee"  />
-<br><br>
 
 <!-- Demo -->
 <img src="./readme/title5.svg"/>
