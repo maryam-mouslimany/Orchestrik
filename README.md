@@ -23,7 +23,7 @@ I created it in **Eraser**  view it here: [ER diagram (Eraser workspace)](https:
 
 A component diagram is a simple architecture view that shows the main parts of a system, the interfaces they expose, and how those parts depend on or talk to each other.
 
-<img src="./readme/system_design/system_architecture.png"/>
+<img src="./readme/system_design/component_diagram.svg"/>
 
 <br>
 <!-- Project Highlights -->
@@ -34,7 +34,7 @@ A component diagram is a simple architecture view that shows the main parts of a
 - **AI Agent Auto-Assign:** Takes the task title and description, extracts the required skills, matches them to members’ skill profiles, and if multiple qualify compares current workload (e.g., open tasks) to assign the least-loaded qualified member.
 
 <p align="center">
-  <img src="./readme/testing/agent.png" alt="AI Agent BPMN (auto-assign flow)" >
+  <img src="./readme/testing/agent.svg" alt="AI Agent BPMN (auto-assign flow)" >
 </p>
 
 - **n8n Automation (Slack Channel Creation):** On project creation, an n8n workflow creates a Slack channel, invites the team members, and posts a kickoff message so collaboration starts instantly.
