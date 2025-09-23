@@ -92,7 +92,7 @@ n8n Automation: Slack Channel Creation
 
 | Services | Validation | Testing |
 | --- | --- | --- |
-| ![Landing](./readme/testing/service.png) | ![fsdaf](./readme/testing/validation.png) | ![fsdaf](./readme/testing/tests.png) |
+| ![Landing](./readme/testing/service.png) | ![fsdaf](./readme/testing/validator.png) | ![fsdaf](./readme/testing/tests.png) |
 
 ### Ci Workflow
 
