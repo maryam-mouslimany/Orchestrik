@@ -14,6 +14,7 @@ class UserService
         $positionId = $filters['positionId'] ?? null;
         $skills = $filters['skills'] ?? [];
         $nameFilter = $filters['nameFilter'] ?? [];
+        
         $q = User::query()
             ->withTrashed()->with(['role', 'position', 'skills']);
 

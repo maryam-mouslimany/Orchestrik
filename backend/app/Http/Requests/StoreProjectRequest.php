@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\User;
 
 class StoreProjectRequest extends FormRequest
 {
@@ -29,14 +30,15 @@ class StoreProjectRequest extends FormRequest
             $members = $this->input('members', []);
 
             if (!empty($members)) {
-                $hasPM = \App\Models\User::whereIn('id', $members)
+                $hasPM = User::whereIn('id', $members)
                     ->whereHas('role', function ($query) {
                         $query->where('name', 'pm');
                     })
                     ->exists();
 
                 if (!$hasPM) {
-                    $validator->errors()->add('members', 'A Prpject Manager should be assigned to this project');
+                    $validator->errors()->add('members', 'A Prpject Manager should be assigned to 
+                    this project');
                 }
             }
         });

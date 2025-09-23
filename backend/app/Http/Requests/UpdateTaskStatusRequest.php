@@ -22,7 +22,6 @@ class UpdateTaskStatusRequest extends FormRequest
             return in_array($this->input('status'), ['in progress', 'completed', 'reopened']);
         }
 
-
         return false;
     }
 

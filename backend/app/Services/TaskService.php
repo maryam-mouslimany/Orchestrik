@@ -35,9 +35,8 @@ class TaskService
 static function editStatus(array $data, $taskId)
 {
     try {
-        $task = Task::findOrFail($taskId); // if not found, handled below
+        $task = Task::findOrFail($taskId); 
     } catch (ModelNotFoundException $e) {
-        // Return null so the controller hits: if (!$task) return error('Status not updated successfully');
         return null;
     }
 
