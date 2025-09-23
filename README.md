@@ -108,12 +108,14 @@ I chose Linear to manage tasks and sprints because it keeps development work con
 | ![Landing](./readme/testing/linear1.png) | ![fsdaf](./readme/testing/linear2.png) |
 
 #### Linear Workflow (high level)
-Create a ticket in Linear →  
-Create a Git branch (following Linear’s naming conventions) →  
-Commit changes (include the corresponding task ID in the commit message) →  
-Push the branch to the remote repository →  
-Open a pull request and request a review →  
-Merge the pull request once it has been reviewed and approved.
+
+1. Create a ticket in Linear  
+2. Create a Git branch (following Linear’s naming conventions)  
+3. Commit changes (include the corresponding task ID in the commit message)  
+4. Push the branch to the remote repository  
+5. Open a pull request and request a review  
+6. Merge the pull request once it has been reviewed and approved  
+
 
 ### Postman (API Testing)
 
