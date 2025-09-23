@@ -121,7 +121,7 @@ I chose Linear to manage tasks and sprints because it keeps development work con
 
 I used Postman to run and verify API endpoints during development, with a shared collection and an environment for base URL and tokens. Requests show headers, payloads, and the JSON responses, which helped me debug quickly.
 
-| Postman Environment | Postman Request & Response | Postman Request & Response |
+| Postman Environment | Api: Get projects | Api: Create Task |
 | --- | --- | --- |
 | ![](./readme/testing/environment.png) | ![](./readme/testing/postman2.png) | ![](./readme/testing/postman3.png) |
 
